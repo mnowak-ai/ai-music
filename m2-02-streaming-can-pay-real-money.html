@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streaming Can Pay Real Money | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(32px,6vw,50px);font-weight:700;line-height:1.12;padding-top:64px;margin:0 0 14px;letter-spacing:-.01em;}
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  /* big stat cards */
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:28px 0;}
+  .stat-card{background:var(--purple-light);border-radius:14px;padding:22px;text-align:center;}
+  .stat-card .st-num{font-family:'Fraunces',serif;font-size:clamp(26px,4.5vw,34px);font-weight:700;color:var(--purple-dark);line-height:1.1;}
+  .stat-card .st-label{font-size:13.5px;color:var(--gray);margin-top:6px;}
+
+  /* sim shell */
+  .sim{border:2px solid var(--purple);border-radius:18px;overflow:hidden;margin:32px 0;background:#fff;}
+  .sim-head{background:var(--purple);color:#fff;padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .sim-head .sh-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;}
+  .sim-head .sh-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.18);padding:5px 12px;border-radius:999px;}
+  .sim-body{padding:28px;}
+
+  /* timeline */
+  .year-row{display:flex;gap:8px;margin-bottom:26px;}
+  .year-btn{
+    flex:1;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:15px;
+    padding:14px 8px;border:2px solid var(--purple-mid);border-radius:12px;
+    background:#fff;cursor:pointer;transition:all .3s;color:var(--gray);
+  }
+  .year-btn:hover{border-color:var(--purple);}
+  .year-btn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .year-btn.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+  .timeline-headline{
+    font-family:'Fraunces',serif;font-size:clamp(24px,4vw,30px);font-weight:700;
+    color:var(--purple-dark);text-align:center;margin-bottom:6px;transition:opacity .3s;
+  }
+  .timeline-sub{text-align:center;font-size:14px;color:var(--gray);margin-bottom:24px;}
+  .tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+  .tier-card{background:var(--gray-light);border-radius:12px;padding:18px;text-align:center;transition:transform .3s;}
+  .tier-card .tc-num{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:20px;color:var(--purple);}
+  .tier-card .tc-label{font-size:12px;color:var(--gray);margin-top:4px;line-height:1.4;}
+  .timeline-note{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--gray);margin-top:20px;text-align:center;line-height:1.6;}
+
+  /* platform explorer */
+  .platform-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:8px;}
+  .platform-card{
+    border:2px solid var(--purple-mid);border-radius:14px;padding:18px 14px;text-align:center;
+    cursor:pointer;background:#fff;transition:all .25s;
+  }
+  .platform-card:hover{border-color:var(--purple);transform:translateY(-2px);}
+  .platform-card:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .platform-card.active{background:var(--purple-light);border-color:var(--purple);}
+  .platform-card .pf-emoji{font-size:26px;margin-bottom:6px;}
+  .platform-card .pf-name{font-weight:700;font-size:14px;}
+  .platform-detail{
+    display:none;background:var(--purple-light);border-radius:14px;padding:22px 26px;margin-top:16px;
+  }
+  .platform-detail.show{display:block;animation:pop .4s ease;}
+  @keyframes pop{0%{transform:scale(.98);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  .platform-detail .pd-name{font-family:'Fraunces',serif;font-size:21px;font-weight:700;margin-bottom:8px;}
+  .platform-detail .pd-text{font-size:14.5px;line-height:1.6;}
+  .platform-hint{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);text-align:center;margin-top:14px;}
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+
+  .ai-box{background:var(--ink);color:#fff;border-radius:16px;padding:30px 34px;margin:28px 0;}
+  .ai-box .ab-label{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#BC87E6;margin-bottom:10px;}
+  .ai-box p{font-size:15.5px;margin-bottom:12px;}
+  .ai-box p:last-child{margin-bottom:0;}
+
+  .quiz-q{border:2px solid var(--purple-mid);border-radius:14px;padding:24px 26px;margin-bottom:18px;background:#fff;}
+  .quiz-q .qq-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--purple);letter-spacing:.12em;margin-bottom:6px;}
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--purple-mid);border-radius:10px;background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);}
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light,#FBEDEB);border-color:#C0392B;color:#C0392B;}
+  .quiz-explain{display:none;font-size:14px;background:var(--gray-light);border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);}
+  .quiz-explain.show{display:block;}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+
+  .sources{margin-top:48px;border-top:2px solid var(--purple-mid);padding-top:24px;}
+  .sources .src-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+  .sources ul{list-style:none;}
+  .sources li{font-size:13.5px;color:var(--gray);margin-bottom:8px;line-height:1.55;}
+  .sources a{color:var(--purple);word-break:break-all;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <h1>Streaming Can Pay Real Money</h1>
+    <p class="lede">"Streaming barely pays anything" is one of the most repeated lines in music. It's also outdated. Let's look at what independent artists are actually earning today, with real numbers.</p>
+    <div class="meta">
+      <span>Reading time: 7 min</span>
+      <span>Interactive: 2 activities</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <!-- HOOK -->
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>The Myth vs. the Money</h2>
+    <p>You've probably heard the joke: streaming pays artists "a fraction of a penny" per stream, so unless you're a global superstar, don't bother. That fear stops a lot of talented people from ever releasing a song.</p>
+    <p>Here's the problem with that story: it's built on a single stream's payout, and it ignores what actually matters, <strong>the payout added up across millions of streams, across an entire year, across an entire catalog of songs.</strong> One raindrop looks pointless. A whole storm fills a lake. Streaming works the same way, and in this article, we're looking at the lake.</p>
+  </section>
+
+  <!-- GROWTH TIMELINE -->
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>Watch the Money Grow</h2>
+    <p>Spotify publishes an annual report called <em>Loud &amp; Clear</em> that tracks exactly how much money independent artists earn on the platform, and how many artists cross major income milestones. Tap a year below and watch the numbers change.</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">The Independent Artist Growth Timeline</div>
+        <div class="sh-tag">Spotify Data</div>
+      </div>
+      <div class="sim-body">
+        <div class="year-row" id="yearRow"></div>
+        <div class="timeline-headline" id="tlHeadline"></div>
+        <div class="timeline-sub" id="tlSub"></div>
+        <div class="tier-grid" id="tierGrid"></div>
+        <div class="timeline-note">Source: Spotify "Loud &amp; Clear" annual reports. Figures reflect artists and labels operating independently of the three major label groups (Sony, Universal, Warner), and thresholds are Spotify-reported royalty tiers, not take-home income after any distributor fees.</div>
+      </div>
+    </div>
+
+    <div class="callout"><b>The headline that matters most:</b> in 2023, independent artists and labels earned about <b>$4.5 billion</b> from Spotify alone, roughly half of everything the platform paid the entire music industry that year. By 2025, that independent share had grown to roughly <b>$5.5 billion</b>, out of $11 billion paid industry-wide. That's not pocket change. That's an entire economy.</div>
+  </section>
+
+  <!-- PLATFORM EXPLORER -->
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>It's Not Just One Platform</h2>
+    <p>Spotify publishes the most detailed public numbers, which is why it anchors this article, but independent artists earn from a whole universe of streaming services at once. Tap each one to learn what makes it different.</p>
+
+    <div class="platform-grid" id="platformGrid"></div>
+    <div class="platform-detail" id="platformDetail">
+      <div class="pd-name" id="pdName"></div>
+      <div class="pd-text" id="pdText"></div>
+    </div>
+    <div class="platform-hint">Tap a platform to learn what makes it unique</div>
+  </section>
+
+  <!-- WHY IT MATTERS -->
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>So What Does This Actually Take?</h2>
+    <p>Reading these numbers, it's tempting to imagine every artist on the list is a superstar. Spotify's own data says otherwise: the majority of artists earning $1 million or more from streaming never had a song reach the platform's global Top 50 chart. Many built their income from a loyal, mid-sized fan base streaming their whole catalog consistently, not from one giant viral hit.</p>
+    <p>That's an important distinction for anyone considering an independent path. The realistic goal for most artists isn't "go viral and get rich." It's "build a real fan base that keeps streaming your music," which is a slower, steadier, and far more achievable target.</p>
+  </section>
+
+  <div class="ai-box fade">
+    <div class="ab-label">The AI Angle</div>
+    <p>Two things about AI are shaping this exact topic right now. First, streaming platforms use AI-powered recommendation systems (remember our Genre Detective work from earlier?) to match songs with the listeners most likely to love them, which is a major reason independent artists without label marketing budgets can still get discovered.</p>
+    <p>Second, the growth in artists releasing music has been so fast that platforms are now using AI specifically to detect fully AI-generated spam music and fraudulent streaming designed to game these very royalty numbers. As you build your own understanding of AI in music, remember: the honest independent artists filling out these growth charts are competing against both real artists and, increasingly, an ocean of low-effort AI content. Understanding the difference is becoming a genuine industry skill.</p>
+  </div>
+
+  <!-- QUIZ -->
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">Why is judging streaming income by a single stream's payout misleading?</div>
+      <button class="quiz-opt" data-c="0">Because streaming payouts are actually illegal</button>
+      <button class="quiz-opt" data-c="1">Because real income comes from millions of streams added up over a whole year and catalog, not one stream</button>
+      <button class="quiz-opt" data-c="0">Because artists never see any of the money</button>
+      <div class="quiz-explain">A single stream's payout looks tiny in isolation, but multiplied across millions of streams and many songs, it becomes a real, and growing, income source for independent artists.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">According to Spotify's data, how did most artists earning $1 million or more reach that level?</div>
+      <button class="quiz-opt" data-c="0">By having a song hit the Global Top 50 chart</button>
+      <button class="quiz-opt" data-c="1">By building a loyal fan base that streams their whole catalog consistently over time</button>
+      <button class="quiz-opt" data-c="0">By signing with one of the three major labels</button>
+      <div class="quiz-explain">The majority of streaming millionaires never had a chart-topping hit. Consistent streams across a body of work, driven by a loyal fan base, is the more common path.</div>
+    </div>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>Independent artists and labels earned roughly $4.5 billion from Spotify in 2023 and roughly $5.5 billion in 2025, about half of everything the platform paid the industry each year.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>The number of artists crossing every earnings milestone, from $10,000 to $10 million, has grown dramatically since 2017.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>Independent artists earn across many platforms at once, not just one, and each platform has its own quirks and audience.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>Most streaming success comes from steady fan growth over time, not viral luck, which makes it a realistic goal rather than a lottery ticket.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sources fade">
+    <div class="src-label">Sources</div>
+    <ul>
+      <li>Spotify Newsroom, "The Biggest Takeaways From Spotify's Annual Music Economics Report" (2023 data, published March 2024) &mdash; <a href="https://newsroom.spotify.com/2024-03-19/loud-clear-music-streaming-royalty-data-artist-payments/" target="_blank" rel="noopener">https://newsroom.spotify.com/2024-03-19/loud-clear-music-streaming-royalty-data-artist-payments/</a></li>
+      <li>Spotify Newsroom, "As Spotify Turns 20..." Loud &amp; Clear highlights (2025 data, published March 2026) &mdash; <a href="https://newsroom.spotify.com/2026-03-11/loud-and-clear-music-economics-highlights/" target="_blank" rel="noopener">https://newsroom.spotify.com/2026-03-11/loud-and-clear-music-economics-highlights/</a></li>
+      <li>Loud and Clear, official takeaways site &mdash; <a href="https://loudandclear.byspotify.com/takeaways/" target="_blank" rel="noopener">https://loudandclear.byspotify.com/takeaways/</a></li>
+      <li>Music Ally, coverage of Spotify's 2023 and 2017 baseline artist-tier data &mdash; <a href="https://musically.com/2024/03/19/spotify-updates-loud-clear-website-with-2023-payout-stats/" target="_blank" rel="noopener">https://musically.com/2024/03/19/spotify-updates-loud-clear-website-with-2023-payout-stats/</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(el=>observer.observe(el));
+
+/* ---------- growth timeline ---------- */
+const years=[
+ {year:"2017",headline:"$10,000 was already possible",sub:"The first year Spotify tracked artist earnings tiers in detail.",
+  tiers:[{n:"23,400",l:"artists earned $10,000+"},{n:"4,300",l:"artists earned $100,000+"},{n:"460",l:"artists earned $1 million+"},{n:"10",l:"artists earned $10 million+"}]},
+ {year:"2023",headline:"Independent artists earned ~$4.5 billion",sub:"About half of everything Spotify paid the whole music industry that year.",
+  tiers:[{n:"66,000",l:"artists earned $10,000+"},{n:"20,500",l:"artists earned $50,000+"},{n:"11,600",l:"artists earned $100,000+"},{n:"1,250",l:"artists earned $1 million+"}]},
+ {year:"2025",headline:"Independent artists earned ~$5.5 billion",sub:"Roughly half of the record $11 billion Spotify paid the industry this year.",
+  tiers:[{n:"13,800+",l:"artists earned $100,000+"},{n:"1,500+",l:"artists earned $1 million+"},{n:"80",l:"artists earned $10 million+"},{n:"150+",l:"countries with a $10,000+ earner"}]}
+];
+let yIndex=1;
+const yearRow=document.getElementById('yearRow');
+years.forEach((y,i)=>{
+  const b=document.createElement('button');
+  b.className='year-btn'+(i===yIndex?' active':'');
+  b.textContent=y.year;
+  b.addEventListener('click',()=>{yIndex=i;renderYear();});
+  yearRow.appendChild(b);
+});
+function renderYear(){
+  const y=years[yIndex];
+  document.getElementById('tlHeadline').textContent=y.headline;
+  document.getElementById('tlSub').textContent=y.sub;
+  const grid=document.getElementById('tierGrid');
+  grid.innerHTML='';
+  y.tiers.forEach(t=>{
+    const c=document.createElement('div');
+    c.className='tier-card';
+    c.innerHTML='<div class="tc-num">'+t.n+'</div><div class="tc-label">'+t.l+'</div>';
+    grid.appendChild(c);
+  });
+  document.querySelectorAll('.year-btn').forEach((b,i)=>b.classList.toggle('active',i===yIndex));
+}
+renderYear();
+
+/* ---------- platform explorer ---------- */
+const platforms=[
+ {emoji:"🟢",name:"Spotify",text:"The largest streaming platform and the industry's most transparent about artist payouts through its public Loud & Clear report. Its personalized recommendation algorithms help independent artists reach new fans without label marketing budgets."},
+ {emoji:"🍎",name:"Apple Music",text:"Apple Music has historically emphasized higher per-stream payout rates than some competitors, and it doesn't offer a free ad-supported tier, meaning every listener is a paying subscriber."},
+ {emoji:"📦",name:"Amazon Music",text:"Bundled into Amazon Prime for many subscribers, giving it a massive built-in listener base. It's also a major player in smart-speaker listening through Alexa devices."},
+ {emoji:"▶️","name":"YouTube Music / YouTube",text:"Beyond audio streaming, YouTube is where official music videos, lyric videos, and fan-made content live, so it often earns artists money through both music streams and video ad revenue at once."},
+ {emoji:"🎧",name:"Deezer",text:"A major streaming service especially strong in Europe, known for supporting a wide range of independent and international artists."},
+ {emoji:"🌊",name:"Tidal",text:"Long positioned as an artist-friendly platform with a history of exploring alternative payout models designed to route more money toward the artists a specific listener actually streams."},
+ {emoji:"☁️",name:"SoundCloud",text:"A favorite launching pad for independent and emerging artists, especially in hip-hop and electronic genres, known for letting artists upload music directly and build audiences from zero."},
+ {emoji:"📻",name:"Pandora",text:"One of the original personalized radio platforms in the U.S. Instead of on-demand song selection, it's built around algorithm-curated stations, an early ancestor of today's AI recommendation systems."},
+ {emoji:"🎵",name:"TikTok",text:"Not a traditional streaming platform, but arguably the industry's most powerful discovery engine today. A song trending in short videos regularly drives massive listener surges on every platform above."}
+];
+const platformGrid=document.getElementById('platformGrid');
+platforms.forEach(p=>{
+  const card=document.createElement('div');
+  card.className='platform-card';
+  card.setAttribute('role','button');
+  card.setAttribute('tabindex','0');
+  card.innerHTML='<div class="pf-emoji">'+p.emoji+'</div><div class="pf-name">'+p.name+'</div>';
+  const open=()=>{
+    document.querySelectorAll('.platform-card').forEach(c=>c.classList.remove('active'));
+    card.classList.add('active');
+    document.getElementById('pdName').textContent=p.emoji+' '+p.name;
+    document.getElementById('pdText').textContent=p.text;
+    const detail=document.getElementById('platformDetail');
+    detail.classList.remove('show');
+    void detail.offsetWidth;
+    detail.classList.add('show');
+  };
+  card.addEventListener('click',open);
+  card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+  platformGrid.appendChild(card);
+});
+
+/* quiz */
+document.querySelectorAll('.quiz-q').forEach(q=>{
+  const opts=q.querySelectorAll('.quiz-opt');
+  const explain=q.querySelector('.quiz-explain');
+  let done=false;
+  opts.forEach(o=>{
+    o.addEventListener('click',()=>{
+      if(done)return;
+      done=true;
+      opts.forEach(x=>{if(x.dataset.c==='1')x.classList.add('correct');});
+      if(o.dataset.c!=='1')o.classList.add('wrong');
+      explain.classList.add('show');
+    });
+  });
+});
+</script>
+</body>
+</html>
