@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI: Learn &amp; Practice | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --red:#C0392B; --red-light:#FBEDEB;
+    --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(32px,6vw,50px);font-weight:700;line-height:1.12;padding-top:64px;margin:0 0 14px;letter-spacing:-.01em;}
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  /* before/after */
+  .ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+  @media (max-width:560px){.ba-grid{grid-template-columns:1fr;}}
+  .ba-card{border-radius:14px;padding:22px 24px;}
+  .ba-card.before{background:var(--gray-light);}
+  .ba-card.after{background:var(--purple-light);}
+  .ba-card .ba-label{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;}
+  .ba-card.before .ba-label{color:var(--gray);}
+  .ba-card.after .ba-label{color:var(--purple);}
+  .ba-card ul{list-style:none;font-size:14.5px;line-height:1.8;}
+  .ba-card li::before{content:"— ";color:var(--gray);}
+  .ba-card.after li::before{content:"✓ ";color:var(--purple);font-weight:700;}
+
+  /* three pillars */
+  .pillar-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:28px 0;}
+  .pillar{border:2px solid var(--purple-mid);border-radius:14px;padding:24px;text-align:center;}
+  .pillar .pl-emoji{font-size:30px;margin-bottom:8px;}
+  .pillar .pl-title{font-family:'Fraunces',serif;font-size:19px;font-weight:700;margin-bottom:8px;}
+  .pillar .pl-text{font-size:14px;color:var(--gray);line-height:1.6;}
+
+  /* sim shell */
+  .sim{border:2px solid var(--purple);border-radius:18px;overflow:hidden;margin:32px 0;background:#fff;}
+  .sim-head{background:var(--purple);color:#fff;padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .sim-head .sh-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;}
+  .sim-head .sh-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.18);padding:5px 12px;border-radius:999px;}
+  .sim-body{padding:28px;}
+
+  /* rhythm game */
+  .rhythm-instructions{font-size:14.5px;color:var(--gray);margin-bottom:18px;}
+  .rhythm-track{
+    position:relative;height:90px;background:var(--gray-light);border-radius:14px;
+    overflow:hidden;margin-bottom:18px;border:2px solid var(--purple-mid);
+  }
+  .hit-zone{
+    position:absolute;left:40px;top:0;bottom:0;width:6px;background:var(--purple);
+    box-shadow:0 0 0 6px rgba(123,47,190,.15);
+  }
+  .beat-dot{
+    position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;
+    border-radius:50%;background:var(--purple-mid);border:3px solid var(--purple);
+    display:flex;align-items:center;justify-content:center;font-size:16px;
+  }
+  .beat-dot.hit-good{background:var(--green);border-color:var(--green);}
+  .beat-dot.hit-miss{background:var(--red);border-color:var(--red);opacity:.6;}
+  .rhythm-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:16px;
+    background:var(--purple);color:#fff;border:none;border-radius:14px;
+    padding:20px;width:100%;cursor:pointer;transition:background .2s,transform .1s;
+    margin-bottom:14px;
+  }
+  .rhythm-btn:hover{background:var(--purple-dark);}
+  .rhythm-btn:active{transform:scale(.97);}
+  .rhythm-btn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .rhythm-feedback-row{display:flex;gap:8px;justify-content:center;margin-bottom:14px;min-height:28px;flex-wrap:wrap;}
+  .rf-tag{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;}
+  .rf-tag.perfect{background:var(--green-light);color:var(--green);}
+  .rf-tag.good{background:var(--purple-light);color:var(--purple);}
+  .rf-tag.miss{background:var(--red-light);color:var(--red);}
+  .rhythm-score{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gray);text-align:center;}
+  .rhythm-score b{color:var(--purple);}
+  .rhythm-startbtn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;
+    background:var(--purple);color:#fff;border:none;border-radius:999px;
+    padding:13px 30px;cursor:pointer;transition:background .3s,transform .15s;display:block;margin:0 auto;
+  }
+  .rhythm-startbtn:hover{background:var(--purple-dark);transform:translateY(-1px);}
+  .rhythm-startbtn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+
+  /* tool explorer */
+  .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:28px 0 8px;}
+  .tool-card{
+    border:2px solid var(--purple-mid);border-radius:14px;padding:20px;cursor:pointer;background:#fff;
+    transition:border-color .3s,box-shadow .3s,transform .15s;
+  }
+  .tool-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(123,47,190,.12);}
+  .tool-card:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .tool-card.open{border-color:var(--purple);background:var(--purple-light);}
+  .tool-card .tc-emoji{font-size:24px;margin-bottom:6px;}
+  .tool-card .tc-name{font-family:'Fraunces',serif;font-size:18px;font-weight:700;}
+  .tool-card .tc-short{font-size:13px;color:var(--gray);margin-top:5px;}
+  .tool-card .tc-detail{display:none;font-size:13.5px;margin-top:12px;padding-top:12px;border-top:1.5px dashed var(--purple-mid);line-height:1.6;}
+  .tool-card.open .tc-detail{display:block;}
+  .tap-hint{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);text-align:center;margin-top:6px;}
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+
+  .quiz-q{border:2px solid var(--purple-mid);border-radius:14px;padding:24px 26px;margin-bottom:18px;background:#fff;}
+  .quiz-q .qq-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--purple);letter-spacing:.12em;margin-bottom:6px;}
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--purple-mid);border-radius:10px;background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);}
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{display:none;font-size:14px;background:var(--gray-light);border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);}
+  .quiz-explain.show{display:block;}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+
+  .sources{margin-top:48px;border-top:2px solid var(--purple-mid);padding-top:24px;}
+  .sources .src-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+  .sources ul{list-style:none;}
+  .sources li{font-size:13.5px;color:var(--gray);margin-bottom:8px;line-height:1.55;}
+  .sources a{color:var(--purple);word-break:break-all;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <h1>AI: Learn &amp; Practice</h1>
+    <p class="lede">Learning an instrument used to mean a teacher, a lesson book, and a lot of guessing whether you were doing it right. AI just changed the middle part of that sentence.</p>
+    <div class="meta">
+      <span>Reading time: 7 min</span>
+      <span>Interactive: 2 activities</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <!-- HOOK -->
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>The Practice Problem</h2>
+    <p>Here's a problem every beginner musician has faced forever: you practice alone in your room, and you have no idea if you're actually doing it right. Is that chord clean or muddy? Was that rhythm on time or rushed? Without a teacher standing next to you, you're guessing.</p>
+    <p>That gap, between practicing and actually knowing how you're doing, is exactly what AI-powered learning tools are built to close. Let's look at how.</p>
+
+    <div class="ba-grid">
+      <div class="ba-card before">
+        <div class="ba-label">Learning, the old way</div>
+        <ul>
+          <li>Practice alone and hope it's correct</li>
+          <li>Wait until your next lesson for feedback</li>
+          <li>Guess which mistakes to fix first</li>
+          <li>One lesson time slot per week</li>
+        </ul>
+      </div>
+      <div class="ba-card after">
+        <div class="ba-label">Learning, with AI tools</div>
+        <ul>
+          <li>Your device listens and scores you instantly</li>
+          <li>Feedback arrives the second you play a note</li>
+          <li>The app shows exactly which notes were off</li>
+          <li>Practice any hour, any day, unlimited</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- THREE PILLARS -->
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>Three Ways AI Helps You Learn</h2>
+    <p>AI-powered learning tools generally do three things, and once you can name them, you'll spot them in every app in this space.</p>
+
+    <div class="pillar-grid">
+      <div class="pillar">
+        <div class="pl-emoji">📚</div>
+        <div class="pl-title">Learn the Basics</div>
+        <div class="pl-text">Learn chords, notes, and basic music skills step by step, broken into small, guided lessons instead of one overwhelming pile of information.</div>
+      </div>
+      <div class="pillar">
+        <div class="pl-emoji">🎧</div>
+        <div class="pl-title">Practice with Feedback</div>
+        <div class="pl-text">Practice songs with real-time feedback to improve faster. Your device's microphone or a connected instrument listens and scores your pitch and timing instantly.</div>
+      </div>
+      <div class="pillar">
+        <div class="pl-emoji">🏆</div>
+        <div class="pl-title">Build Confidence</div>
+        <div class="pl-text">Build confidence by playing along with guided lessons and challenges. Small wins and visible progress keep beginners motivated to keep coming back.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RHYTHM GAME -->
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>Feel What Real-Time Feedback Feels Like</h2>
+    <p>The core trick behind every app in this space is simple to describe and remarkable to experience: the software listens, compares what you did to what you were supposed to do, and tells you instantly. Try a tiny version of that feedback loop yourself. Tap the button in rhythm with the beat as each dot reaches the line.</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">The Real-Time Feedback Loop</div>
+        <div class="sh-tag">Rhythm Simulator</div>
+      </div>
+      <div class="sim-body">
+        <p class="rhythm-instructions">Press Start, then tap "HIT!" the instant each dot crosses the purple line. This is the exact same listen-compare-respond loop that AI practice apps run thousands of times per song.</p>
+        <div class="rhythm-track" id="rhythmTrack">
+          <div class="hit-zone"></div>
+        </div>
+        <div class="rhythm-feedback-row" id="rhythmFeedbackRow"></div>
+        <button class="rhythm-btn" id="hitBtn" disabled>HIT!</button>
+        <div class="rhythm-score" id="rhythmScore">Press Start to begin</div>
+        <button class="rhythm-startbtn" id="rhythmStart">Start</button>
+      </div>
+    </div>
+
+    <div class="callout"><b>That's the whole trick, scaled up.</b> A real AI learning app runs this exact listen-compare-respond loop continuously while you play an entire song, checking every single note's pitch and timing, not just one beat every few seconds like our simplified version.</div>
+  </section>
+
+  <!-- TOOL EXPLORER -->
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>Real Tools Doing This Right Now</h2>
+    <p>This isn't a future idea, it's already a crowded, competitive category of real apps. Tap each one to see what it's known for.</p>
+
+    <div class="tool-grid" id="toolGrid"></div>
+    <p class="tap-hint">Tap a card to expand it</p>
+  </section>
+
+  <!-- WHY IT MATTERS -->
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>What AI Can't Do (Yet)</h2>
+    <p>Before you assume these tools replace teachers entirely, here's an honest limit worth knowing: AI practice apps are excellent at scoring pitch and timing, but they generally can't watch your hand posture, correct your breathing technique, or make the artistic judgment calls a real teacher makes about phrasing and expression. Most experts in this space describe the best setup as AI apps for daily practice, paired with occasional check-ins from a real teacher for everything a microphone can't see.</p>
+    <p>That combination, unlimited AI-guided practice plus periodic human expertise, is quickly becoming the new normal for how people learn instruments.</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="fade">
+    <span class="section-num">06</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">What is the main "practice problem" that AI learning apps solve?</div>
+      <button class="quiz-opt" data-c="0">Beginners don't have access to any instruments</button>
+      <button class="quiz-opt" data-c="1">Beginners practicing alone have no way to know if they're playing correctly until their next lesson</button>
+      <button class="quiz-opt" data-c="0">Beginners already know exactly what to fix</button>
+      <div class="quiz-explain">Without a teacher present, solo practice is often guesswork. AI apps close that gap by scoring your playing the instant you play it.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">According to this article, what is a real limitation of today's AI practice apps?</div>
+      <button class="quiz-opt" data-c="0">They cannot listen to any instrument at all</button>
+      <button class="quiz-opt" data-c="1">They can't watch hand posture or make artistic judgment calls about expression the way a human teacher can</button>
+      <button class="quiz-opt" data-c="0">They only work for piano and no other instrument</button>
+      <div class="quiz-explain">AI apps are strong at scoring pitch and timing, but posture correction and artistic judgment still benefit from a real teacher's eye and ear.</div>
+    </div>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>AI learning apps help with three things: teaching basics step by step, giving real-time feedback during practice, and building confidence through guided challenges.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>The core technology is a listen-compare-respond loop: the app hears you play, compares it to the correct note and timing, and tells you instantly.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>Real apps like Yousician, Simply Piano, Flowkey, Skoove, and Melodics already do this today, using microphone or MIDI input to score pitch and timing.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>AI apps are practice companions, not full replacements for teachers, since posture and artistic expression still need a human eye and ear.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sources fade">
+    <div class="src-label">Sources</div>
+    <ul>
+      <li>Songscription AI, "Best AI Tools for Music Education in 2026" &mdash; <a href="https://www.songscription.ai/blog/best-ai-tools-for-music-education-2026" target="_blank" rel="noopener">https://www.songscription.ai/blog/best-ai-tools-for-music-education-2026</a></li>
+      <li>HackerNoon, "Best Piano Learning Apps in 2026: An In-Depth Comparison of Music Education Technology" &mdash; <a href="https://hackernoon.com/best-piano-learning-apps-in-2026-an-in-depth-comparison-of-music-education-technology" target="_blank" rel="noopener">https://hackernoon.com/best-piano-learning-apps-in-2026-an-in-depth-comparison-of-music-education-technology</a></li>
+      <li>ToolDirectory.ai, Yousician platform overview &mdash; <a href="https://tooldirectory.ai/tools/yousician" target="_blank" rel="noopener">https://tooldirectory.ai/tools/yousician</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(el=>observer.observe(el));
+
+/* ---------- rhythm game ---------- */
+const track=document.getElementById('rhythmTrack');
+const hitBtn=document.getElementById('hitBtn');
+const startBtn=document.getElementById('rhythmStart');
+const scoreEl=document.getElementById('rhythmScore');
+const fbRow=document.getElementById('rhythmFeedbackRow');
+let beatTimer=null, moveTimer=null, activeBeats=[], score=0, totalBeats=0, running=false;
+const TRACK_WIDTH=null;
+
+function spawnBeat(){
+  const dot=document.createElement('div');
+  dot.className='beat-dot';
+  dot.textContent='♪';
+  dot.style.right='-40px';
+  track.appendChild(dot);
+  const beat={el:dot,pos:0,judged:false};
+  activeBeats.push(beat);
+  totalBeats++;
+}
+
+function tick(){
+  const trackWidth=track.clientWidth;
+  activeBeats.forEach(b=>{
+    b.pos+=trackWidth*0.014;
+    b.el.style.right=(b.pos-40)+'px';
+    if(b.pos>trackWidth+60 && !b.judged){
+      b.judged=true;
+      showFeedback('miss','Missed');
+      b.el.remove();
+    }
+  });
+  activeBeats=activeBeats.filter(b=>!b.judged);
+}
+
+function showFeedback(kind,label){
+  const tag=document.createElement('span');
+  tag.className='rf-tag '+kind;
+  tag.textContent=label;
+  fbRow.appendChild(tag);
+  setTimeout(()=>tag.remove(),1400);
+  updateScoreText();
+}
+function updateScoreText(){
+  scoreEl.innerHTML='Score: <b>'+score+'</b> / '+totalBeats+' beats hit';
+}
+
+hitBtn.addEventListener('click',()=>{
+  if(!running)return;
+  const trackWidth=track.clientWidth;
+  const zoneX=40;
+  let best=null,bestDist=9999;
+  activeBeats.forEach(b=>{
+    if(b.judged)return;
+    const dist=Math.abs((trackWidth-b.pos)-(trackWidth-zoneX));
+    const dotX=trackWidth-b.pos;
+    const d2=Math.abs(dotX-zoneX);
+    if(d2<bestDist){bestDist=d2;best=b;}
+  });
+  if(best && bestDist<45){
+    best.judged=true;
+    if(bestDist<18){
+      score++;best.el.classList.add('hit-good');showFeedback('perfect','Perfect!');
+    }else{
+      score++;best.el.classList.add('hit-good');showFeedback('good','Good');
+    }
+    setTimeout(()=>best.el.remove(),200);
+  }
+});
+
+startBtn.addEventListener('click',()=>{
+  track.querySelectorAll('.beat-dot').forEach(d=>d.remove());
+  activeBeats=[];score=0;totalBeats=0;running=true;
+  hitBtn.disabled=false;
+  startBtn.textContent='Restart';
+  updateScoreText();
+  clearInterval(beatTimer);clearInterval(moveTimer);
+  let count=0;
+  beatTimer=setInterval(()=>{
+    if(count<8){spawnBeat();count++;}
+    else{
+      clearInterval(beatTimer);
+      setTimeout(()=>{
+        running=false;
+        hitBtn.disabled=true;
+        clearInterval(moveTimer);
+        scoreEl.innerHTML='Final score: <b>'+score+'</b> / '+totalBeats+' &mdash; '+(score>=6?"Great timing! That's the precision AI apps score in real songs.":"Try again, that's exactly the skill these apps help you build.");
+      },2200);
+    }
+  },900);
+  moveTimer=setInterval(tick,30);
+});
+updateScoreText();
+
+/* ---------- tool explorer ---------- */
+const tools=[
+ {emoji:"🎸",name:"Yousician",short:"Guitar, piano, bass, ukulele, singing",
+  detail:"Listens through your device's microphone (or a connected instrument) and scores pitch, accuracy, and timing in real time across five instruments, with thousands of gamified lessons and songs."},
+ {emoji:"🎹",name:"Simply Piano",short:"Beginner-friendly piano",
+  detail:"Uses your device's microphone to detect which piano notes you're playing and gives instant on-screen feedback, guiding total beginners through songs step by step."},
+ {emoji:"🎼",name:"Flowkey",short:"Learn piano through real songs",
+  detail:"Similar real-time note detection to Simply Piano, but built around learning actual songs at your own pace rather than a strict lesson ladder."},
+ {emoji:"🎵",name:"Skoove",short:"AI-guided piano for adults",
+  detail:"Combines real-time listening feedback with sheet music instruction from the very first lesson, and adapts lesson pacing based on how you're performing."},
+ {emoji:"🥁",name:"Melodics",short:"Beat-making, drums & finger drumming",
+  detail:"Built for producers and drummers: scores live note timing on a MIDI keyboard, pad controller, or electronic drums, focusing on rhythm and muscle memory rather than sheet music."}
+];
+const toolGrid=document.getElementById('toolGrid');
+tools.forEach(t=>{
+  const card=document.createElement('div');
+  card.className='tool-card';
+  card.setAttribute('role','button');
+  card.setAttribute('tabindex','0');
+  card.innerHTML='<div class="tc-emoji">'+t.emoji+'</div><div class="tc-name">'+t.name+'</div>'
+    +'<div class="tc-short">'+t.short+'</div><div class="tc-detail">'+t.detail+'</div>';
+  const toggle=()=>{const open=card.classList.toggle('open');card.setAttribute('aria-expanded',open?'true':'false');};
+  card.addEventListener('click',toggle);
+  card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+  toolGrid.appendChild(card);
+});
+
+/* quiz */
+document.querySelectorAll('.quiz-q').forEach(q=>{
+  const opts=q.querySelectorAll('.quiz-opt');
+  const explain=q.querySelector('.quiz-explain');
+  let done=false;
+  opts.forEach(o=>{
+    o.addEventListener('click',()=>{
+      if(done)return;
+      done=true;
+      opts.forEach(x=>{if(x.dataset.c==='1')x.classList.add('correct');});
+      if(o.dataset.c!=='1')o.classList.add('wrong');
+      explain.classList.add('show');
+    });
+  });
+});
+</script>
+</body>
+</html>
