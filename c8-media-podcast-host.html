@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Deep Dive: Media / Podcast Host | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --red:#C0392B; --red-light:#FBEDEB;
+    --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(32px,5.6vw,48px);font-weight:700;line-height:1.12;padding-top:64px;margin:0 0 14px;letter-spacing:-.01em;}
+  .role-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);
+    background:var(--purple-light);border-radius:999px;padding:7px 16px;margin-top:64px;
+  }
+  .role-badge + h1{padding-top:14px;}
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"\25CF  ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  .sim{border:2px solid var(--purple);border-radius:18px;overflow:hidden;margin:32px 0;background:#fff;}
+  .sim-head{background:var(--purple);color:#fff;padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .sim-head .sh-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;}
+  .sim-head .sh-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.18);padding:5px 12px;border-radius:999px;}
+  .sim-body{padding:28px;}
+
+  /* day in the life */
+  .clock-row{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap;}
+  .clock-btn{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:12px;
+    padding:9px 14px;border:2px solid var(--purple-mid);border-radius:999px;
+    background:#fff;cursor:pointer;transition:all .25s;color:var(--gray);
+  }
+  .clock-btn:hover{border-color:var(--purple);color:var(--purple);}
+  .clock-btn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .clock-btn.current{background:var(--purple);border-color:var(--purple);color:#fff;}
+  .day-scene{background:var(--purple-light);border-radius:14px;padding:24px 26px;}
+  .day-scene .ds-time{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--purple);margin-bottom:6px;}
+  .day-scene .ds-title{font-family:'Fraunces',serif;font-size:20px;font-weight:700;margin-bottom:8px;}
+  .day-scene .ds-text{font-size:15px;line-height:1.65;}
+  .day-nav{margin-top:18px;display:flex;gap:10px;}
+  .sim-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;
+    background:var(--purple);color:#fff;border:none;border-radius:999px;
+    padding:11px 26px;cursor:pointer;transition:background .3s,transform .15s;
+  }
+  .sim-btn:hover{background:var(--purple-dark);transform:translateY(-1px);}
+  .sim-btn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .sim-btn:disabled{opacity:.4;cursor:default;transform:none;}
+
+  /* education path */
+  .edu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:28px 0 8px;}
+  .edu-card{border:2px solid var(--purple-mid);border-radius:14px;padding:22px;cursor:pointer;background:#fff;transition:border-color .3s,box-shadow .3s,transform .15s;}
+  .edu-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(123,47,190,.12);}
+  .edu-card:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .edu-card.open{border-color:var(--purple);background:var(--purple-light);}
+  .edu-card .ec-emoji{font-size:24px;margin-bottom:4px;}
+  .edu-card .ec-name{font-family:'Fraunces',serif;font-size:19px;font-weight:700;line-height:1.25;}
+  .edu-card .ec-short{font-size:13.5px;color:var(--gray);margin-top:5px;}
+  .edu-card .ec-detail{display:none;font-size:14px;margin-top:12px;padding-top:12px;border-top:1.5px dashed var(--purple-mid);line-height:1.6;}
+  .edu-card.open .ec-detail{display:block;}
+  .tap-hint{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);text-align:center;margin-top:6px;}
+
+  /* pay meter */
+  .pay-box{border:2px solid var(--purple-mid);border-radius:16px;padding:30px;margin:28px 0;}
+  .pay-box .pb-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:20px;}
+  .pay-track{position:relative;height:14px;background:var(--purple-light);border-radius:99px;margin:44px 8px 56px;}
+  .pay-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,var(--purple-mid),var(--purple));border-radius:99px;transition:width 1.6s cubic-bezier(.2,.7,.3,1);}
+  .pay-mark{position:absolute;top:50%;transform:translate(-50%,-50%);}
+  .pay-mark .pm-dot{width:22px;height:22px;border-radius:50%;background:#fff;border:5px solid var(--purple);margin:0 auto;}
+  .pay-mark .pm-val{position:absolute;top:-38px;left:50%;transform:translateX(-50%);font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:var(--ink);white-space:nowrap;}
+  .pay-mark .pm-tag{position:absolute;top:26px;left:50%;transform:translateX(-50%);font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);white-space:nowrap;}
+  .pay-mark.median .pm-dot{border-color:var(--purple-dark);width:26px;height:26px;}
+  .pay-mark.median .pm-val{font-size:15px;color:var(--purple-dark);}
+  .pay-note{font-size:14px;color:var(--gray);background:var(--gray-light);border-radius:10px;padding:14px 18px;}
+  .pay-note b{color:var(--purple);}
+
+  /* perks */
+  .perk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:28px 0;}
+  .perk{background:var(--purple-light);border-radius:14px;padding:22px;}
+  .perk .pk-emoji{font-size:26px;margin-bottom:6px;}
+  .perk .pk-title{font-family:'Fraunces',serif;font-size:18px;font-weight:700;margin-bottom:6px;line-height:1.3;}
+  .perk .pk-text{font-size:14px;line-height:1.6;}
+
+  .ai-box{background:var(--ink);color:#fff;border-radius:16px;padding:30px 34px;margin:28px 0;}
+  .ai-box .ab-label{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#BC87E6;margin-bottom:10px;}
+  .ai-box p{font-size:15.5px;margin-bottom:12px;}
+  .ai-box p:last-child{margin-bottom:0;}
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+
+  .quiz-q{border:2px solid var(--purple-mid);border-radius:14px;padding:24px 26px;margin-bottom:18px;background:#fff;}
+  .quiz-q .qq-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--purple);letter-spacing:.12em;margin-bottom:6px;}
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--purple-mid);border-radius:10px;background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);}
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{display:none;font-size:14px;background:var(--gray-light);border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);}
+  .quiz-explain.show{display:block;}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+
+  .sources{margin-top:48px;border-top:2px solid var(--purple-mid);padding-top:24px;}
+  .sources .src-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+  .sources ul{list-style:none;}
+  .sources li{font-size:13.5px;color:var(--gray);margin-bottom:8px;line-height:1.55;}
+  .sources a{color:var(--purple);word-break:break-all;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <div class="role-badge">🎙️ Music Career Deep Dive</div>
+    <h1>Media / Podcast Host</h1>
+    <p class="lede">They interview the artists, review the albums, and tell the stories behind the songs. Music needs storytellers, and this career is for the people who can't stop talking about it.</p>
+    <div class="meta">
+      <span>Reading time: 7 min</span>
+      <span>Interactive: 2 activities</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>The Job, In Real Life</h2>
+    <p>Media hosts and music journalists are the industry's storytellers. They interview artists, review new releases, host radio and video shows, run podcasts, write articles, and help fans discover the humans behind the music. When you watch a great artist interview or read a review that puts an album into words, you're watching this career at work.</p><p>The lanes here are wide. <strong>Podcast hosts</strong> build shows around music conversations and interviews. <strong>Radio and video hosts</strong> present music programming on stations and channels. <strong>Music journalists and critics</strong> write reviews, features, and news for publications. <strong>Content creators</strong> build their own audiences reviewing and explaining music online, and this lane has exploded: some independent music channels now reach bigger audiences than legacy magazines.</p><p>What unites every lane: curiosity, preparation, and the interviewer's gift, making a guarded famous person feel safe enough to say something real.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>Spend a Day in Their Shoes</h2>
+    <p>Meet Theo, who runs a music interview podcast and writes for a music site. Click through an interview day.</p>
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">A Day With Theo, Music Podcast Host</div>
+        <div class="sh-tag">Day Simulator</div>
+      </div>
+      <div class="sim-body">
+        <div class="clock-row" id="clockRow"></div>
+        <div class="day-scene">
+          <div class="ds-time" id="dsTime"></div>
+          <div class="ds-title" id="dsTitle"></div>
+          <div class="ds-text" id="dsText"></div>
+        </div>
+        <div class="day-nav">
+          <button class="sim-btn" id="dayPrev">Back</button>
+          <button class="sim-btn" id="dayNext">Next</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>How Do You Get This Job?</h2>
+    <p>Two doors lead into this career, and the modern move is walking through both at once.</p>
+    <div class="edu-grid">
+      <div class="edu-card" role="button" tabindex="0" aria-expanded="false"><div class="ec-emoji">🎓</div><div class="ec-name">Formal education</div><div class="ec-short">A bachelor's degree is typical for traditional media</div><div class="ec-detail">The BLS lists a <b>bachelor's degree</b>, typically in communications, journalism, or broadcasting, as the standard credential for broadcast announcers and for news analysts and journalists. School newspapers, AV programs, and college radio stations are the classic proving grounds.</div></div><div class="edu-card" role="button" tabindex="0" aria-expanded="false"><div class="ec-emoji">🛤️</div><div class="ec-name">The creator door</div><div class="ec-short">Start your own show today</div><div class="ec-detail">Podcasting and online video have no gatekeeper: a decent microphone and free editing software launch a show this weekend. Many working hosts built audiences independently first, then got hired by networks, or never needed to be. Interviewing local artists is the universal first rung, and local artists say yes.</div></div><div class="edu-card" role="button" tabindex="0" aria-expanded="false"><div class="ec-emoji">💪</div><div class="ec-name">Skills that matter most</div><div class="ec-short">Curiosity, listening, and consistency</div><div class="ec-detail">Genuine curiosity (audiences smell fake interest instantly); real listening, because the best follow-up questions come from what the guest just said, not the script; clear writing and speaking; and consistency, since shows grow by publishing reliably for years, not weeks.</div></div>
+    </div>
+    <p class="tap-hint">Tap a card to expand it</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>What Does It Pay?</h2>
+    <p>Traditional media pay is documented by the BLS below, but this career now has two economies, so read the note for the creator side.</p>
+    <div class="pay-box">
+      <div class="pb-label">Broadcast Announcers & Radio DJs · Hourly Pay (BLS, May 2024)</div>
+      <div class="pay-track">
+        <div class="pay-fill" id="payFill"></div>
+        <div class="pay-mark" style="left:6%">
+          <div class="pm-val">$21.96/hr</div><div class="pm-dot"></div><div class="pm-tag">Median (announcers)</div>
+        </div>
+        <div class="pay-mark median" style="left:50%">
+          <div class="pm-val">$60,280/yr</div><div class="pm-dot"></div><div class="pm-tag">Median</div>
+        </div>
+        <div class="pay-mark" style="left:94%">
+          <div class="pm-val">Creator economy</div><div class="pm-dot"></div><div class="pm-tag">Uncapped lane</div>
+        </div>
+      </div>
+      <div class="pay-note"><b>What this means:</b> broadcast announcers and radio DJs earned a median of $21.96 per hour, while news analysts, reporters, and journalists earned a median of $60,280 per year (BLS, May 2024). The creator lane works differently: independent podcasters and channels earn through ads, sponsorships, and memberships, where income ranges from zero to life-changing depending on audience size. Most successful hosts stack both: a media job or freelance writing plus a growing show of their own.</div>
+    </div>
+    
+  </section>
+
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>Cool Things to Look Forward To</h2>
+    <div class="perk-grid">
+      <div class="perk"><div class="pk-emoji">🎤</div><div class="pk-title">Conversations with your heroes</div><div class="pk-text">Hosts sit across from the artists whose posters were on their walls, and get paid to ask them anything. Few careers deliver that specific dream.</div></div><div class="perk"><div class="pk-emoji">🗞️</div><div class="pk-title">First to everything</div><div class="pk-text">Advance album copies, early singles, invites to listen before the world hears. Music media lives permanently ahead of the release calendar.</div></div><div class="perk"><div class="pk-emoji">🏗️</div><div class="pk-title">You can own your platform</div><div class="pk-text">Unlike most careers here, hosts can build an asset they own: a show with a loyal audience is a business, a resume, and a media company in one.</div></div><div class="perk"><div class="pk-emoji">🧭</div><div class="pk-title">You shape what people hear</div><div class="pk-text">A great review or interview sends thousands of listeners to an artist. Tastemakers genuinely move the culture, and that influence compounds over years.</div></div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">06</span>
+    <h2>The AI Angle</h2>
+    <div class="ai-box">
+      <div class="ab-label">How AI Is Changing This Career</div>
+      <p>AI has become the host's production assistant: transcribing interviews instantly, editing audio, generating clips, drafting show notes and newsletters, and researching guests in minutes. Solo podcasters now ship work at a quality that used to require a small staff.</p><p>But this career also sits at the center of AI's biggest media question: synthetic voices can now read the news and even host generated shows. What they can't do is earn a nervous artist's trust, catch the flicker in a guest's answer and follow it somewhere unplanned, or bring lived taste to a review. As generated content floods the internet, audiences are gravitating harder toward hosts they trust as real humans, which quietly makes authenticity this career's growth stock.</p>
+    </div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">07</span>
+    <h2>Check Your Understanding</h2>
+    <div class="quiz-q"><div class="qq-num">QUESTION 1</div><div class="qq-text">What skill produced the breakthrough moment in Theo's interview?</div><button class="quiz-opt" data-c="0">Talking louder than the guest</button><button class="quiz-opt" data-c="1">Deep research: asking about a detail nobody else had ever asked about</button><button class="quiz-opt" data-c="0">Keeping the interview as short as possible</button><div class="quiz-explain">The unlocking question came from research hours: knowing the guest's work deeply enough to ask something new. Preparation is the host's hidden skill.</div></div><div class="quiz-q"><div class="qq-num">QUESTION 2</div><div class="qq-text">How does the 'creator economy' lane of this career differ from traditional media jobs?</div><button class="quiz-opt" data-c="0">Creators are paid a fixed government salary</button><button class="quiz-opt" data-c="1">Creators earn through ads, sponsorships, and memberships from an audience they own, with uncapped but unguaranteed income</button><button class="quiz-opt" data-c="0">Creators are not allowed to interview artists</button><div class="quiz-explain">Independent hosts own their platforms and monetize their audiences directly. The ceiling is uncapped, but nothing is guaranteed, which is why many hosts stack a traditional role alongside their own show.</div></div>
+  </section>
+
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway"><div class="t-icon">01</div><p>Media hosts and music journalists are the industry's storytellers, spanning podcasts, radio, video, criticism, and independent channels.</p></div><div class="takeaway"><div class="t-icon">02</div><p>A bachelor's degree in communications or journalism is the traditional credential, but the creator door is open today: anyone can launch a show, and local artists will say yes to interviews.</p></div><div class="takeaway"><div class="t-icon">03</div><p>Traditional media pays a $21.96/hour median for announcers and $60,280/year for journalists (BLS, May 2024), while the creator lane is uncapped but unguaranteed. Smart hosts stack both.</p></div><div class="takeaway"><div class="t-icon">04</div><p>AI handles transcription, editing, and research, while human trust, curiosity, and authenticity become the host's defining value.</p></div>
+    </div>
+    <div class="sources">
+      <div class="src-label">Sources</div>
+      <ul>
+        <li>U.S. Bureau of Labor Statistics, Occupational Outlook Handbook: Announcers and DJs (May 2024 wage data) &mdash; <a href="https://www.bls.gov/ooh/media-and-communication/announcers.htm" target="_blank" rel="noopener">https://www.bls.gov/ooh/media-and-communication/announcers.htm</a></li><li>U.S. Bureau of Labor Statistics, Occupational Outlook Handbook: Media and Communication Occupations (news analysts, reporters, and journalists median wage, May 2024) &mdash; <a href="https://www.bls.gov/ooh/media-and-communication" target="_blank" rel="noopener">https://www.bls.gov/ooh/media-and-communication</a></li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(el=>observer.observe(el));
+
+/* day sim */
+const day=[{"time": "9:00 AM", "title": "The deep research", "text": "Tomorrow's guest is a rising R&B singer. Theo listens to her whole catalog, reads every past interview, and writes questions nobody has asked her. Great interviews are won in research hours the audience never sees."}, {"time": "11:30 AM", "title": "The review", "text": "He drafts a review of a major album release for the music site: 700 words that capture what the record sounds like and whether it succeeds. Critics develop the rare skill of translating sound into language."}, {"time": "2:00 PM", "title": "The interview", "text": "The singer arrives guarded, giving practiced answers. Twenty minutes in, Theo asks about a lyric buried on track nine, and her eyes change: 'Nobody's ever asked me that.' The next thirty minutes are gold. That's hosting."}, {"time": "4:30 PM", "title": "The edit", "text": "Theo edits the recording: trimming rambles, tightening pace, clipping three short highlight moments for social. Modern hosts are their own producers, and the clips are how new listeners find the show."}, {"time": "6:00 PM", "title": "Publishing and community", "text": "Episode scheduled, clips posted, newsletter written. Then he answers listener comments, because a host's audience is a community, and communities grow when the host shows up."}];
+let dIndex=0;
+const clockRow=document.getElementById('clockRow');
+day.forEach((d,i)=>{
+  const b=document.createElement('button');
+  b.className='clock-btn'+(i===0?' current':'');
+  b.textContent=d.time;
+  b.addEventListener('click',()=>{dIndex=i;renderDay();});
+  clockRow.appendChild(b);
+});
+function renderDay(){
+  const d=day[dIndex];
+  document.getElementById('dsTime').textContent=d.time;
+  document.getElementById('dsTitle').textContent=d.title;
+  document.getElementById('dsText').textContent=d.text;
+  document.querySelectorAll('.clock-btn').forEach((b,i)=>b.classList.toggle('current',i===dIndex));
+  document.getElementById('dayPrev').disabled=(dIndex===0);
+  document.getElementById('dayNext').disabled=(dIndex===day.length-1);
+}
+document.getElementById('dayPrev').addEventListener('click',()=>{if(dIndex>0){dIndex--;renderDay();}});
+document.getElementById('dayNext').addEventListener('click',()=>{if(dIndex<day.length-1){dIndex++;renderDay();}});
+renderDay();
+
+/* edu cards */
+document.querySelectorAll('.edu-card').forEach(p=>{
+  const toggle=()=>{const open=p.classList.toggle('open');p.setAttribute('aria-expanded',open?'true':'false');};
+  p.addEventListener('click',toggle);
+  p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+});
+
+/* pay fill animation */
+const payObserver=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){document.getElementById('payFill').style.width='94%';payObserver.unobserve(e.target);}
+  });
+},{threshold:.4});
+payObserver.observe(document.querySelector('.pay-track'));
+
+/* quiz */
+document.querySelectorAll('.quiz-q').forEach(q=>{
+  const opts=q.querySelectorAll('.quiz-opt');
+  const explain=q.querySelector('.quiz-explain');
+  let done=false;
+  opts.forEach(o=>{
+    o.addEventListener('click',()=>{
+      if(done)return;
+      done=true;
+      opts.forEach(x=>{if(x.dataset.c==='1')x.classList.add('correct');});
+      if(o.dataset.c!=='1')o.classList.add('wrong');
+      explain.classList.add('show');
+    });
+  });
+});
+</script>
+</body>
+</html>
