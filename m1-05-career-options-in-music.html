@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Options in Music | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE;
+    --purple-dark:#5A1F8E;
+    --purple-light:#F3EAFB;
+    --purple-mid:#E2CFF5;
+    --ink:#1A1523;
+    --gray:#5C5566;
+    --gray-light:#F7F5FA;
+    --green:#1E8A5A;
+    --green-light:#E7F6EF;
+    --red:#C0392B;
+    --red-light:#FBEDEB;
+    --gold:#B07D2B;
+    --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:#FFFFFF;
+    color:var(--ink);
+    line-height:1.7;
+    font-size:17px;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+
+  h1{
+    font-family:'Fraunces',serif;
+    font-size:clamp(34px,6vw,52px);
+    font-weight:700;line-height:1.12;
+    padding-top:64px;
+    margin:0 0 14px;
+    letter-spacing:-.01em;
+  }
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);
+    margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;
+  }
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+
+  h2{
+    font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);
+    font-weight:600;line-height:1.2;margin:64px 0 16px;
+  }
+  p{margin-bottom:16px;}
+  .section-num{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);
+    font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;
+  }
+  .section-num + h2{margin-top:8px;}
+
+  /* ---------- rolling credits hook ---------- */
+  .credits-screen{
+    background:var(--ink);border-radius:18px;overflow:hidden;
+    margin:28px 0;position:relative;height:280px;
+  }
+  .credits-inner{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;color:#fff;
+    animation:rollUp 26s linear infinite;
+    padding-top:280px;
+  }
+  @keyframes rollUp{
+    0%{transform:translateY(0);}
+    100%{transform:translateY(-980px);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .credits-inner{animation:none;padding-top:20px;overflow:hidden;}
+    .credits-screen{height:auto;}
+    .credits-inner{position:static;}
+  }
+  .cr-line{text-align:center;margin-bottom:22px;}
+  .cr-role{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:#BC87E6;margin-bottom:3px;
+  }
+  .cr-name{font-family:'Fraunces',serif;font-size:20px;font-weight:600;}
+  .credits-screen .cs-label{
+    position:absolute;top:14px;left:18px;z-index:2;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:rgba(255,255,255,.5);
+  }
+
+  /* ---------- elevator ---------- */
+  .sim{
+    border:2px solid var(--purple);border-radius:18px;overflow:hidden;
+    margin:32px 0;background:#fff;
+  }
+  .sim-head{
+    background:var(--purple);color:#fff;padding:18px 26px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+  }
+  .sim-head .sh-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;}
+  .sim-head .sh-tag{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;background:rgba(255,255,255,.18);
+    padding:5px 12px;border-radius:999px;
+  }
+  .elevator{display:flex;min-height:420px;}
+  .panel{
+    background:var(--gray-light);border-right:2px solid var(--purple-mid);
+    padding:18px 12px;display:flex;flex-direction:column;gap:7px;flex-shrink:0;
+  }
+  .floor-btn{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;
+    width:52px;height:40px;border:2px solid var(--purple-mid);border-radius:10px;
+    background:#fff;cursor:pointer;transition:all .25s;color:var(--gray);
+    position:relative;
+  }
+  .floor-btn:hover{border-color:var(--purple);color:var(--purple);}
+  .floor-btn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .floor-btn.current{background:var(--purple);border-color:var(--purple);color:#fff;}
+  .floor-btn.visited::after{
+    content:"✓";position:absolute;top:-6px;right:-6px;
+    background:var(--green);color:#fff;border-radius:50%;
+    width:16px;height:16px;font-size:10px;line-height:16px;
+  }
+  .floor-view{padding:26px 28px;flex:1;}
+  .fv-floor{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:6px;
+  }
+  .fv-emoji{font-size:36px;margin-bottom:4px;}
+  .fv-name{font-family:'Fraunces',serif;font-size:26px;font-weight:700;margin-bottom:8px;}
+  .fv-question{
+    background:var(--purple-light);border-radius:10px;padding:12px 16px;
+    font-size:14.5px;font-style:italic;color:var(--purple-dark);margin-bottom:14px;
+  }
+  .fv-desc{font-size:15px;margin-bottom:14px;}
+  .fv-day{
+    background:var(--gray-light);border-radius:10px;padding:14px 18px;font-size:14px;
+  }
+  .fv-day .fd-label{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--gray);margin-bottom:5px;
+  }
+  .elevator-progress{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);
+    padding:0 28px 20px;
+  }
+  .elevator-progress b{color:var(--purple);}
+  @media (max-width:560px){
+    .elevator{flex-direction:column;}
+    .panel{flex-direction:row;flex-wrap:wrap;border-right:none;border-bottom:2px solid var(--purple-mid);}
+  }
+
+  /* ---------- hotline game ---------- */
+  .phone-card{
+    background:var(--purple-light);border-radius:14px;padding:24px 26px;margin-bottom:20px;
+  }
+  .phone-card .pc-label{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .ring{display:inline-block;animation:ring 1.2s ease infinite;}
+  @keyframes ring{0%,100%{transform:rotate(0);}10%{transform:rotate(14deg);}20%{transform:rotate(-12deg);}30%{transform:rotate(10deg);}40%{transform:rotate(-8deg);}50%{transform:rotate(0);}}
+  .phone-card .pc-text{font-size:16px;line-height:1.65;font-style:italic;}
+  .guess-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px;}
+  .guess-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:13.5px;
+    padding:13px 8px;border:2px solid var(--purple-mid);border-radius:12px;
+    background:#fff;cursor:pointer;transition:all .25s;color:var(--ink);
+  }
+  .guess-btn:hover{border-color:var(--purple);background:var(--purple-light);}
+  .guess-btn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .guess-btn.correct{background:var(--green-light);border-color:var(--green);color:var(--green);}
+  .guess-btn.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .guess-feedback{
+    margin-top:16px;border-radius:10px;padding:14px 18px;font-size:15px;display:none;
+  }
+  .guess-feedback.good{display:block;background:var(--green-light);color:var(--green);}
+  .guess-feedback.bad{display:block;background:var(--red-light);color:var(--red);}
+  .guess-score{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gray);margin-top:16px;
+  }
+  .guess-score b{color:var(--purple);}
+  .sim-body{padding:28px;}
+
+  /* ---------- career matcher ---------- */
+  .match-q{margin-bottom:22px;}
+  .match-q .mq-label{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;
+  }
+  .match-q .mq-text{font-weight:700;font-size:16px;margin-bottom:12px;}
+  .chip-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{
+    font-family:'DM Sans',sans-serif;font-weight:500;font-size:14px;
+    padding:10px 18px;border:1.5px solid var(--purple-mid);border-radius:999px;
+    background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);
+  }
+  .chip:hover{border-color:var(--purple);}
+  .chip:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .chip.selected{background:var(--purple);border-color:var(--purple);color:#fff;font-weight:700;}
+  .match-result{
+    display:none;margin-top:8px;background:var(--purple-light);
+    border-radius:14px;padding:24px 28px;animation:pop .4s ease;
+  }
+  .match-result.show{display:block;}
+  @keyframes pop{0%{transform:scale(.97);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  .match-result .mr-label{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;
+  }
+  .match-result .mr-career{
+    font-family:'Fraunces',serif;font-size:24px;font-weight:700;margin-bottom:6px;
+  }
+  .match-result .mr-why{font-size:15px;margin-bottom:12px;}
+  .match-result .mr-second{font-size:14px;color:var(--gray);}
+  .match-result .mr-second b{color:var(--purple);}
+  .match-note{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:12px;
+  }
+
+  .callout{
+    background:var(--gold-light);border-left:5px solid var(--gold);
+    border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;
+  }
+  .callout b{color:var(--gold);}
+
+  .takeaways{
+    background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;
+  }
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;
+    background:rgba(255,255,255,.16);border-radius:8px;
+    min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;margin-top:2px;
+  }
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="fade">
+    <h1>Career Options in Music</h1>
+    <p class="lede">There are a lot more people involved in that hit song than you see. Today, you get the backstage pass: a tour of eight careers, a crisis hotline to run, and a matcher that finds where you might fit.</p>
+    <div class="meta">
+      <span>Reading time: 7 min</span>
+      <span>Interactive: 3 activities</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <!-- HOOK: CREDITS -->
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>Movies Roll Credits. Songs Should Too.</h2>
+    <p>When a movie ends, hundreds of names scroll up the screen. Every one of them helped make it. Songs don't get a credits screen, but if they did, it might look something like this:</p>
+
+    <div class="credits-screen" aria-label="Rolling credits showing music careers">
+      <div class="cs-label">If songs had credits...</div>
+      <div class="credits-inner">
+        <div class="cr-line"><div class="cr-role">Written, sung &amp; performed by</div><div class="cr-name">The Artist</div></div>
+        <div class="cr-line"><div class="cr-role">Beat &amp; sound shaped by</div><div class="cr-name">The Producer &amp; Sound Engineer</div></div>
+        <div class="cr-line"><div class="cr-role">Tours &amp; meetings organized by</div><div class="cr-name">The Agent &amp; Manager</div></div>
+        <div class="cr-line"><div class="cr-role">Released &amp; sold by</div><div class="cr-name">The Record Label</div></div>
+        <div class="cr-line"><div class="cr-role">Photoshoot &amp; music video by</div><div class="cr-name">The Photographer &amp; Videographer</div></div>
+        <div class="cr-line"><div class="cr-role">Played at parties &amp; on radio by</div><div class="cr-name">The DJ</div></div>
+        <div class="cr-line"><div class="cr-role">Fans &amp; promotion handled by</div><div class="cr-name">The Marketing Team</div></div>
+        <div class="cr-line"><div class="cr-role">Artist interviews by</div><div class="cr-name">The Media &amp; Podcast Hosts</div></div>
+        <div class="cr-line"><div class="cr-role">And starring</div><div class="cr-name">You, somewhere in this list?</div></div>
+      </div>
+    </div>
+
+    <p>Every name on that list is a real career. Some pay salaries. Some pay per project. All of them are doors into the music industry, and most don't require you to sing a single note. Let's meet them all.</p>
+  </section>
+
+  <!-- ELEVATOR TOUR -->
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>Take the Elevator: 8 Floors, 8 Careers</h2>
+    <p>Imagine the whole music industry works in one building. Each career gets its own floor. Press the elevator buttons to visit them all. Your goal: light up all eight check marks.</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">The Music Industry Building</div>
+        <div class="sh-tag">Elevator Tour</div>
+      </div>
+      <div class="elevator">
+        <div class="panel" id="panel"></div>
+        <div class="floor-view">
+          <div class="fv-floor" id="fvFloor"></div>
+          <div class="fv-emoji" id="fvEmoji"></div>
+          <div class="fv-name" id="fvName"></div>
+          <div class="fv-question" id="fvQuestion"></div>
+          <div class="fv-desc" id="fvDesc"></div>
+          <div class="fv-day">
+            <div class="fd-label">A moment from their workday</div>
+            <div id="fvDay"></div>
+          </div>
+        </div>
+      </div>
+      <div class="elevator-progress">Floors visited: <b id="floorCount">1</b> of 8</div>
+    </div>
+  </section>
+
+  <!-- HOTLINE GAME -->
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>You Try It: Run the Industry Hotline</h2>
+    <p>Congratulations, you've been hired for a day. Your job: answer the phone at a music company and send each problem to the right professional. Five calls are coming in. Don't keep them waiting.</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">Who You Gonna Call?</div>
+        <div class="sh-tag">Hotline Challenge</div>
+      </div>
+      <div class="sim-body">
+        <div class="phone-card">
+          <div class="pc-label"><span class="ring">📞</span> <span id="callProgress">Incoming call 1 of 5</span></div>
+          <div class="pc-text" id="callText"></div>
+        </div>
+        <div class="guess-grid" id="callGrid"></div>
+        <div class="guess-feedback" id="callFeedback"></div>
+        <div class="guess-score">Calls routed correctly: <b id="callScore">0</b> / 5</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MATCHER -->
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>Find Your Fit</h2>
+    <p>Here's the question that actually matters: <strong>where might YOU fit in this building?</strong> Answer three quick questions honestly, no wrong answers, and we'll point you toward the careers worth a closer look. The next few articles dive deeper into each one, so consider this your preview guide.</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">The Career Matcher</div>
+        <div class="sh-tag">Self-Discovery</div>
+      </div>
+      <div class="sim-body">
+        <div class="match-q">
+          <div class="mq-label">Question 1</div>
+          <div class="mq-text">At a school event, where would you rather be?</div>
+          <div class="chip-row" data-q="0">
+            <button class="chip" data-v="spotlight">On stage in front of everyone</button>
+            <button class="chip" data-v="backstage">Behind the scenes making it run</button>
+            <button class="chip" data-v="crowd">In the crowd, hyping people up</button>
+          </div>
+        </div>
+        <div class="match-q">
+          <div class="mq-label">Question 2</div>
+          <div class="mq-text">Which of these sounds most fun to you?</div>
+          <div class="chip-row" data-q="1">
+            <button class="chip" data-v="create">Making something new from scratch</button>
+            <button class="chip" data-v="tech">Playing with software and gear</button>
+            <button class="chip" data-v="people">Talking to people and making deals</button>
+            <button class="chip" data-v="visual">Taking photos and shooting videos</button>
+          </div>
+        </div>
+        <div class="match-q">
+          <div class="mq-label">Question 3</div>
+          <div class="mq-text">Your friends would say you're the one who...</div>
+          <div class="chip-row" data-q="2">
+            <button class="chip" data-v="ideas">Always has creative ideas</button>
+            <button class="chip" data-v="organized">Keeps everyone organized</button>
+            <button class="chip" data-v="online">Knows what's trending online</button>
+            <button class="chip" data-v="talker">Can talk to absolutely anyone</button>
+          </div>
+        </div>
+        <div class="match-result" id="matchResult">
+          <div class="mr-label">Your strongest match</div>
+          <div class="mr-career" id="mrCareer"></div>
+          <div class="mr-why" id="mrWhy"></div>
+          <div class="mr-second" id="mrSecond"></div>
+        </div>
+        <div class="match-note" id="matchNote">Answer all 3 questions to see your match</div>
+      </div>
+    </div>
+
+    <div class="callout"><b>Remember:</b> this matcher is a conversation starter, not a fortune teller. Plenty of people in music started in one career and moved to another. The point is that there are eight doors into this industry, and singing is only one of them.</div>
+  </section>
+
+  <!-- WHY IT MATTERS -->
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>What's Next</h2>
+    <p>You've now met all eight careers at a high level: the artist, the producer and sound engineer, the agent and manager, the record label, the photographer and videographer, the DJ, the marketing team, and the media and podcast hosts.</p>
+    <p>In the next few articles, we'll visit these floors one at a time and go deeper: what the job really involves day to day, what skills it takes, and, because this is an AI course, <strong>how AI is changing each career right now.</strong> Some of these jobs are being supercharged by AI tools. Others are being reshaped in ways every future music professional should understand before choosing a path.</p>
+    <p>Keep your Career Matcher results in mind as we go. You might be reading about your future job.</p>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>Far more people are involved in a hit song than the artist you see. Eight major careers make it happen.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>Music careers split roughly into creators (artist, producer), business (agent, label), visuals and promotion (photographer, marketing), and performance and media (DJ, podcast host).</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>Most music careers don't require performing. Skills like organizing, filming, social media, and talking to people all have a place in the building.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>AI is changing every floor of this building, which is exactly what the next articles explore, career by career.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* fade in */
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(el=>observer.observe(el));
+
+/* ---------- elevator ---------- */
+const floors=[
+  {emoji:"🎤",name:"Artist / Musician",q:"Who writes, sings & performs the song?",
+   desc:"The face and voice of the music. Artists write, sing, and perform songs, and they carry the creative vision everyone else helps bring to life.",
+   day:"It's 11 p.m. in the studio. She's sung the same chorus nine times, and on the tenth take, something magic happens. That's the one."},
+  {emoji:"🎛️",name:"Producer & Sound Engineer",q:"Who makes the beat, shapes the music & sound with computer software?",
+   desc:"The architects of how a song sounds. Producers build beats and guide the song's direction; sound engineers use computer software to record, mix, and perfect every second of audio.",
+   day:"He plays the same 4 seconds of a beat 30 times, nudging one drum sound until it hits just right. Nobody will notice it. Everybody will feel it."},
+  {emoji:"📅",name:"Agent / Manager",q:"Who helped organize tours & schedules meetings?",
+   desc:"The organizers and dealmakers. Agents book shows and tours; managers guide the artist's whole career, schedule meetings, and handle problems before the artist ever hears about them.",
+   day:"Three phone calls at once: a venue in Denver, a meeting request from a brand, and an artist who overslept. She solves all three before lunch."},
+  {emoji:"🏢",name:"Record Label",q:"Who sells the music & decides song release dates?",
+   desc:"The company behind the music. Labels pay for recording, decide when songs come out, and sell the music to the world. Signing with a label is a famous milestone in many artists' stories.",
+   day:"A team debates around a table: release the single in June or wait for August? Millions of streams may hang on getting this date right."},
+  {emoji:"🎥",name:"Photographer / Videographer",q:"Who did the photoshoot & shot the music video?",
+   desc:"The image makers. They shoot album covers, photoshoots, and music videos, creating the visuals that fans connect to a song forever.",
+   day:"Golden hour lasts 26 minutes. He has exactly that long to capture the album cover shot before the light is gone."},
+  {emoji:"🎚️",name:"DJ",q:"Who plays the music on the radio & at parties?",
+   desc:"The tastemakers. DJs choose and play music on the radio, at parties, and at clubs. A great DJ reads the room and knows the exact right song for the exact right moment.",
+   day:"The dance floor is fading. She senses it, blends in a track everyone forgot they loved, and in ten seconds the room explodes again."},
+  {emoji:"📣",name:"Marketing Team",q:"Who manages social media, responds to fans, & promotes new songs?",
+   desc:"The hype builders. Marketing teams run social media, respond to fans, plan promotions, and make sure that when a song drops, the whole world knows about it.",
+   day:"A fan's video using the new song is going viral. The team has one hour to ride the wave: reposts, comments, and a surprise from the artist."},
+  {emoji:"🎙️",name:"Media / Podcast Host",q:"Who interviewed the Artist/Musician?",
+   desc:"The storytellers. Hosts and journalists interview artists, review new music, and help fans discover the humans behind the songs.",
+   day:"Ten minutes before the interview, he rereads his notes and cuts his safest question. The best stories come from the brave ones."}
+];
+const panel=document.getElementById('panel');
+const visited=new Set([0]);
+let currentFloor=0;
+floors.forEach((f,i)=>{
+  const b=document.createElement('button');
+  b.className='floor-btn'+(i===0?' current visited':'');
+  b.textContent=(i+1);
+  b.setAttribute('aria-label','Visit floor '+(i+1)+': '+f.name);
+  b.addEventListener('click',()=>{
+    currentFloor=i;
+    visited.add(i);
+    document.querySelectorAll('.floor-btn').forEach((x,j)=>{
+      x.classList.toggle('current',j===i);
+      x.classList.toggle('visited',visited.has(j));
+    });
+    renderFloor();
+  });
+  panel.appendChild(b);
+});
+function renderFloor(){
+  const f=floors[currentFloor];
+  document.getElementById('fvFloor').textContent='Floor '+(currentFloor+1)+' of 8';
+  document.getElementById('fvEmoji').textContent=f.emoji;
+  document.getElementById('fvName').textContent=f.name;
+  document.getElementById('fvQuestion').textContent='"'+f.q+'"';
+  document.getElementById('fvDesc').textContent=f.desc;
+  document.getElementById('fvDay').textContent=f.day;
+  const count=document.getElementById('floorCount');
+  count.textContent=visited.size;
+  if(visited.size===floors.length){
+    document.querySelector('.elevator-progress').innerHTML='All <b>8</b> floors visited. You\'ve seen the whole building!';
+  }
+}
+renderFloor();
+
+/* ---------- hotline ---------- */
+const calls=[
+  {text:"\"Hi, this is a venue in Atlanta. We'd love to book your artist for a show in October, and we need someone to negotiate the date and the payment. Who handles that?\"",
+   answer:"Agent / Manager",why:"Booking shows and negotiating deals is exactly what agents and managers do."},
+  {text:"\"Hey, the new single sounds amazing, but the album cover shoot fell through and the music video still isn't filmed. We need visuals, fast!\"",
+   answer:"Photographer / Videographer",why:"Photoshoots and music videos belong to the photographer and videographer."},
+  {text:"\"This is the artist. I recorded my vocals but the track sounds messy, the drums are drowning out my voice, and it just doesn't sound professional yet.\"",
+   answer:"Producer & Sound Engineer",why:"Balancing sounds and making a track professional is studio work for the producer and sound engineer."},
+  {text:"\"We're throwing the biggest back-to-school party of the year, and we need someone who can keep 500 people dancing for four hours straight.\"",
+   answer:"DJ",why:"Reading a crowd and playing the right music at parties is the DJ's specialty."},
+  {text:"\"The new song drops Friday and almost nobody knows about it! We need buzz on social media, posts, fan replies, everything. Who do I talk to?\"",
+   answer:"Marketing Team",why:"Promoting new songs and managing social media is the marketing team's whole job."}
+];
+const callOptions=["Artist / Musician","Producer & Sound Engineer","Agent / Manager","Record Label","Photographer / Videographer","DJ","Marketing Team","Media / Podcast Host"];
+let cIndex=0,cScore=0,cAnswered=false;
+const callGrid=document.getElementById('callGrid');
+callOptions.forEach(o=>{
+  const b=document.createElement('button');
+  b.className='guess-btn';
+  b.textContent=o;
+  b.dataset.g=o;
+  b.addEventListener('click',()=>{
+    if(cAnswered)return;
+    cAnswered=true;
+    const c=calls[cIndex];
+    document.querySelectorAll('#callGrid .guess-btn').forEach(x=>{
+      x.disabled=true;
+      if(x.dataset.g===c.answer)x.classList.add('correct');
+    });
+    const fb=document.getElementById('callFeedback');
+    if(o===c.answer){
+      cScore++;
+      document.getElementById('callScore').textContent=cScore;
+      fb.className='guess-feedback good';
+      fb.textContent='Call routed! '+c.why;
+    }else{
+      b.classList.add('wrong');
+      fb.className='guess-feedback bad';
+      fb.textContent='They got transferred back. '+c.why;
+    }
+    setTimeout(()=>{
+      if(cIndex<calls.length-1){cIndex++;renderCall();}
+      else{
+        document.getElementById('callProgress').textContent='Shift complete';
+        document.getElementById('callText').textContent='You routed '+cScore+' of 5 calls correctly. '+(cScore>=4?'The company wants to hire you full time.':'Not bad for day one. Take another lap around the building and try again.');
+        fb.className='guess-feedback';
+        callGrid.style.display='none';
+        document.querySelector('.ring').style.animation='none';
+      }
+    },2800);
+  });
+  callGrid.appendChild(b);
+});
+function renderCall(){
+  const c=calls[cIndex];
+  document.getElementById('callProgress').textContent='Incoming call '+(cIndex+1)+' of 5';
+  document.getElementById('callText').textContent=c.text;
+  document.getElementById('callFeedback').className='guess-feedback';
+  document.querySelectorAll('#callGrid .guess-btn').forEach(b=>{b.className='guess-btn';b.disabled=false;});
+  cAnswered=false;
+}
+renderCall();
+
+/* ---------- career matcher ---------- */
+const answers=[null,null,null];
+const careerScores={
+  "Artist / Musician":{spotlight:3,create:3,ideas:2},
+  "Producer & Sound Engineer":{backstage:2,tech:3,create:1,ideas:1},
+  "Agent / Manager":{backstage:2,people:3,organized:3,talker:1},
+  "Record Label":{backstage:2,people:2,organized:2},
+  "Photographer / Videographer":{backstage:1,visual:3,ideas:2},
+  "DJ":{crowd:3,spotlight:1,tech:1,online:1},
+  "Marketing Team":{crowd:2,online:3,people:1,ideas:1},
+  "Media / Podcast Host":{spotlight:1,crowd:1,talker:3,people:1}
+};
+const careerBlurbs={
+  "Artist / Musician":"You want the spotlight and you love creating. The artist's path is demanding, but for people wired like you, nothing else compares.",
+  "Producer & Sound Engineer":"You like building things behind the scenes, especially with technology. Producers and engineers are the quiet geniuses every hit song depends on.",
+  "Agent / Manager":"You're organized, you're good with people, and you get things done. Agents and managers run the business side that keeps whole careers on track.",
+  "Record Label":"You like the big picture: teams, plans, and decisions that shape what the world hears. Label work puts you in those rooms.",
+  "Photographer / Videographer":"You think in images. The industry always needs creative eyes to turn songs into covers, photos, and videos fans never forget.",
+  "DJ":"You feed off crowd energy and you know what makes people move. DJs turn that instinct into a career, from parties to radio to festivals.",
+  "Marketing Team":"You're plugged into what's trending and you know how attention works online. Marketing teams turn that skill into hit songs' success stories.",
+  "Media / Podcast Host":"You can talk to anyone, and people open up to you. Hosts and journalists build careers on exactly that gift."
+};
+document.querySelectorAll('.chip-row[data-q]').forEach(row=>{
+  const qi=parseInt(row.dataset.q);
+  row.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      row.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
+      chip.classList.add('selected');
+      answers[qi]=chip.dataset.v;
+      updateMatch();
+    });
+  });
+});
+function updateMatch(){
+  const note=document.getElementById('matchNote');
+  if(answers.some(a=>a===null)){
+    const left=answers.filter(a=>a===null).length;
+    note.textContent=left+' more question'+(left===1?'':'s')+' to go';
+    return;
+  }
+  const scores={};
+  Object.keys(careerScores).forEach(c=>{
+    scores[c]=0;
+    answers.forEach(a=>{
+      if(careerScores[c][a])scores[c]+=careerScores[c][a];
+    });
+  });
+  const ranked=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const top=ranked[0][0];
+  const second=ranked[1][0];
+  document.getElementById('mrCareer').textContent=top;
+  document.getElementById('mrWhy').textContent=careerBlurbs[top];
+  document.getElementById('mrSecond').innerHTML='Also worth exploring: <b>'+second+'</b>. Change any answer to see how your match shifts.';
+  document.getElementById('matchResult').classList.add('show');
+  note.textContent='Match complete. Try different answers to explore other paths.';
+}
+</script>
+</body>
+</html>
