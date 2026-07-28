@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Independent vs. Signed Artists | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --red:#C0392B; --red-light:#FBEDEB;
+    --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(32px,6vw,50px);font-weight:700;line-height:1.12;padding-top:64px;margin:0 0 14px;letter-spacing:-.01em;}
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  /* vs definition panel */
+  .vs-panel{border:2px solid var(--purple);border-radius:18px;overflow:hidden;margin:28px 0;background:#fff;}
+  .vs-grid{display:grid;grid-template-columns:1fr auto 1fr;}
+  .vs-col{padding:26px 24px;}
+  .vs-col.indie{background:var(--purple-light);}
+  .vs-col.signed{background:var(--ink);color:#fff;}
+  .vs-divider{display:flex;align-items:center;justify-content:center;padding:0 12px;background:linear-gradient(180deg,var(--purple-light),var(--ink));}
+  .vs-divider .vs-text{
+    font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:13px;letter-spacing:.14em;
+    color:#fff;background:var(--purple);border-radius:50%;width:44px;height:44px;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .vs-label{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;}
+  .vs-col.indie .vs-label{color:var(--purple);}
+  .vs-col.signed .vs-label{color:#BC87E6;}
+  .vs-name{font-family:'Fraunces',serif;font-size:22px;font-weight:700;margin-bottom:10px;line-height:1.2;}
+  .vs-def{font-size:14.5px;line-height:1.6;}
+  .vs-def em{font-style:normal;font-weight:700;}
+  .vs-col.indie .vs-def em{color:var(--purple-dark);}
+  .vs-col.signed .vs-def em{color:#BC87E6;}
+  .vs-money{
+    margin-top:16px;padding-top:16px;border-top:1.5px dashed;font-size:13.5px;font-weight:700;
+  }
+  .vs-col.indie .vs-money{border-color:var(--purple-mid);color:var(--purple-dark);}
+  .vs-col.signed .vs-money{border-color:rgba(255,255,255,.25);color:#fff;}
+  @media (max-width:600px){
+    .vs-grid{grid-template-columns:1fr;}
+    .vs-divider{padding:12px 0;}
+  }
+
+  /* sim shell */
+  .sim{border:2px solid var(--purple);border-radius:18px;overflow:hidden;margin:32px 0;background:#fff;}
+  .sim-head{background:var(--purple);color:#fff;padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .sim-head .sh-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;}
+  .sim-head .sh-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.18);padding:5px 12px;border-radius:999px;}
+  .sim-body{padding:28px;}
+
+  /* revenue slider */
+  .slider-row{margin-bottom:8px;}
+  .slider-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+  .slider-val{font-family:'Fraunces',serif;font-size:30px;font-weight:700;color:var(--ink);margin-bottom:16px;}
+  input[type=range]{
+    width:100%;height:8px;border-radius:99px;background:var(--purple-mid);
+    -webkit-appearance:none;appearance:none;outline:none;margin-bottom:8px;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:26px;height:26px;border-radius:50%;
+    background:var(--purple);border:4px solid #fff;box-shadow:0 0 0 2px var(--purple);cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:18px;height:18px;border-radius:50%;background:var(--purple);border:4px solid #fff;
+    box-shadow:0 0 0 2px var(--purple);cursor:pointer;
+  }
+  .slider-ticks{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gray);margin-bottom:28px;}
+
+  .split-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:560px){.split-grid{grid-template-columns:1fr;}}
+  .split-card{border-radius:14px;padding:22px;}
+  .split-card.indie{background:var(--purple-light);}
+  .split-card.signed{background:var(--gray-light);}
+  .split-card .sc-label{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;}
+  .split-card.indie .sc-label{color:var(--purple);}
+  .split-card.signed .sc-label{color:var(--gray);}
+  .split-bar{height:34px;border-radius:10px;overflow:hidden;display:flex;margin-bottom:10px;background:#fff;border:1.5px solid var(--purple-mid);}
+  .split-seg{display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:#fff;transition:width .5s ease;white-space:nowrap;overflow:hidden;}
+  .split-seg.artist{background:var(--purple);}
+  .split-seg.label{background:var(--gray);}
+  .split-line{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px;}
+  .split-line b{font-family:'IBM Plex Mono',monospace;}
+  .split-total{margin-top:10px;padding-top:10px;border-top:1.5px dashed var(--purple-mid);font-weight:700;font-size:15px;color:var(--purple-dark);}
+  .split-card.signed .split-total{color:var(--ink);border-color:#ddd;}
+
+  /* sort game */
+  .expense-card{background:var(--purple-light);border-radius:14px;padding:22px 24px;margin-bottom:18px;text-align:center;}
+  .expense-card .ex-label{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;}
+  .expense-card .ex-name{font-family:'Fraunces',serif;font-size:22px;font-weight:700;}
+  .expense-card .ex-desc{font-size:14px;color:var(--gray);margin-top:6px;}
+  .expense-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .expense-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;padding:16px;
+    border:2px solid var(--purple-mid);border-radius:12px;background:#fff;cursor:pointer;
+    transition:all .25s;color:var(--ink);
+  }
+  .expense-btn:hover{border-color:var(--purple);background:var(--purple-light);}
+  .expense-btn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .expense-btn.correct{background:var(--green-light);border-color:var(--green);color:var(--green);}
+  .expense-btn.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .expense-feedback{margin-top:16px;border-radius:10px;padding:14px 18px;font-size:14.5px;display:none;}
+  .expense-feedback.good{display:block;background:var(--green-light);color:var(--green);}
+  .expense-feedback.bad{display:block;background:var(--red-light);color:var(--red);}
+  .expense-score{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gray);margin-top:16px;}
+  .expense-score b{color:var(--purple);}
+  .expense-progress{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin-bottom:14px;}
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+
+  .ai-box{background:var(--ink);color:#fff;border-radius:16px;padding:30px 34px;margin:28px 0;}
+  .ai-box .ab-label{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#BC87E6;margin-bottom:10px;}
+  .ai-box p{font-size:15.5px;margin-bottom:12px;}
+  .ai-box p:last-child{margin-bottom:0;}
+
+  .quiz-q{border:2px solid var(--purple-mid);border-radius:14px;padding:24px 26px;margin-bottom:18px;background:#fff;}
+  .quiz-q .qq-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--purple);letter-spacing:.12em;margin-bottom:6px;}
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--purple-mid);border-radius:10px;background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);}
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{display:none;font-size:14px;background:var(--gray-light);border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);}
+  .quiz-explain.show{display:block;}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <h1>Independent vs. Signed Artists</h1>
+    <p class="lede">Every artist eventually faces the same fork in the road. Do you stay independent and keep control, or sign with a label and gain support? There's no universally right answer, only trade-offs, and today you'll learn exactly what they are.</p>
+    <div class="meta">
+      <span>Reading time: 7 min</span>
+      <span>Interactive: 2 activities</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <!-- HOOK -->
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>Two Artists, Same Talent, Different Paths</h2>
+    <p>Picture two singers. Both are equally talented. Both write great songs. One of them uploads her music herself, pays for her own studio time, and posts every day to build her fan base. The other signs a contract with a giant record label that pays for everything and puts her songs on billboards.</p>
+    <p>Neither one is doing it wrong. They've simply chosen two different deals, and every deal in the music industry comes down to the same trade: <strong>who pays the bills, and who keeps the money.</strong></p>
+  </section>
+
+  <!-- DEFINITIONS -->
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>The Two Paths, Defined</h2>
+    <p>Here are the two terms you'll use for the rest of this article.</p>
+
+    <div class="vs-panel">
+      <div class="vs-grid">
+        <div class="vs-col indie">
+          <div class="vs-label">Path One</div>
+          <div class="vs-name">Independent Artist</div>
+          <div class="vs-def">A musician who <em>creates, produces, and distributes their music</em> without being signed to a major record label.</div>
+          <div class="vs-money">Artist pays bills &amp; keeps the majority of $</div>
+        </div>
+        <div class="vs-divider"><div class="vs-text">VS</div></div>
+        <div class="vs-col signed">
+          <div class="vs-label">Path Two</div>
+          <div class="vs-name">Signed Artist</div>
+          <div class="vs-def">A musician who <em>has a contract with a major record label</em> (like Sony, Universal, or Warner).</div>
+          <div class="vs-money">Record label pays bills and keeps the majority of $</div>
+        </div>
+      </div>
+    </div>
+
+    <p>Read that last line in each box again, because it's the whole article in one sentence. Independent artists pay their own way and keep most of what they earn. Signed artists get someone else to pay the bills, but that someone else keeps most of the money in return. It's not a gift. It's a trade.</p>
+  </section>
+
+  <!-- REVENUE SIMULATOR -->
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>See the Trade in Real Numbers</h2>
+    <p>Let's make that trade concrete. Imagine a song earns a certain amount of money this year, from streaming, downloads, and sales combined. Drag the slider to set how much the song earns, and watch how differently that money splits depending on which path the artist chose.</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">The Revenue Split Simulator</div>
+        <div class="sh-tag">Simulation</div>
+      </div>
+      <div class="sim-body">
+        <div class="slider-row">
+          <div class="slider-label">This song earns, this year:</div>
+          <div class="slider-val" id="sliderVal">$20,000</div>
+          <input type="range" id="revSlider" min="2000" max="200000" step="1000" value="20000">
+          <div class="slider-ticks"><span>$2,000</span><span>$200,000</span></div>
+        </div>
+
+        <div class="split-grid">
+          <div class="split-card indie">
+            <div class="sc-label">If She's Independent</div>
+            <div class="split-bar">
+              <div class="split-seg artist" id="indieArtistBar" style="width:85%">Artist</div>
+              <div class="split-seg label" id="indieCostBar" style="width:15%"></div>
+            </div>
+            <div class="split-line"><span>Artist keeps</span><b id="indieArtistVal"></b></div>
+            <div class="split-line"><span>Spent on distributor fees</span><b id="indieCostVal"></b></div>
+            <div class="split-total">She takes home most of it, but she paid for the studio, the mixing, and the marketing herself, before this money ever arrived.</div>
+          </div>
+          <div class="split-card signed">
+            <div class="sc-label">If She's Signed</div>
+            <div class="split-bar">
+              <div class="split-seg artist" id="signedArtistBar" style="width:20%">Artist</div>
+              <div class="split-seg label" id="signedLabelBar" style="width:80%">Label</div>
+            </div>
+            <div class="split-line"><span>Artist keeps</span><b id="signedArtistVal"></b></div>
+            <div class="split-line"><span>Label keeps</span><b id="signedLabelVal"></b></div>
+            <div class="split-total">The label keeps more of every dollar, but it already paid for her studio time, music video, and marketing campaign upfront.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout"><b>These numbers are realistic estimates, not one universal contract.</b> Real splits vary widely: independent artists using a distributor commonly keep roughly 85 to 100 percent of streaming revenue after small distribution fees, while traditional major-label deals have historically paid artists a royalty in the range of roughly 15 to 20 percent of revenue, since the label recoups its upfront investment first. Every contract is different, which is exactly why artists hire the entertainment lawyers and managers you met earlier in this course before signing anything.</div>
+  </section>
+
+  <!-- WHO PAYS FOR WHAT -->
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>You Try It: Who Pays for What?</h2>
+    <p>Here's the flip side of the money split: upfront costs. Making and promoting music isn't free, so for each expense below, guess who typically foots the bill: the independent artist herself, or the label, if she's signed. Six rounds.</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">Who's Footing the Bill?</div>
+        <div class="sh-tag">Sorting Challenge</div>
+      </div>
+      <div class="sim-body">
+        <div class="expense-progress" id="expProgress">Expense 1 of 6</div>
+        <div class="expense-card">
+          <div class="ex-label">Expense</div>
+          <div class="ex-name" id="expName"></div>
+          <div class="ex-desc" id="expDesc"></div>
+        </div>
+        <div class="expense-options">
+          <button class="expense-btn" data-who="indie">Independent Artist Pays</button>
+          <button class="expense-btn" data-who="label">Record Label Pays</button>
+        </div>
+        <div class="expense-feedback" id="expFeedback"></div>
+        <div class="expense-score">Score: <b id="expScore">0</b> / 6</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY IT MATTERS -->
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>So Which Path Is "Better"?</h2>
+    <p>By now you can probably guess the honest answer: <strong>it depends on the artist.</strong></p>
+    <p>Going independent makes sense for an artist who wants full creative control, is comfortable running a small business, and would rather grow slowly while keeping more of every dollar. Signing with a label makes sense for an artist who wants a team and a budget behind them immediately, and is willing to give up some control and a larger share of the money to get it.</p>
+    <p>There's also a middle path worth knowing: many artists sign with <strong>independent labels</strong> (smaller companies than the giant majors) or distribution deals that offer some support without giving up as much control or money. The music industry isn't really two doors. It's a whole hallway of them, and where an artist lands often changes over their career.</p>
+  </section>
+
+  <div class="ai-box fade">
+    <div class="ab-label">The AI Angle</div>
+    <p>AI is quietly tilting this whole decision. A big reason artists used to need a label was cost: studio time, mixing engineers, marketing teams, and video production were expensive. AI tools are now shrinking those costs fast, home recording software with AI mixing assistance, AI-powered marketing analytics, and affordable video editing tools let independent artists do more of what once required a label's budget.</p>
+    <p>That doesn't mean labels are disappearing. It means the trade is shifting. Independence is becoming more realistic for more artists every year, which is exactly why understanding this trade-off matters more now than it did a decade ago.</p>
+  </div>
+
+  <!-- QUIZ -->
+  <section class="fade">
+    <span class="section-num">06</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">What is an independent artist?</div>
+      <button class="quiz-opt" data-c="0">A musician who only performs solo, without a band</button>
+      <button class="quiz-opt" data-c="1">A musician who creates, produces, and distributes their music without being signed to a major record label</button>
+      <button class="quiz-opt" data-c="0">A musician who has never released any music</button>
+      <div class="quiz-explain">Independent artists handle their own creation, production, and distribution instead of relying on a major label to do it for them.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">Why do signed artists typically keep a smaller share of their music's revenue than independent artists?</div>
+      <button class="quiz-opt" data-c="0">Labels are required by law to keep most of the money</button>
+      <button class="quiz-opt" data-c="1">The label pays the upfront costs and takes on financial risk, so it keeps a larger share in return</button>
+      <button class="quiz-opt" data-c="0">Signed artists don't work as hard as independent artists</button>
+      <div class="quiz-explain">It's a trade: the label fronts the money for recording, promotion, and more, and keeps a bigger share of revenue because it took on that financial risk.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 3</div>
+      <div class="qq-text">Which artist would going independent likely suit best?</div>
+      <button class="quiz-opt" data-c="0">An artist who wants someone else to pay for everything and handle every decision</button>
+      <button class="quiz-opt" data-c="1">An artist who wants full creative control and is comfortable running their own small business</button>
+      <button class="quiz-opt" data-c="0">An artist who has never written a song before</button>
+      <div class="quiz-explain">Independence rewards artists who want control and are willing to handle the business side themselves in exchange for keeping more revenue.</div>
+    </div>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>Independent artists create, produce, and distribute their own music without a major label contract; signed artists have a contract with a major label like Sony, Universal, or Warner.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>It's a trade: whoever pays the upfront bills (the artist or the label) keeps the majority of the money afterward.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>Neither path is universally better. Independence suits control and a bigger share of smaller numbers; signing suits support and a smaller share of potentially bigger numbers.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>AI tools are lowering the cost of going independent, shifting more of the industry's power toward artists every year.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(el=>observer.observe(el));
+
+/* ---------- revenue slider ---------- */
+const slider=document.getElementById('revSlider');
+const sliderVal=document.getElementById('sliderVal');
+function fmt(n){return '$'+Math.round(n).toLocaleString('en-US');}
+function updateSplit(){
+  const total=parseInt(slider.value,10);
+  sliderVal.textContent=fmt(total);
+
+  const indieFeeRate=0.12; // distributor fee
+  const indieCost=total*indieFeeRate;
+  const indieArtist=total-indieCost;
+  document.getElementById('indieArtistBar').style.width=((indieArtist/total)*100)+'%';
+  document.getElementById('indieCostBar').style.width=((indieCost/total)*100)+'%';
+  document.getElementById('indieArtistVal').textContent=fmt(indieArtist);
+  document.getElementById('indieCostVal').textContent=fmt(indieCost);
+
+  const signedArtistRate=0.18; // artist royalty
+  const signedArtist=total*signedArtistRate;
+  const signedLabel=total-signedArtist;
+  document.getElementById('signedArtistBar').style.width=(signedArtistRate*100)+'%';
+  document.getElementById('signedLabelBar').style.width=((1-signedArtistRate)*100)+'%';
+  document.getElementById('signedArtistVal').textContent=fmt(signedArtist);
+  document.getElementById('signedLabelVal').textContent=fmt(signedLabel);
+}
+slider.addEventListener('input',updateSplit);
+updateSplit();
+
+/* ---------- who pays for what ---------- */
+const expenses=[
+ {name:"Recording Studio Time",desc:"Renting a professional studio and engineer to record an album.",who:"indie",why:"An independent artist pays for studio time out of pocket (or uses a home setup). A signed artist usually has this covered by their label's recording budget."},
+ {name:"A Nationwide Ad Campaign",desc:"Billboards, TV spots, and large-scale advertising for a new single.",who:"label",why:"Big-budget national campaigns are usually a major label's territory. This is exactly the kind of expensive marketing push labels provide in exchange for a larger revenue share."},
+ {name:"Social Media Posts",desc:"Posting clips, updates, and behind-the-scenes content online.",who:"indie",why:"This one is free either way, and it's a huge reason independent artists can compete: promotion no longer requires a big budget, just consistency."},
+ {name:"A Music Video With a Film Crew",desc:"Hiring a director, crew, and equipment for a high-budget video shoot.",who:"label",why:"Expensive video productions are typically financed by the label upfront, as part of the investment it expects to earn back from the artist's success."},
+ {name:"A Distributor Fee",desc:"A small fee or percentage paid to the service that uploads a song to Spotify, Apple Music, and other platforms.",who:"indie",why:"Independent artists pay this small fee directly to their distributor. It's usually a much smaller cost than a full label deal, which is why independent artists keep more overall."},
+ {name:"A Tour Bus and Crew for an Arena Tour",desc:"Transportation, lighting, sound, and staff for a large-scale national tour.",who:"label",why:"Large tours are hugely expensive to launch. Labels (or the artist's own advance from the label) often front this cost, then recoup it from ticket and merchandise revenue."}
+];
+let eIndex=0,eScore=0,eAnswered=false;
+function renderExpense(){
+  const e=expenses[eIndex];
+  document.getElementById('expProgress').textContent='Expense '+(eIndex+1)+' of '+expenses.length;
+  document.getElementById('expName').textContent=e.name;
+  document.getElementById('expDesc').textContent=e.desc;
+  document.getElementById('expFeedback').className='expense-feedback';
+  document.querySelectorAll('.expense-btn').forEach(b=>{b.className='expense-btn';b.disabled=false;});
+  eAnswered=false;
+}
+document.querySelectorAll('.expense-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(eAnswered)return;
+    eAnswered=true;
+    const e=expenses[eIndex];
+    const pick=btn.dataset.who;
+    document.querySelectorAll('.expense-btn').forEach(b=>{
+      b.disabled=true;
+      if(b.dataset.who===e.who)b.classList.add('correct');
+    });
+    const fb=document.getElementById('expFeedback');
+    if(pick===e.who){
+      eScore++;
+      document.getElementById('expScore').textContent=eScore;
+      fb.className='expense-feedback good';
+      fb.textContent='Correct! '+e.why;
+    }else{
+      btn.classList.add('wrong');
+      fb.className='expense-feedback bad';
+      fb.textContent='Not quite. '+e.why;
+    }
+    setTimeout(()=>{
+      if(eIndex<expenses.length-1){eIndex++;renderExpense();}
+      else{
+        document.getElementById('expProgress').textContent='Challenge complete';
+        document.getElementById('expName').textContent='You scored '+eScore+' of '+expenses.length;
+        document.getElementById('expDesc').textContent=eScore>=5?'Excellent. You clearly understand where the money in this industry actually flows.':'Good effort. Scroll up and review the Revenue Split Simulator, then try again anytime.';
+        fb.className='expense-feedback';
+        document.querySelectorAll('.expense-btn').forEach(b=>b.style.display='none');
+      }
+    },3200);
+  });
+});
+renderExpense();
+
+/* quiz */
+document.querySelectorAll('.quiz-q').forEach(q=>{
+  const opts=q.querySelectorAll('.quiz-opt');
+  const explain=q.querySelector('.quiz-explain');
+  let done=false;
+  opts.forEach(o=>{
+    o.addEventListener('click',()=>{
+      if(done)return;
+      done=true;
+      opts.forEach(x=>{if(x.dataset.c==='1')x.classList.add('correct');});
+      if(o.dataset.c!=='1')o.classList.add('wrong');
+      explain.classList.add('show');
+    });
+  });
+});
+</script>
+</body>
+</html>
