@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is the Music Industry? | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE;
+    --purple-dark:#5A1F8E;
+    --purple-light:#F3EAFB;
+    --purple-mid:#E2CFF5;
+    --ink:#1A1523;
+    --gray:#5C5566;
+    --gray-light:#F7F5FA;
+    --green:#1E8A5A;
+    --green-light:#E7F6EF;
+    --red:#C0392B;
+    --red-light:#FBEDEB;
+    --gold:#B07D2B;
+    --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:#FFFFFF;
+    color:var(--ink);
+    line-height:1.7;
+    font-size:17px;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+
+  /* ---------- fade in ---------- */
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+
+  /* ---------- header ---------- */
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--purple);font-weight:600;
+    display:flex;align-items:center;gap:10px;
+    padding-top:56px;
+  }
+  .eyebrow::after{content:"";height:1px;flex:1;background:var(--purple-mid);}
+  h1{
+    font-family:'Fraunces',serif;
+    font-size:clamp(34px,6vw,52px);
+    font-weight:700;line-height:1.12;
+    margin:18px 0 14px;
+    letter-spacing:-.01em;
+  }
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);
+    margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;
+  }
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+
+  h2{
+    font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);
+    font-weight:600;line-height:1.2;margin:64px 0 16px;
+  }
+  h3{font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin:32px 0 10px;}
+  p{margin-bottom:16px;}
+  .section-num{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);
+    font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;
+  }
+  .section-num + h2{margin-top:8px;}
+
+  /* ---------- definition card ---------- */
+  .definition{
+    background:var(--purple-light);
+    border-left:5px solid var(--purple);
+    border-radius:0 14px 14px 0;
+    padding:30px 34px;margin:36px 0;
+  }
+  .definition .label{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);
+    margin-bottom:10px;
+  }
+  .definition .text{
+    font-family:'Fraunces',serif;font-size:clamp(20px,3.4vw,25px);
+    font-weight:600;line-height:1.4;color:var(--ink);
+  }
+  .definition .text em{color:var(--purple);font-style:normal;}
+
+  /* ---------- credits reveal (hook) ---------- */
+  .credits-box{
+    border:2px solid var(--purple-mid);border-radius:16px;
+    padding:30px;margin:28px 0;background:#fff;
+  }
+  .credits-box .cb-head{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:6px;
+  }
+  .credits-box h3{margin:0 0 8px;}
+  .credits-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:18px 0 6px;}
+  .credit{
+    border:1.5px solid var(--purple-mid);border-radius:10px;
+    padding:12px 14px;cursor:pointer;background:var(--gray-light);
+    transition:background .3s,border-color .3s,transform .15s;
+    user-select:none;text-align:center;min-height:74px;
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  .credit:hover{transform:translateY(-2px);}
+  .credit .q{font-family:'IBM Plex Mono',monospace;font-size:20px;color:var(--purple);font-weight:600;}
+  .credit .role{display:none;font-weight:700;font-size:14px;line-height:1.35;}
+  .credit .job{display:none;font-size:12.5px;color:var(--gray);line-height:1.35;margin-top:3px;}
+  .credit.revealed{background:var(--purple-light);border-color:var(--purple);cursor:default;}
+  .credit.revealed .q{display:none;}
+  .credit.revealed .role,.credit.revealed .job{display:block;}
+  .credits-count{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gray);
+    margin-top:12px;
+  }
+  .credits-count b{color:var(--purple);font-size:16px;}
+  .credits-done{
+    display:none;margin-top:14px;background:var(--green-light);
+    border-radius:10px;padding:14px 18px;color:var(--green);font-weight:500;font-size:15px;
+  }
+  .credits-done.show{display:block;animation:pop .4s ease;}
+  @keyframes pop{0%{transform:scale(.96);opacity:0;}100%{transform:scale(1);opacity:1;}}
+
+  /* ---------- four pillars ---------- */
+  .pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:28px 0;}
+  .pillar{
+    border:2px solid var(--purple-mid);border-radius:14px;padding:22px 20px;
+    cursor:pointer;transition:border-color .3s,box-shadow .3s,transform .15s;
+    background:#fff;
+  }
+  .pillar:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(123,47,190,.12);}
+  .pillar.open{border-color:var(--purple);background:var(--purple-light);}
+  .pillar .p-num{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    color:var(--purple);letter-spacing:.12em;
+  }
+  .pillar .p-title{
+    font-family:'Fraunces',serif;font-size:23px;font-weight:700;margin:6px 0 4px;
+  }
+  .pillar .p-short{font-size:14px;color:var(--gray);}
+  .pillar .p-detail{
+    display:none;font-size:14px;margin-top:12px;padding-top:12px;
+    border-top:1.5px dashed var(--purple-mid);line-height:1.6;
+  }
+  .pillar.open .p-detail{display:block;}
+  .tap-hint{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);
+    text-align:center;margin-top:-8px;
+  }
+
+  /* ---------- journey simulation ---------- */
+  .sim{
+    border:2px solid var(--purple);border-radius:18px;overflow:hidden;
+    margin:32px 0;background:#fff;
+  }
+  .sim-head{
+    background:var(--purple);color:#fff;padding:18px 26px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+  }
+  .sim-head .sh-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;}
+  .sim-head .sh-tag{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;background:rgba(255,255,255,.18);
+    padding:5px 12px;border-radius:999px;
+  }
+  .sim-body{padding:28px;}
+  .progress-track{display:flex;gap:6px;margin-bottom:24px;}
+  .progress-seg{height:6px;flex:1;background:var(--purple-mid);border-radius:99px;transition:background .4s;}
+  .progress-seg.done{background:var(--purple);}
+  .stage-label{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:6px;
+  }
+  .stage-title{font-family:'Fraunces',serif;font-size:24px;font-weight:700;margin-bottom:10px;}
+  .stage-text{font-size:16px;margin-bottom:18px;min-height:0;}
+  .stage-people{
+    background:var(--gray-light);border-radius:12px;padding:16px 20px;margin-bottom:20px;
+  }
+  .stage-people .sp-label{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin-bottom:6px;
+  }
+  .stage-people .sp-list{font-size:14.5px;line-height:1.6;}
+  .sim-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;
+    background:var(--purple);color:#fff;border:none;border-radius:999px;
+    padding:13px 30px;cursor:pointer;transition:background .3s,transform .15s;
+  }
+  .sim-btn:hover{background:var(--purple-dark);transform:translateY(-1px);}
+  .sim-btn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .sim-btn.secondary{background:#fff;color:var(--purple);border:2px solid var(--purple);}
+  .sim-note{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:14px;
+  }
+
+  /* ---------- sorting game ---------- */
+  .sort-card{
+    background:var(--purple-light);border-radius:14px;padding:26px;
+    text-align:center;margin-bottom:20px;
+  }
+  .sort-card .sc-label{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;
+  }
+  .sort-card .sc-role{font-family:'Fraunces',serif;font-size:24px;font-weight:700;}
+  .sort-card .sc-desc{font-size:15px;color:var(--gray);margin-top:6px;}
+  .sort-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;}
+  .sort-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;
+    padding:14px;border:2px solid var(--purple-mid);border-radius:12px;
+    background:#fff;cursor:pointer;transition:all .25s;color:var(--ink);
+  }
+  .sort-btn:hover{border-color:var(--purple);background:var(--purple-light);}
+  .sort-btn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .sort-btn.correct{background:var(--green-light);border-color:var(--green);color:var(--green);}
+  .sort-btn.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .sort-feedback{
+    margin-top:16px;border-radius:10px;padding:14px 18px;font-size:15px;display:none;
+  }
+  .sort-feedback.good{display:block;background:var(--green-light);color:var(--green);}
+  .sort-feedback.bad{display:block;background:var(--red-light);color:var(--red);}
+  .sort-score{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gray);margin-top:16px;
+  }
+  .sort-score b{color:var(--purple);}
+
+  /* ---------- quiz ---------- */
+  .quiz-q{
+    border:2px solid var(--purple-mid);border-radius:14px;
+    padding:24px 26px;margin-bottom:18px;background:#fff;
+  }
+  .quiz-q .qq-num{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    color:var(--purple);letter-spacing:.12em;margin-bottom:6px;
+  }
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{
+    display:block;width:100%;text-align:left;
+    font-family:'DM Sans',sans-serif;font-size:15px;
+    padding:12px 16px;margin-bottom:8px;
+    border:1.5px solid var(--purple-mid);border-radius:10px;
+    background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);
+  }
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{
+    display:none;font-size:14px;background:var(--gray-light);
+    border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);
+  }
+  .quiz-explain.show{display:block;}
+
+  /* ---------- takeaways ---------- */
+  .takeaways{
+    background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;
+  }
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{
+    display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;
+  }
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;
+    background:rgba(255,255,255,.16);border-radius:8px;
+    min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;margin-top:2px;
+  }
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+
+  .callout{
+    background:var(--gold-light);border-left:5px solid var(--gold);
+    border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;
+  }
+  .callout b{color:var(--gold);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="fade">
+    <div class="eyebrow">AI in Music &middot; Module 1 &middot; Article 1</div>
+    <h1>What Is the Music Industry?</h1>
+    <p class="lede">Before we can talk about how AI is changing music, we need to answer a simpler question first: what is the music industry, and who is actually in it?</p>
+    <div class="meta">
+      <span>Reading time: 8 min</span>
+      <span>Interactive: 3 activities</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <!-- HOOK -->
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>Start With a Song You Love</h2>
+    <p>Think about your favorite song. Any song. The one you play on repeat.</p>
+    <p>Now here's a question most people never think about: <strong>how many people did it take to get that song into your ears?</strong></p>
+    <p>If you said "one, the artist," you're in for a surprise. Tap each card below to meet some of the people behind a single hit song.</p>
+
+    <div class="credits-box">
+      <div class="cb-head">Interactive &middot; Tap to Reveal</div>
+      <h3>Who's Behind One Song?</h3>
+      <div class="credits-grid" id="creditsGrid"></div>
+      <div class="credits-count">People revealed: <b id="creditCount">0</b> of 8</div>
+      <div class="credits-done" id="creditsDone">
+        That's 8 people, and that's the short list. Big songs can have 50 or more people working on them. Every one of those people has a job in the music industry.
+      </div>
+    </div>
+  </section>
+
+  <!-- DEFINITION -->
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>The Definition</h2>
+    <p>So what do we call this whole world of artists, helpers, and businesses? Here's the definition we'll use for this entire course. It's worth reading twice.</p>
+
+    <div class="definition">
+      <div class="label">Key Definition</div>
+      <div class="text">The music industry is all the people and businesses that work together to <em>create</em>, <em>record</em>, <em>share</em>, and <em>sell</em> music.</div>
+    </div>
+
+    <p>Notice the four action words: <strong>create, record, share, and sell.</strong> Those four words are a map of the entire industry. Every job in music, from a songwriter in Nashville to a marketing manager at a streaming company, fits into at least one of them.</p>
+    <p>Tap each one below to see what it really means.</p>
+
+    <div class="pillars">
+      <div class="pillar" role="button" tabindex="0" aria-expanded="false">
+        <div class="p-num">STAGE 1</div>
+        <div class="p-title">Create</div>
+        <div class="p-short">Making the music itself</div>
+        <div class="p-detail">This is where a song is born. Songwriters come up with the words. Composers and artists come up with the melody, which is the tune you hum. Producers help shape how the whole thing should sound.</div>
+      </div>
+      <div class="pillar" role="button" tabindex="0" aria-expanded="false">
+        <div class="p-num">STAGE 2</div>
+        <div class="p-title">Record</div>
+        <div class="p-short">Capturing it so it can be replayed</div>
+        <div class="p-detail">A song in someone's head can't be shared. Recording turns it into a file or a track that can be played over and over. Audio engineers run the equipment and make sure everything sounds clean and clear.</div>
+      </div>
+      <div class="pillar" role="button" tabindex="0" aria-expanded="false">
+        <div class="p-num">STAGE 3</div>
+        <div class="p-title">Share</div>
+        <div class="p-short">Getting it in front of listeners</div>
+        <div class="p-detail">A finished song is worthless if nobody hears it. Sharing means putting music on streaming apps, radio, social media, and playlists. Marketers, publicists, and playlist editors all work in this stage.</div>
+      </div>
+      <div class="pillar" role="button" tabindex="0" aria-expanded="false">
+        <div class="p-num">STAGE 4</div>
+        <div class="p-title">Sell</div>
+        <div class="p-short">Turning music into money</div>
+        <div class="p-detail">Music is also a business. Selling includes streaming payments, concert tickets, merchandise like t-shirts, and licensing, which means letting a movie or ad use a song for a fee. Managers and lawyers make sure artists get paid fairly.</div>
+      </div>
+    </div>
+    <p class="tap-hint">Tap a card to expand it</p>
+  </section>
+
+  <!-- JOURNEY SIM -->
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>Follow a Song's Journey</h2>
+    <p>The best way to understand the music industry is to follow one song all the way through it. Let's watch an imaginary song called <em>"Golden Hour"</em> travel from a bedroom in Chicago to headphones around the world.</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">The Journey of "Golden Hour"</div>
+        <div class="sh-tag">Simulation</div>
+      </div>
+      <div class="sim-body">
+        <div class="progress-track" id="progressTrack">
+          <div class="progress-seg"></div>
+          <div class="progress-seg"></div>
+          <div class="progress-seg"></div>
+          <div class="progress-seg"></div>
+          <div class="progress-seg"></div>
+        </div>
+        <div class="stage-label" id="stageLabel"></div>
+        <div class="stage-title" id="stageTitle"></div>
+        <div class="stage-text" id="stageText"></div>
+        <div class="stage-people">
+          <div class="sp-label">Industry people at work in this step</div>
+          <div class="sp-list" id="stagePeople"></div>
+        </div>
+        <button class="sim-btn" id="simNext">Start the journey</button>
+        <div class="sim-note" id="simNote">Step 0 of 5</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SORT GAME -->
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>You Try It: Sort the Jobs</h2>
+    <p>Now that you know the four stages, let's test it. We'll show you a real music industry job. Your task: decide which stage that person mostly works in. Ready?</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">Which Stage Is It?</div>
+        <div class="sh-tag">Sorting Challenge</div>
+      </div>
+      <div class="sim-body" id="sortBody">
+        <div class="sort-card">
+          <div class="sc-label" id="sortProgress">Job 1 of 6</div>
+          <div class="sc-role" id="sortRole"></div>
+          <div class="sc-desc" id="sortDesc"></div>
+        </div>
+        <div class="sort-options">
+          <button class="sort-btn" data-stage="Create">Create</button>
+          <button class="sort-btn" data-stage="Record">Record</button>
+          <button class="sort-btn" data-stage="Share">Share</button>
+          <button class="sort-btn" data-stage="Sell">Sell</button>
+        </div>
+        <div class="sort-feedback" id="sortFeedback"></div>
+        <div class="sort-score">Score: <b id="sortScore">0</b> / 6</div>
+      </div>
+    </div>
+
+    <div class="callout"><b>Heads up:</b> some jobs touch more than one stage. A producer helps create a song and record it. That's normal. In this challenge, pick the stage where the job spends most of its time.</div>
+  </section>
+
+  <!-- WHY IT MATTERS -->
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>Why This Matters for This Course</h2>
+    <p>Here's the big idea to carry forward: <strong>the music industry is a team sport.</strong> It's not just singers and rappers. It's engineers, marketers, lawyers, managers, playlist editors, and dozens of other roles most fans never see.</p>
+    <p>Why does that matter in a course about AI? Because AI isn't changing just one job in music. It's showing up in <em>every one of the four stages</em>:</p>
+    <p>AI tools now help people <strong>create</strong> melodies, <strong>record</strong> and clean up audio, <strong>share</strong> songs with the exact listeners who will love them, and <strong>sell</strong> music by predicting what will be popular next.</p>
+    <p>In the rest of this course, we'll walk through each stage and see exactly where AI helps, where it falls short, and where humans still make the call. But it all starts with the map you just learned: create, record, share, sell.</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="fade">
+    <span class="section-num">06</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">Which of these is the best definition of the music industry?</div>
+      <button class="quiz-opt" data-c="0">Famous singers and the songs they make</button>
+      <button class="quiz-opt" data-c="1">All the people and businesses that work together to create, record, share, and sell music</button>
+      <button class="quiz-opt" data-c="0">The companies that run streaming apps</button>
+      <div class="quiz-explain">The music industry is much bigger than artists or any single type of company. It's everyone who works together to create, record, share, and sell music.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">A playlist editor decides which new songs get added to a popular streaming playlist. Which stage do they mostly work in?</div>
+      <button class="quiz-opt" data-c="0">Create</button>
+      <button class="quiz-opt" data-c="0">Record</button>
+      <button class="quiz-opt" data-c="1">Share</button>
+      <button class="quiz-opt" data-c="0">Sell</button>
+      <div class="quiz-explain">Playlist editors help songs reach listeners, which is the heart of the Share stage. They don't make or record the music themselves.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 3</div>
+      <div class="qq-text">Why is the music industry called a "team sport" in this article?</div>
+      <button class="quiz-opt" data-c="0">Because musicians often play in bands</button>
+      <button class="quiz-opt" data-c="1">Because it takes many different people with different jobs to get one song to listeners</button>
+      <button class="quiz-opt" data-c="0">Because record companies compete against each other</button>
+      <div class="quiz-explain">Even one song can involve dozens of people: writers, engineers, marketers, lawyers, and more. No single person does it all alone.</div>
+    </div>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>The music industry is all the people and businesses that work together to create, record, share, and sell music.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>The four stages, create, record, share, and sell, are a map. Every music job fits into at least one of them.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>One song can involve dozens of people, most of whom never step on a stage.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>AI is showing up in all four stages, which is exactly what the rest of this course explores.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ---------- fade in on scroll ---------- */
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target);} });
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(el=>observer.observe(el));
+
+/* ---------- credits reveal ---------- */
+const credits=[
+  {role:"Songwriter",job:"Wrote the words and melody"},
+  {role:"Artist",job:"Performed and sang the song"},
+  {role:"Producer",job:"Shaped how the song sounds"},
+  {role:"Audio Engineer",job:"Recorded and cleaned up the sound"},
+  {role:"Session Musician",job:"Played the drums you hear"},
+  {role:"Marketing Manager",job:"Planned how fans would find it"},
+  {role:"Playlist Editor",job:"Added it to a big playlist"},
+  {role:"Music Lawyer",job:"Made sure everyone got paid fairly"}
+];
+const grid=document.getElementById('creditsGrid');
+let revealed=0;
+credits.forEach(c=>{
+  const d=document.createElement('div');
+  d.className='credit';
+  d.setAttribute('role','button');
+  d.setAttribute('tabindex','0');
+  d.setAttribute('aria-label','Tap to reveal a person behind the song');
+  d.innerHTML='<div class="q">?</div><div class="role">'+c.role+'</div><div class="job">'+c.job+'</div>';
+  const reveal=()=>{
+    if(d.classList.contains('revealed'))return;
+    d.classList.add('revealed');
+    revealed++;
+    document.getElementById('creditCount').textContent=revealed;
+    if(revealed===credits.length){document.getElementById('creditsDone').classList.add('show');}
+  };
+  d.addEventListener('click',reveal);
+  d.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();reveal();}});
+  grid.appendChild(d);
+});
+
+/* ---------- pillars ---------- */
+document.querySelectorAll('.pillar').forEach(p=>{
+  const toggle=()=>{
+    const open=p.classList.toggle('open');
+    p.setAttribute('aria-expanded',open?'true':'false');
+  };
+  p.addEventListener('click',toggle);
+  p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+});
+
+/* ---------- journey simulation ---------- */
+const stages=[
+  {label:"Waiting to begin",title:"A song is about to be born",text:"Press the button to follow \"Golden Hour\" from an idea to your headphones.",people:"Nobody yet. Just an idea waiting to happen."},
+  {label:"Stage 1 · Create",title:"A melody in a bedroom",text:"A 19-year-old in Chicago hums a melody into her phone at 1 a.m. Over two weeks, she and a songwriter friend turn it into a full song with verses and a chorus. A producer joins and suggests slowing the beat down. The song suddenly clicks.",people:"Artist · Songwriter · Producer"},
+  {label:"Stage 2 · Record",title:"Into the studio",text:"The team books a small recording studio. An audio engineer sets up microphones, records the vocals in twelve takes, and then mixes everything, which means balancing all the sounds so nothing is too loud or too quiet. Now the song exists as a file that can be played anywhere.",people:"Audio Engineer · Producer · Session Musicians"},
+  {label:"Stage 3 · Share",title:"Out into the world",text:"A distributor, which is a company that delivers music to streaming apps, uploads \"Golden Hour\" everywhere. A marketing manager plans a release day, posts short clips online, and pitches the song to playlist editors. One big playlist says yes. Streams jump from 800 a day to 90,000.",people:"Distributor · Marketing Manager · Playlist Editors · Publicist"},
+  {label:"Stage 4 · Sell",title:"The money comes in",text:"Streams turn into small payments that add up. A brand pays to use the song in an ad, which is called licensing. The artist's manager books her first paid shows, and fans buy t-shirts at the merch table. A music lawyer checks every contract so she's paid fairly.",people:"Manager · Music Lawyer · Booking Agent · Merch Team"},
+  {label:"Journey complete",title:"From bedroom to the world",text:"Count the people who touched this one song: at least a dozen, and that's a small release. That whole network of people and businesses, working across create, record, share, and sell? That's the music industry.",people:"Everyone above, working as one team."}
+];
+let step=0;
+const sLabel=document.getElementById('stageLabel'),
+      sTitle=document.getElementById('stageTitle'),
+      sText=document.getElementById('stageText'),
+      sPeople=document.getElementById('stagePeople'),
+      sBtn=document.getElementById('simNext'),
+      sNote=document.getElementById('simNote'),
+      segs=document.querySelectorAll('.progress-seg');
+function renderStage(){
+  const s=stages[step];
+  sLabel.textContent=s.label;
+  sTitle.textContent=s.title;
+  sText.textContent=s.text;
+  sPeople.textContent=s.people;
+  segs.forEach((seg,i)=>seg.classList.toggle('done',i<step));
+  sNote.textContent='Step '+step+' of 5';
+  if(step===0){sBtn.textContent='Start the journey';}
+  else if(step<stages.length-1){sBtn.textContent='Next step';}
+  else{sBtn.textContent='Restart journey';sBtn.classList.add('secondary');}
+}
+sBtn.addEventListener('click',()=>{
+  if(step===stages.length-1){step=0;sBtn.classList.remove('secondary');}
+  else{step++;}
+  renderStage();
+});
+renderStage();
+
+/* ---------- sorting game ---------- */
+const jobs=[
+  {role:"Songwriter",desc:"Writes the lyrics and melodies for new songs",stage:"Create",why:"Songwriters make the music itself. That's the Create stage."},
+  {role:"Audio Engineer",desc:"Runs the studio equipment and captures clean sound",stage:"Record",why:"Engineers turn live performances into files we can replay. That's Record."},
+  {role:"Marketing Manager",desc:"Plans how new songs reach fans on social media and playlists",stage:"Share",why:"Getting music in front of listeners is the Share stage."},
+  {role:"Music Lawyer",desc:"Reviews contracts and makes sure artists get paid fairly",stage:"Sell",why:"Contracts and payments live in the Sell stage, where music becomes money."},
+  {role:"Producer",desc:"Guides the overall sound and feel of a song as it's being made",stage:"Create",why:"Producers spend most of their time shaping the song itself, so Create is the best fit."},
+  {role:"Booking Agent",desc:"Sets up paid concerts and tours for artists",stage:"Sell",why:"Concert tickets are one of the biggest ways artists earn money, so this is Sell."}
+];
+let jobIndex=0,score=0,answered=false;
+const sortRole=document.getElementById('sortRole'),
+      sortDesc=document.getElementById('sortDesc'),
+      sortProgress=document.getElementById('sortProgress'),
+      sortFeedback=document.getElementById('sortFeedback'),
+      sortScoreEl=document.getElementById('sortScore'),
+      sortBtns=document.querySelectorAll('.sort-btn');
+function renderJob(){
+  const j=jobs[jobIndex];
+  sortRole.textContent=j.role;
+  sortDesc.textContent=j.desc;
+  sortProgress.textContent='Job '+(jobIndex+1)+' of '+jobs.length;
+  sortFeedback.className='sort-feedback';
+  sortBtns.forEach(b=>{b.className='sort-btn';b.disabled=false;});
+  answered=false;
+}
+sortBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(answered)return;
+    answered=true;
+    const j=jobs[jobIndex];
+    const pick=btn.dataset.stage;
+    sortBtns.forEach(b=>{
+      b.disabled=true;
+      if(b.dataset.stage===j.stage)b.classList.add('correct');
+    });
+    if(pick===j.stage){
+      score++;
+      sortScoreEl.textContent=score;
+      sortFeedback.className='sort-feedback good';
+      sortFeedback.textContent='Correct! '+j.why;
+    }else{
+      btn.classList.add('wrong');
+      sortFeedback.className='sort-feedback bad';
+      sortFeedback.textContent='Not quite. '+j.why;
+    }
+    setTimeout(()=>{
+      if(jobIndex<jobs.length-1){jobIndex++;renderJob();}
+      else{
+        sortProgress.textContent='Challenge complete';
+        sortRole.textContent='You scored '+score+' out of '+jobs.length+'!';
+        sortDesc.textContent=score>=5?'Excellent. You already think like an industry insider.':'Nice work. Review the four stages above and you\'ll nail it next time.';
+        sortFeedback.className='sort-feedback';
+        sortBtns.forEach(b=>b.style.display='none');
+      }
+    },2600);
+  });
+});
+renderJob();
+
+/* ---------- quiz ---------- */
+document.querySelectorAll('.quiz-q').forEach(q=>{
+  const opts=q.querySelectorAll('.quiz-opt');
+  const explain=q.querySelector('.quiz-explain');
+  let done=false;
+  opts.forEach(o=>{
+    o.addEventListener('click',()=>{
+      if(done)return;
+      done=true;
+      opts.forEach(x=>{
+        if(x.dataset.c==='1')x.classList.add('correct');
+      });
+      if(o.dataset.c!=='1')o.classList.add('wrong');
+      explain.classList.add('show');
+    });
+  });
+});
+</script>
+</body>
+</html>
