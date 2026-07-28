@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choosing Your Path | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(34px,6vw,52px);font-weight:700;line-height:1.12;padding-top:64px;margin:0 0 14px;letter-spacing:-.01em;}
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  h3{font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin:32px 0 10px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  /* two more doors */
+  .door-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin:28px 0;}
+  .door{border:2px solid var(--purple);border-radius:16px;overflow:hidden;background:#fff;}
+  .door-head{background:var(--purple-light);padding:20px 24px;display:flex;align-items:center;gap:12px;}
+  .door-head .dh-emoji{font-size:30px;}
+  .door-head .dh-name{font-family:'Fraunces',serif;font-size:21px;font-weight:700;}
+  .door-head .dh-new{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.12em;background:var(--purple);color:#fff;border-radius:999px;padding:4px 10px;margin-left:auto;}
+  .door-body{padding:22px 24px;}
+  .door-body p{font-size:14.5px;margin-bottom:14px;}
+  .door-stat{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start;}
+  .door-stat .ds-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--purple);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;min-width:78px;text-align:center;}
+  .door-stat .ds-text{font-size:13.5px;line-height:1.55;}
+  .door-perk{background:var(--gold-light);border-radius:10px;padding:12px 16px;font-size:13.5px;margin-top:6px;}
+  .door-perk b{color:var(--gold);}
+
+  /* comparison board */
+  .sim{border:2px solid var(--purple);border-radius:18px;overflow:hidden;margin:32px 0;background:#fff;}
+  .sim-head{background:var(--purple);color:#fff;padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .sim-head .sh-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;}
+  .sim-head .sh-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.18);padding:5px 12px;border-radius:999px;}
+  .sim-body{padding:28px;}
+  .sort-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;align-items:center;}
+  .sort-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-right:4px;}
+  .sort-btn{font-family:'DM Sans',sans-serif;font-weight:700;font-size:13.5px;padding:9px 18px;border:2px solid var(--purple-mid);border-radius:999px;background:#fff;cursor:pointer;transition:all .25s;color:var(--ink);}
+  .sort-btn:hover{border-color:var(--purple);}
+  .sort-btn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .sort-btn.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+  .board{display:flex;flex-direction:column;gap:9px;}
+  .row{display:grid;grid-template-columns:34px 1fr 110px;gap:12px;align-items:center;border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 16px;background:var(--gray-light);transition:transform .35s ease,opacity .35s;}
+  .row .r-rank{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:var(--purple);}
+  .row .r-main{min-width:0;}
+  .row .r-name{font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+  .row .r-name .new-pill{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.1em;background:var(--purple);color:#fff;border-radius:999px;padding:2px 7px;}
+  .row .r-bar{height:7px;background:var(--purple-mid);border-radius:99px;margin-top:7px;overflow:hidden;}
+  .row .r-fill{height:100%;background:linear-gradient(90deg,var(--purple-mid),var(--purple));border-radius:99px;transition:width .6s ease;}
+  .row .r-val{font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;color:var(--ink);text-align:right;line-height:1.4;}
+  .board-note{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--gray);margin-top:16px;line-height:1.6;}
+
+  /* action planner */
+  .plan-intro{font-size:15px;color:var(--gray);margin-bottom:18px;}
+  .pick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-bottom:8px;}
+  .pick-btn{font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;padding:12px 8px;border:2px solid var(--purple-mid);border-radius:12px;background:#fff;cursor:pointer;transition:all .25s;color:var(--ink);}
+  .pick-btn:hover{border-color:var(--purple);background:var(--purple-light);}
+  .pick-btn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .pick-btn.picked{background:var(--purple);border-color:var(--purple);color:#fff;}
+  .pick-note{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin:10px 0 0;}
+  .plan-result{display:none;margin-top:20px;}
+  .plan-result.show{display:block;animation:pop .4s ease;}
+  @keyframes pop{0%{transform:scale(.97);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  .plan-card{background:var(--purple-light);border-radius:14px;padding:22px 26px;margin-bottom:14px;}
+  .plan-card .pl-name{font-family:'Fraunces',serif;font-size:19px;font-weight:700;margin-bottom:8px;}
+  .plan-card .pl-step{display:flex;gap:10px;margin-bottom:8px;font-size:14px;line-height:1.55;}
+  .plan-card .pl-step .st-n{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;color:#fff;background:var(--purple);border-radius:6px;min-width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .plan-close{background:var(--green-light);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--green);}
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+
+  .sources{margin-top:48px;border-top:2px solid var(--purple-mid);padding-top:24px;}
+  .sources .src-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+  .sources ul{list-style:none;}
+  .sources li{font-size:13.5px;color:var(--gray);margin-bottom:8px;line-height:1.55;}
+  .sources a{color:var(--purple);word-break:break-all;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <h1>Choosing Your Path</h1>
+    <p class="lede">You've now met the careers behind the music. This is where it becomes personal: two final doors, one comparison board, and a plan you can actually start this month.</p>
+    <div class="meta">
+      <span>Reading time: 6 min</span>
+      <span>Interactive: 2 activities</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>Ten Doors Into One Industry</h2>
+    <p>Over the last several articles, you toured eight music careers in depth: the artist, the producer and engineer, the agent and manager, the record label, the photographer and videographer, the DJ, the marketing team, and the media host. Eight different personalities, eight different paths, one industry.</p>
+    <p>But before we compare them side by side, there are two more doors you should know about, and here's the honest truth: for many students, these two might be the most realistic music careers on the entire list.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>Two More Doors</h2>
+
+    <div class="door-grid">
+      <div class="door">
+        <div class="door-head">
+          <div class="dh-emoji">🍎</div>
+          <div class="dh-name">Music Teacher</div>
+          <div class="dh-new">NEW</div>
+        </div>
+        <div class="door-body">
+          <p>Music teachers lead school bands, choirs, and orchestras, and teach students to play, sing, and love music. It might be the most overlooked career in this whole course, because it offers something almost no other music job does: <strong>a salary, benefits, summers off, and a job in nearly every town in America.</strong></p>
+          <div class="door-stat"><div class="ds-tag">Education</div><div class="ds-text">Bachelor's degree in music education plus a state teaching license. A clear, well-marked 4-year path.</div></div>
+          <div class="door-stat"><div class="ds-tag">Pay</div><div class="ds-text">High school teachers earned a median of <b>$64,580</b> per year, with the top 10% above <b>$104,670</b> (BLS, May 2024). Public school pay comes with pensions and benefits.</div></div>
+          <div class="door-stat"><div class="ds-tag">Look forward to</div><div class="ds-text">Conducting your own concerts, building a program that's yours, and being the teacher a future professional musician thanks in their award speech.</div></div>
+          <div class="door-perk"><b>Real talk:</b> ask working musicians who got them started, and an enormous number will name a school music teacher. This career multiplies musicians.</div>
+        </div>
+      </div>
+
+      <div class="door">
+        <div class="door-head">
+          <div class="dh-emoji">💚</div>
+          <div class="dh-name">Music Therapist</div>
+          <div class="dh-new">NEW</div>
+        </div>
+        <div class="door-body">
+          <p>Here's the career most students never knew existed: music therapists use music as medicine. They work in hospitals, schools, and care facilities, using singing, playing, and songwriting to help patients recover speech after strokes, manage pain, process emotions, and connect when words fail. It's a real clinical health career built entirely on music.</p>
+          <div class="door-stat"><div class="ds-tag">Education</div><div class="ds-text">Bachelor's degree in music therapy plus board certification (the MT-BC credential, earned by passing a national exam).</div></div>
+          <div class="door-stat"><div class="ds-tag">Pay</div><div class="ds-text">The BLS tracks music therapists within recreational therapists: median <b>$60,280</b> per year, top 10% above <b>$96,600</b> (May 2024), with steady projected growth.</div></div>
+          <div class="door-stat"><div class="ds-tag">Look forward to</div><div class="ds-text">Moments like a nonverbal child singing their first word, or a patient's heart rate calming to your guitar. Music therapists watch music literally heal people.</div></div>
+          <div class="door-perk"><b>Real talk:</b> this career is perfect for students torn between music and healthcare. You don't have to choose.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>The Comparison Board</h2>
+    <p>Ten careers, three questions that matter when choosing between them: How much school does it take? What does it typically pay? And how fast could you realistically start? Use the sort buttons and watch the board reorder. Every number comes from the deep-dive articles and their BLS sources.</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">10 Careers, Side by Side</div>
+        <div class="sh-tag">Comparison Board</div>
+      </div>
+      <div class="sim-body">
+        <div class="sort-row">
+          <span class="sort-label">Sort by:</span>
+          <button class="sort-btn active" data-sort="edu">Least school first</button>
+          <button class="sort-btn" data-sort="pay">Highest pay first</button>
+          <button class="sort-btn" data-sort="speed">Fastest start first</button>
+        </div>
+        <div class="board" id="board"></div>
+        <div class="board-note">Pay figures are medians from the U.S. Bureau of Labor Statistics (see each career's deep-dive article and the sources below). Hourly careers like artist, photographer, and DJ depend heavily on how much paid work you book, and freelance/commission careers can far exceed their medians. "Fastest start" estimates when a motivated beginner could realistically earn their first dollar in the role.</div>
+      </div>
+    </div>
+
+    <div class="callout"><b>Notice the pattern?</b> The careers with the least required school (DJ, photographer, artist) trade certainty for speed: you can start fast, but income depends on hustle. The careers with the most school (teacher, therapist, manager) trade speed for stability. Neither trade is wrong. The question is which trade fits <b>you</b>.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>Your Move</h2>
+    <p class="plan-intro">Career exploration only counts if it leads to action. So here's your final exercise: pick the TWO careers you're most curious about right now (curious, not committed; nobody's signing anything today). You'll get a starter plan for each: real things you could do this month, for free, to test whether the career fits.</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">The This-Month Plan Builder</div>
+        <div class="sh-tag">Action Exercise</div>
+      </div>
+      <div class="sim-body">
+        <div class="pick-grid" id="pickGrid"></div>
+        <div class="pick-note" id="pickNote">Pick 2 careers to build your plan</div>
+        <div class="plan-result" id="planResult">
+          <div id="planCards"></div>
+          <div class="plan-close">Screenshot this plan. Then actually do step one this week. The difference between people who work in music and people who wish they did is almost never talent. It's that one of them started.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>Where This Course Goes Next</h2>
+    <p>You now have the complete map of the music industry: what it is, how genres and songs are built, and the ten careers that make it run. You also noticed a thread running through every career article: <strong>AI is changing all of them at once</strong>, automating technical work while making human judgment, taste, and connection more valuable.</p>
+    <p>That thread is about to become the main story. In the next part of this course, we go deep on the AI side: the actual tools, what they can and can't do in each stage of the industry, and how to build the AI skills that will make you more valuable in whichever door you choose to walk through.</p>
+  </section>
+
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>The industry has ten major doors, including two often-overlooked ones: music teacher (the most stable path) and music therapist (music as a healthcare career).</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>Every career trades between speed and stability: low-credential careers start fast but depend on hustle; degree careers start slower but offer salaries and structure.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>There's no single "best" music career, only the best fit for your personality, timeline, and appetite for risk.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>Exploration becomes reality through small, free actions you can start this month. Step one beats someday.</p>
+      </div>
+    </div>
+    <div class="sources">
+      <div class="src-label">Sources</div>
+      <ul>
+        <li>U.S. Bureau of Labor Statistics, Occupational Outlook Handbook: High School Teachers (May 2024 wage data) &mdash; <a href="https://www.bls.gov/ooh/education-training-and-library/high-school-teachers.htm" target="_blank" rel="noopener">https://www.bls.gov/ooh/education-training-and-library/high-school-teachers.htm</a></li>
+        <li>U.S. Bureau of Labor Statistics, Occupational Outlook Handbook: Recreational Therapists, the category that includes music therapists (May 2024 wage data) &mdash; <a href="https://www.bls.gov/ooh/healthcare/recreational-therapists.htm" target="_blank" rel="noopener">https://www.bls.gov/ooh/healthcare/recreational-therapists.htm</a></li>
+        <li>Pay figures for the other eight careers are sourced in their individual deep-dive articles, drawing on BLS Occupational Outlook Handbook and Occupational Employment and Wage Statistics data.</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(el=>observer.observe(el));
+
+/* ---------- comparison board ---------- */
+const careers=[
+ {name:"Artist / Musician",isNew:false,edu:0,eduLabel:"No degree required",pay:88300,payLabel:"$42.45/hr median*",speed:2,speedLabel:"Months to first paid gig"},
+ {name:"Producer & Sound Engineer",isNew:false,edu:2,eduLabel:"Certificate / associate common",pay:56600,payLabel:"$56,600/yr median",speed:3,speedLabel:"Portfolio first, then paid work"},
+ {name:"Agent / Manager",isNew:false,edu:4,eduLabel:"Bachelor's typical",pay:84900,payLabel:"$84,900/yr median",speed:5,speedLabel:"Degree or years of hustle"},
+ {name:"Record Label",isNew:false,edu:4,eduLabel:"Bachelor's typical",pay:69780,payLabel:"$69,780/yr median**",speed:5,speedLabel:"Internships are the door"},
+ {name:"Photographer / Videographer",isNew:false,edu:0,eduLabel:"HS diploma + portfolio",pay:42520,payLabel:"$20.44/hr median***",speed:1,speedLabel:"Can start shooting this weekend"},
+ {name:"DJ",isNew:false,edu:0,eduLabel:"No degree (radio: bachelor's)",pay:44950,payLabel:"~$22/hr median + gig pricing",speed:1,speedLabel:"Fastest start in the industry"},
+ {name:"Marketing Team",isNew:false,edu:4,eduLabel:"Bachelor's typical + receipts",pay:69780,payLabel:"$69,780/yr median",speed:4,speedLabel:"Build receipts now, hired later"},
+ {name:"Media / Podcast Host",isNew:false,edu:2,eduLabel:"Bachelor's for media; creators start free",pay:60280,payLabel:"$60,280/yr median (journalists)",speed:2,speedLabel:"Launch a show anytime"},
+ {name:"Music Teacher",isNew:true,edu:4,eduLabel:"Bachelor's + teaching license",pay:64580,payLabel:"$64,580/yr median",speed:6,speedLabel:"4-year path, then salaried"},
+ {name:"Music Therapist",isNew:true,edu:4,eduLabel:"Bachelor's + board certification",pay:60280,payLabel:"$60,280/yr median",speed:6,speedLabel:"4-year path + certification exam"}
+];
+let sortMode='edu';
+const board=document.getElementById('board');
+function renderBoard(){
+  const sorted=[...careers].sort((a,b)=>{
+    if(sortMode==='edu')return a.edu-b.edu||b.pay-a.pay;
+    if(sortMode==='pay')return b.pay-a.pay;
+    return a.speed-b.speed||b.pay-a.pay;
+  });
+  const maxPay=Math.max(...careers.map(c=>c.pay));
+  board.innerHTML='';
+  sorted.forEach((c,i)=>{
+    const row=document.createElement('div');
+    row.className='row';
+    let sub, barPct;
+    if(sortMode==='edu'){sub=c.eduLabel;barPct=(c.edu/4)*100;}
+    else if(sortMode==='pay'){sub=c.payLabel;barPct=(c.pay/maxPay)*100;}
+    else{sub=c.speedLabel;barPct=100-((c.speed-1)/5)*100;}
+    row.innerHTML='<div class="r-rank">'+String(i+1).padStart(2,'0')+'</div>'
+      +'<div class="r-main"><div class="r-name">'+c.name+(c.isNew?'<span class="new-pill">NEW</span>':'')+'</div>'
+      +'<div class="r-bar"><div class="r-fill" style="width:0%"></div></div></div>'
+      +'<div class="r-val">'+sub+'</div>';
+    board.appendChild(row);
+    requestAnimationFrame(()=>{requestAnimationFrame(()=>{row.querySelector('.r-fill').style.width=barPct+'%';});});
+  });
+}
+document.querySelectorAll('.sort-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.sort-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    sortMode=b.dataset.sort;
+    renderBoard();
+  });
+});
+renderBoard();
+
+/* ---------- plan builder ---------- */
+const plans={
+ "Artist / Musician":["Write or record one rough song this month, on your phone counts, and share it with one person you trust.","Find one open mic, talent show, or school performance happening near you and put the date on your calendar.","Follow three working independent artists online and study how they promote themselves, not just their music."],
+ "Producer & Sound Engineer":["Download a free DAW (like GarageBand or BandLab) and finish one beat, even a bad one. Finished beats teach more than perfect plans.","Watch one 'how this hit song was produced' breakdown video and try to copy one technique you see.","Find out if your school or a local community college has an audio class or equipment you can access."],
+ "Agent / Manager":["Offer to organize one real event this month: a showcase, a party, a school performance. Booking anything is the first rep.","Ask a local artist if you can help them find one gig. Congratulations, you're now managing.","Look up one music business program at a college near you and read what its classes cover."],
+ "Record Label":["Pick one small independent label whose music you love and study everything about how they release songs for two weeks.","Make a list of five local artists you'd sign if you had a label, and write one sentence on why for each. That's A&R practice.","Search for music industry internships in your region so you know what they ask for before you need to apply."],
+ "Photographer / Videographer":["Shoot one local show, school concert, or rehearsal this month with whatever camera you have, including your phone.","Edit your ten best shots and send them to the performers for free. Tagged photos are how this career starts.","Learn one editing skill this week from a free tutorial and use it on a real photo the same day."],
+ "DJ":["Download free DJ software (many apps work with just a laptop) and practice blending two songs until the transition is smooth.","Build a 30-minute playlist designed to take a room from calm to hyped, and study why each song follows the last.","Offer to DJ one thing for free this month: a family party, a school event, anything with an audience."],
+ "Marketing Team":["Pick one song releasing soon and write the three social posts YOU would use to promote it. Compare with what the real team does.","Grow anything by 100 followers this month: a fan page, a meme account, a friend's music page. Growth receipts are this career's resume.","Study one song that went viral this year and write down the exact chain of events that made it explode."],
+ "Media / Podcast Host":["Interview one local artist this month, with your phone as the recorder. Local artists say yes far more than you'd expect.","Write a 300-word review of the last album you loved and post it anywhere. Critics are made by publishing, not by permission.","Listen to one great interview and write down the three questions that unlocked the best answers."],
+ "Music Teacher":["Volunteer to help younger students in your school's music program, or tutor one beginner on your instrument.","Interview your own music teacher about their path: how they trained, what the job is really like, what they'd tell you.","Look up one music education degree program near you and note its requirements."],
+ "Music Therapist":["Watch one real music therapy session video online. Ten minutes will tell you if this field pulls you in.","Interview or email a certified music therapist (the AMTA directory lists them) and ask about their day.","Look up which colleges in your state offer music therapy degrees, since not all do, and note the closest one."]
+};
+const picked=[];
+const pickGrid=document.getElementById('pickGrid');
+careers.forEach(c=>{
+  const b=document.createElement('button');
+  b.className='pick-btn';
+  b.textContent=c.name;
+  b.addEventListener('click',()=>{
+    const idx=picked.indexOf(c.name);
+    if(idx>-1){picked.splice(idx,1);b.classList.remove('picked');}
+    else{
+      if(picked.length>=2){
+        const dropped=picked.shift();
+        document.querySelectorAll('.pick-btn').forEach(x=>{if(x.textContent===dropped)x.classList.remove('picked');});
+      }
+      picked.push(c.name);b.classList.add('picked');
+    }
+    renderPlan();
+  });
+  pickGrid.appendChild(b);
+});
+function renderPlan(){
+  const note=document.getElementById('pickNote');
+  const result=document.getElementById('planResult');
+  if(picked.length<2){
+    note.textContent='Pick '+(2-picked.length)+' more career'+(picked.length===1?'':'s')+' to build your plan';
+    result.classList.remove('show');
+    return;
+  }
+  note.textContent='Your plan is ready. Change a pick anytime to rebuild it.';
+  const cards=document.getElementById('planCards');
+  cards.innerHTML='';
+  picked.forEach(name=>{
+    const card=document.createElement('div');
+    card.className='plan-card';
+    card.innerHTML='<div class="pl-name">'+name+' &middot; This Month</div>'+
+      plans[name].map((s,i)=>'<div class="pl-step"><div class="st-n">'+(i+1)+'</div><div>'+s+'</div></div>').join('');
+    cards.appendChild(card);
+  });
+  result.classList.add('show');
+}
+</script>
+</body>
+</html>
