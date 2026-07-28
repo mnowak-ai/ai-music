@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 8 Music Genres | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE;
+    --purple-dark:#5A1F8E;
+    --purple-light:#F3EAFB;
+    --purple-mid:#E2CFF5;
+    --ink:#1A1523;
+    --gray:#5C5566;
+    --gray-light:#F7F5FA;
+    --green:#1E8A5A;
+    --green-light:#E7F6EF;
+    --red:#C0392B;
+    --red-light:#FBEDEB;
+    --gold:#B07D2B;
+    --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:#FFFFFF;
+    color:var(--ink);
+    line-height:1.7;
+    font-size:17px;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+
+  h1{
+    font-family:'Fraunces',serif;
+    font-size:clamp(34px,6vw,52px);
+    font-weight:700;line-height:1.12;
+    padding-top:64px;
+    margin:0 0 14px;
+    letter-spacing:-.01em;
+  }
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);
+    margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;
+  }
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+
+  h2{
+    font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);
+    font-weight:600;line-height:1.2;margin:64px 0 16px;
+  }
+  p{margin-bottom:16px;}
+  .section-num{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);
+    font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;
+  }
+  .section-num + h2{margin-top:8px;}
+
+  .recap{
+    background:var(--gray-light);border-radius:14px;padding:22px 28px;margin:28px 0;
+    font-size:15.5px;
+  }
+  .recap .r-label{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;
+  }
+  .recap b{color:var(--purple);}
+
+  /* ---------- genre explorer ---------- */
+  .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin:28px 0 8px;}
+  .genre-card{
+    border:2px solid var(--purple-mid);border-radius:14px;padding:20px;
+    cursor:pointer;background:#fff;text-align:center;
+    transition:border-color .3s,box-shadow .3s,transform .15s;
+  }
+  .genre-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(123,47,190,.12);border-color:var(--purple);}
+  .genre-card:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .genre-card.active{border-color:var(--purple);background:var(--purple-light);}
+  .genre-card .g-emoji{font-size:30px;margin-bottom:6px;}
+  .genre-card .g-name{font-family:'Fraunces',serif;font-size:19px;font-weight:700;line-height:1.2;}
+  .genre-card .g-tag{font-size:12.5px;color:var(--gray);margin-top:4px;}
+
+  .genre-detail{
+    display:none;border:2px solid var(--purple);border-radius:16px;
+    padding:30px 32px;margin:20px 0 8px;background:var(--purple-light);
+    animation:pop .4s ease;
+  }
+  .genre-detail.show{display:block;}
+  @keyframes pop{0%{transform:scale(.98);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  .genre-detail .gd-name{
+    font-family:'Fraunces',serif;font-size:28px;font-weight:700;margin-bottom:4px;
+  }
+  .genre-detail .gd-oneliner{font-size:16px;color:var(--gray);margin-bottom:18px;}
+  .gd-ingredients{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px;}
+  .gd-ing{background:#fff;border-radius:12px;padding:16px 18px;}
+  .gd-ing .gi-label{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--purple);margin-bottom:5px;
+  }
+  .gd-ing .gi-text{font-size:14px;line-height:1.55;}
+  .gd-fact{
+    background:#fff;border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+    padding:14px 18px;font-size:14.5px;
+  }
+  .gd-fact b{color:var(--gold);}
+  .explorer-progress{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);
+    text-align:center;margin-top:14px;
+  }
+  .explorer-progress b{color:var(--purple);}
+
+  /* ---------- detective sim ---------- */
+  .sim{
+    border:2px solid var(--purple);border-radius:18px;overflow:hidden;
+    margin:32px 0;background:#fff;
+  }
+  .sim-head{
+    background:var(--purple);color:#fff;padding:18px 26px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+  }
+  .sim-head .sh-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;}
+  .sim-head .sh-tag{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;background:rgba(255,255,255,.18);
+    padding:5px 12px;border-radius:999px;
+  }
+  .sim-body{padding:28px;}
+  .clue-card{
+    background:var(--purple-light);border-radius:14px;padding:24px 26px;margin-bottom:20px;
+  }
+  .clue-card .cc-label{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;
+  }
+  .clue-line{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start;}
+  .clue-line:last-child{margin-bottom:0;}
+  .clue-line .cl-tag{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;
+    letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--purple);
+    border-radius:6px;padding:3px 8px;flex-shrink:0;margin-top:3px;min-width:66px;text-align:center;
+  }
+  .clue-line .cl-text{font-size:15px;line-height:1.55;}
+  .guess-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:9px;}
+  .guess-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;
+    padding:13px 8px;border:2px solid var(--purple-mid);border-radius:12px;
+    background:#fff;cursor:pointer;transition:all .25s;color:var(--ink);
+  }
+  .guess-btn:hover{border-color:var(--purple);background:var(--purple-light);}
+  .guess-btn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .guess-btn.correct{background:var(--green-light);border-color:var(--green);color:var(--green);}
+  .guess-btn.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .guess-feedback{
+    margin-top:16px;border-radius:10px;padding:14px 18px;font-size:15px;display:none;
+  }
+  .guess-feedback.good{display:block;background:var(--green-light);color:var(--green);}
+  .guess-feedback.bad{display:block;background:var(--red-light);color:var(--red);}
+  .guess-score{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gray);margin-top:16px;
+  }
+  .guess-score b{color:var(--purple);}
+
+  .callout{
+    background:var(--gold-light);border-left:5px solid var(--gold);
+    border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;
+  }
+  .callout b{color:var(--gold);}
+
+  /* quiz */
+  .quiz-q{
+    border:2px solid var(--purple-mid);border-radius:14px;
+    padding:24px 26px;margin-bottom:18px;background:#fff;
+  }
+  .quiz-q .qq-num{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    color:var(--purple);letter-spacing:.12em;margin-bottom:6px;
+  }
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{
+    display:block;width:100%;text-align:left;
+    font-family:'DM Sans',sans-serif;font-size:15px;
+    padding:12px 16px;margin-bottom:8px;
+    border:1.5px solid var(--purple-mid);border-radius:10px;
+    background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);
+  }
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{
+    display:none;font-size:14px;background:var(--gray-light);
+    border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);
+  }
+  .quiz-explain.show{display:block;}
+
+  .takeaways{
+    background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;
+  }
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;
+    background:rgba(255,255,255,.16);border-radius:8px;
+    min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;margin-top:2px;
+  }
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="fade">
+    <h1>The 8 Music Genres</h1>
+    <p class="lede">In the last article, you learned that a genre is a category of music with its own sound, beat, and feeling. Now it's time to meet the eight genres you'll see again and again in this course.</p>
+    <div class="meta">
+      <span>Reading time: 9 min</span>
+      <span>Interactive: 2 activities</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <!-- RECAP + INTRO -->
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>Your Map for This Article</h2>
+
+    <div class="recap">
+      <div class="r-label">Quick Recap</div>
+      A music genre is <b>a category or style of music that has a certain sound, beat, and feeling.</b> Those three ingredients are how we'll describe every genre on this page.
+    </div>
+
+    <p>There are hundreds of genres in the world, and new ones are born every year. But almost everything you hear on the radio, in movies, or on streaming apps connects back to a handful of major families. In this course, we'll focus on <strong>eight</strong> of them:</p>
+    <p><strong>Pop, Hip-Hop/Rap, Rock &amp; Roll, Country, R&amp;B, Jazz, Classical, and World Music.</strong></p>
+    <p>Tap each genre below to open its profile. Try to notice how the sound, beat, and feeling change from one genre to the next. Your goal: explore all eight.</p>
+  </section>
+
+  <!-- GENRE EXPLORER -->
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>The Genre Explorer</h2>
+
+    <div class="genre-grid" id="genreGrid"></div>
+    <div class="genre-detail" id="genreDetail">
+      <div class="gd-name" id="gdName"></div>
+      <div class="gd-oneliner" id="gdOneliner"></div>
+      <div class="gd-ingredients">
+        <div class="gd-ing"><div class="gi-label">Sound</div><div class="gi-text" id="gdSound"></div></div>
+        <div class="gd-ing"><div class="gi-label">Beat</div><div class="gi-text" id="gdBeat"></div></div>
+        <div class="gd-ing"><div class="gi-label">Feeling</div><div class="gi-text" id="gdFeeling"></div></div>
+      </div>
+      <div class="gd-fact"><b>Did you know?</b> <span id="gdFact"></span></div>
+    </div>
+    <div class="explorer-progress">Genres explored: <b id="exploreCount">0</b> of 8</div>
+  </section>
+
+  <!-- DETECTIVE SIM -->
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>You Try It: Genre Detective</h2>
+    <p>Time to test your ear, no headphones required. We'll describe a mystery song using only its three ingredients: sound, beat, and feeling. Your job is to name the genre. There are six mystery songs. Good luck, detective.</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">Name That Genre</div>
+        <div class="sh-tag">Detective Challenge</div>
+      </div>
+      <div class="sim-body">
+        <div class="clue-card">
+          <div class="cc-label" id="clueProgress">Mystery Song 1 of 6</div>
+          <div class="clue-line"><div class="cl-tag">Sound</div><div class="cl-text" id="clueSound"></div></div>
+          <div class="clue-line"><div class="cl-tag">Beat</div><div class="cl-text" id="clueBeat"></div></div>
+          <div class="clue-line"><div class="cl-tag">Feeling</div><div class="cl-text" id="clueFeeling"></div></div>
+        </div>
+        <div class="guess-grid" id="guessGrid"></div>
+        <div class="guess-feedback" id="guessFeedback"></div>
+        <div class="guess-score">Score: <b id="guessScore">0</b> / 6</div>
+      </div>
+    </div>
+
+    <div class="callout"><b>Real talk:</b> even music experts argue about genres. Plenty of songs blend two or more genres at once, like a pop song with a country sound, or hip-hop with jazz instruments. If a song feels like it fits in two boxes, you're not wrong. That blending is where a lot of new music comes from.</div>
+  </section>
+
+  <!-- WHY IT MATTERS -->
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>Why These 8 Matter for This Course</h2>
+    <p>You just did something interesting in that detective game. You took three clues, sound, beat, and feeling, and used them to sort music into categories. You did it with your brain in a few seconds.</p>
+    <p>Here's the connection: <strong>AI systems play genre detective millions of times a day.</strong> When a streaming app scans a brand-new song, it measures things like the instruments it hears, the speed of the beat, and even the mood of the melody. Then it makes its best guess about the genre, just like you did, so it can recommend that song to the right listeners.</p>
+    <p>Keep these eight genres in your back pocket. As we move through this course, we'll see how AI creates music in these styles, how it sorts songs into them, and where it still gets confused in ways a human never would.</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">Which genre is known for strong rhythms and rhyming lyrics?</div>
+      <button class="quiz-opt" data-c="0">Classical</button>
+      <button class="quiz-opt" data-c="1">Hip-Hop/Rap</button>
+      <button class="quiz-opt" data-c="0">Country</button>
+      <button class="quiz-opt" data-c="0">Jazz</button>
+      <div class="quiz-explain">Hip-hop and rap are built on strong rhythms and rhyming lyrics, with the words often spoken or chanted in rhythm instead of sung.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">A song features violins and pianos, no drums, and it was written hundreds of years ago. Which genre fits best?</div>
+      <button class="quiz-opt" data-c="0">Rock &amp; Roll</button>
+      <button class="quiz-opt" data-c="0">R&amp;B</button>
+      <button class="quiz-opt" data-c="1">Classical</button>
+      <button class="quiz-opt" data-c="0">Pop</button>
+      <div class="quiz-explain">Classical is older, elegant music built around instruments like violins and pianos, often played by full orchestras.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 3</div>
+      <div class="qq-text">African drums, Indian sitars, K-pop, salsa, and reggaeton were all grouped under one label in this article. Which one?</div>
+      <button class="quiz-opt" data-c="0">Jazz</button>
+      <button class="quiz-opt" data-c="0">Country</button>
+      <button class="quiz-opt" data-c="1">World Music</button>
+      <button class="quiz-opt" data-c="0">Rock &amp; Roll</button>
+      <div class="quiz-explain">World Music is the umbrella label for music rooted in cultures around the globe, from African drumming to K-pop to reggaeton.</div>
+    </div>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>The eight major genres in this course are Pop, Hip-Hop/Rap, Rock &amp; Roll, Country, R&amp;B, Jazz, Classical, and World Music.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>Every genre can be described with the same three ingredients: sound, beat, and feeling.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>Many songs blend genres, and that mixing is where new styles of music are born.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>AI systems sort songs into genres millions of times a day, using clues a lot like the ones you used in the detective game.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* fade in */
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(el=>observer.observe(el));
+
+/* ---------- genre explorer ---------- */
+const genres=[
+  {name:"Pop",emoji:"🎤",tag:"Catchy and fun",oneliner:"Short for \"popular\" music. Catchy, fun songs made to be loved by as many people as possible.",
+   sound:"Bright singing voices with a mix of instruments and polished, modern production.",
+   beat:"Steady and upbeat, easy to clap or dance along to.",
+   feeling:"Fun, catchy, and feel-good. Pop songs are designed to get stuck in your head.",
+   fact:"A catchy piece of a pop song that repeats in your head is called a \"hook,\" because it hooks your attention and won't let go."},
+  {name:"Hip-Hop / Rap",emoji:"🎧",tag:"Strong rhythms, rhyming lyrics",oneliner:"Built on strong rhythms and rhyming lyrics, with words often spoken in rhythm instead of sung.",
+   sound:"A rapper's voice front and center over drum-heavy tracks, often with pieces of other songs mixed in.",
+   beat:"Strong and bold. The beat is the backbone of every hip-hop song.",
+   feeling:"Confident and expressive. Hip-hop tells real stories about life, struggle, and success.",
+   fact:"Hip-hop started at neighborhood parties in New York City in the 1970s, when DJs looped the drum sections of songs so people could dance longer."},
+  {name:"Rock & Roll",emoji:"🎸",tag:"Loud guitars, strong beats",oneliner:"Loud guitars and strong beats, made to be turned up.",
+   sound:"Electric guitars, bass, and live drums, often with powerful singing or even shouting.",
+   beat:"Strong and driving, the kind that makes crowds jump and nod their heads hard.",
+   feeling:"Energetic and rebellious. Rock is music with attitude.",
+   fact:"The electric guitar solo, a moment where the guitarist takes over the song, became one of the most famous traditions in all of music thanks to rock."},
+  {name:"Country",emoji:"🪕",tag:"Songs about life and stories",oneliner:"Songs about life and stories, often with guitars.",
+   sound:"Acoustic and electric guitars, banjos, and fiddles, with clear singing you can follow word for word.",
+   beat:"Usually steady and relaxed, like a truck rolling down a long road.",
+   feeling:"Honest and heartfelt. Country songs tell stories about love, family, hometowns, and hard times.",
+   fact:"Country music is famous for storytelling. Some country songs have a full beginning, middle, and twist ending, just like a short movie."},
+  {name:"R&B",emoji:"🎙️",tag:"Smooth singing, emotional songs",oneliner:"Short for Rhythm & Blues. Smooth singing and emotional songs.",
+   sound:"Rich, smooth vocals with soulful runs, backed by warm bass and mellow instruments.",
+   beat:"Slow to medium grooves that flow instead of pound.",
+   feeling:"Emotional and soulful, often about love, heartbreak, and everything in between.",
+   fact:"That moment when a singer glides through many quick notes on a single word is called a \"vocal run,\" and R&B singers are the masters of it."},
+  {name:"Jazz",emoji:"🎷",tag:"Smooth and cool, lots of improvising",oneliner:"Smooth, cool music with lots of improvising, which means making up parts on the spot.",
+   sound:"Saxophones, trumpets, pianos, and upright bass trading melodies back and forth.",
+   beat:"Swinging and loose. Jazz rhythms bounce in a way that's hard to sit still to.",
+   feeling:"Cool, classy, and full of surprises, because the players invent new parts live.",
+   fact:"In jazz, musicians improvise, meaning they make up melodies on the spot. The same song can sound completely different every single time it's played."},
+  {name:"Classical",emoji:"🎻",tag:"Older, elegant, violins and pianos",oneliner:"Older, elegant music built around violins and pianos, often played by big orchestras.",
+   sound:"Violins, cellos, pianos, flutes, and horns, sometimes over 80 musicians playing together.",
+   beat:"Changes throughout a piece, from soft and slow to huge and dramatic.",
+   feeling:"Elegant and powerful. Classical music can feel like a story told without any words.",
+   fact:"Much of the music in movie soundtracks and video games today is written in the classical style, so you probably hear \"classical\" music more often than you think."},
+  {name:"World Music",emoji:"🌍",tag:"Music from cultures everywhere",oneliner:"Music rooted in cultures around the globe: African drums, Indian sitars, K-pop, salsa, reggaeton, and much more.",
+   sound:"Depends on the culture. It might be hand drums, a sitar (a long-necked string instrument from India), or a full K-pop production.",
+   beat:"Endlessly different, from the layered rhythms of African drumming to the dance beat of reggaeton.",
+   feeling:"Connection. World music carries the pride, celebrations, and traditions of the people who make it.",
+   fact:"Some of the biggest songs on Earth right now come from this category. K-pop and reggaeton regularly top global charts in languages many listeners don't even speak."}
+];
+
+const grid=document.getElementById('genreGrid');
+const detail=document.getElementById('genreDetail');
+const explored=new Set();
+genres.forEach((g,i)=>{
+  const card=document.createElement('div');
+  card.className='genre-card';
+  card.setAttribute('role','button');
+  card.setAttribute('tabindex','0');
+  card.setAttribute('aria-label','Open profile for '+g.name);
+  card.innerHTML='<div class="g-emoji">'+g.emoji+'</div><div class="g-name">'+g.name+'</div><div class="g-tag">'+g.tag+'</div>';
+  const open=()=>{
+    document.querySelectorAll('.genre-card').forEach(c=>c.classList.remove('active'));
+    card.classList.add('active');
+    document.getElementById('gdName').textContent=g.emoji+' '+g.name;
+    document.getElementById('gdOneliner').textContent=g.oneliner;
+    document.getElementById('gdSound').textContent=g.sound;
+    document.getElementById('gdBeat').textContent=g.beat;
+    document.getElementById('gdFeeling').textContent=g.feeling;
+    document.getElementById('gdFact').textContent=g.fact;
+    detail.classList.remove('show');
+    void detail.offsetWidth;
+    detail.classList.add('show');
+    explored.add(i);
+    const count=document.getElementById('exploreCount');
+    count.textContent=explored.size;
+    if(explored.size===genres.length){
+      document.querySelector('.explorer-progress').innerHTML='All <b>8</b> genres explored. Nicely done!';
+    }
+    detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
+  card.addEventListener('click',open);
+  card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+  grid.appendChild(card);
+});
+
+/* ---------- detective game ---------- */
+const mysteries=[
+  {sound:"A booming drum track with a voice speaking rhyming lyrics in perfect rhythm over it.",
+   beat:"Strong, bold, and impossible to ignore.",
+   feeling:"Confident, like the artist is telling their life story with pride.",
+   answer:"Hip-Hop / Rap",why:"Rhyming lyrics delivered in rhythm over a strong beat is the signature of hip-hop and rap."},
+  {sound:"About 60 musicians playing violins, cellos, and horns together, with no singing at all.",
+   beat:"Starts soft and slow, then swells into something huge and dramatic.",
+   feeling:"Elegant and powerful, like a story told without words.",
+   answer:"Classical",why:"A large orchestra of violins and horns with dramatic rises and falls points straight to classical."},
+  {sound:"An acoustic guitar and a fiddle behind a clear voice singing about a small hometown.",
+   beat:"Steady and relaxed, like a drive down a long country road.",
+   feeling:"Honest and heartfelt, like a true story from a friend.",
+   answer:"Country",why:"Storytelling lyrics, guitars, and a fiddle are classic country ingredients."},
+  {sound:"A saxophone and piano trading melodies, and the players seem to be inventing parts on the spot.",
+   beat:"Loose and swinging, with a bounce that's hard to sit still to.",
+   feeling:"Cool and classy, full of little surprises.",
+   answer:"Jazz",why:"Improvising, that on-the-spot invention, plus swing and saxophones equals jazz."},
+  {sound:"A smooth, soulful voice gliding through quick runs of notes over warm, mellow bass.",
+   beat:"A slow groove that flows instead of pounds.",
+   feeling:"Deeply emotional, like a love letter set to music.",
+   answer:"R&B",why:"Smooth vocals, slow grooves, and deep emotion are the heart of R&B."},
+  {sound:"Layered hand drums and call-and-response singing rooted in a centuries-old tradition from West Africa.",
+   beat:"Multiple rhythms woven together at once.",
+   feeling:"Joyful and proud, like a whole community celebrating together.",
+   answer:"World Music",why:"Music rooted in cultural traditions from around the globe, like West African drumming, falls under World Music."}
+];
+const options=["Pop","Hip-Hop / Rap","Rock & Roll","Country","R&B","Jazz","Classical","World Music"];
+let mIndex=0,mScore=0,mAnswered=false;
+const guessGrid=document.getElementById('guessGrid');
+options.forEach(o=>{
+  const b=document.createElement('button');
+  b.className='guess-btn';
+  b.textContent=o;
+  b.dataset.g=o;
+  b.addEventListener('click',()=>{
+    if(mAnswered)return;
+    mAnswered=true;
+    const m=mysteries[mIndex];
+    document.querySelectorAll('.guess-btn').forEach(x=>{
+      x.disabled=true;
+      if(x.dataset.g===m.answer)x.classList.add('correct');
+    });
+    const fb=document.getElementById('guessFeedback');
+    if(o===m.answer){
+      mScore++;
+      document.getElementById('guessScore').textContent=mScore;
+      fb.className='guess-feedback good';
+      fb.textContent='Case closed! '+m.why;
+    }else{
+      b.classList.add('wrong');
+      fb.className='guess-feedback bad';
+      fb.textContent='Not this time. '+m.why;
+    }
+    setTimeout(()=>{
+      if(mIndex<mysteries.length-1){mIndex++;renderMystery();}
+      else{
+        document.getElementById('clueProgress').textContent='All cases solved';
+        document.getElementById('clueSound').textContent='You scored '+mScore+' out of 6.';
+        document.getElementById('clueBeat').textContent=mScore>=5?'Outstanding. You have a detective\'s ear for genre.':'Good work. Scroll back up to the Genre Explorer for another look, then try again anytime.';
+        document.getElementById('clueFeeling').textContent='Remember: sound + beat + feeling = genre.';
+        fb.className='guess-feedback';
+        guessGrid.style.display='none';
+      }
+    },2800);
+  });
+  guessGrid.appendChild(b);
+});
+function renderMystery(){
+  const m=mysteries[mIndex];
+  document.getElementById('clueProgress').textContent='Mystery Song '+(mIndex+1)+' of 6';
+  document.getElementById('clueSound').textContent=m.sound;
+  document.getElementById('clueBeat').textContent=m.beat;
+  document.getElementById('clueFeeling').textContent=m.feeling;
+  document.getElementById('guessFeedback').className='guess-feedback';
+  document.querySelectorAll('.guess-btn').forEach(b=>{b.className='guess-btn';b.disabled=false;});
+  mAnswered=false;
+}
+renderMystery();
+
+/* quiz */
+document.querySelectorAll('.quiz-q').forEach(q=>{
+  const opts=q.querySelectorAll('.quiz-opt');
+  const explain=q.querySelector('.quiz-explain');
+  let done=false;
+  opts.forEach(o=>{
+    o.addEventListener('click',()=>{
+      if(done)return;
+      done=true;
+      opts.forEach(x=>{if(x.dataset.c==='1')x.classList.add('correct');});
+      if(o.dataset.c!=='1')o.classList.add('wrong');
+      explain.classList.add('show');
+    });
+  });
+});
+</script>
+</body>
+</html>
