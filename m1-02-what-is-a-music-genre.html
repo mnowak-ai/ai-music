@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Music Genre? | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE;
+    --purple-dark:#5A1F8E;
+    --purple-light:#F3EAFB;
+    --purple-mid:#E2CFF5;
+    --ink:#1A1523;
+    --gray:#5C5566;
+    --gray-light:#F7F5FA;
+    --green:#1E8A5A;
+    --green-light:#E7F6EF;
+    --red:#C0392B;
+    --red-light:#FBEDEB;
+    --gold:#B07D2B;
+    --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:#FFFFFF;
+    color:var(--ink);
+    line-height:1.7;
+    font-size:17px;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--purple);font-weight:600;
+    display:flex;align-items:center;gap:10px;
+    padding-top:56px;
+  }
+  .eyebrow::after{content:"";height:1px;flex:1;background:var(--purple-mid);}
+  h1{
+    font-family:'Fraunces',serif;
+    font-size:clamp(34px,6vw,52px);
+    font-weight:700;line-height:1.12;
+    padding-top:64px;
+    margin:0 0 14px;
+    letter-spacing:-.01em;
+  }
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);
+    margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;
+  }
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+
+  h2{
+    font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);
+    font-weight:600;line-height:1.2;margin:64px 0 16px;
+  }
+  p{margin-bottom:16px;}
+  .section-num{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);
+    font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;
+  }
+  .section-num + h2{margin-top:8px;}
+
+  .definition{
+    background:var(--purple-light);
+    border-left:5px solid var(--purple);
+    border-radius:0 14px 14px 0;
+    padding:30px 34px;margin:36px 0;
+  }
+  .definition .label{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);
+    margin-bottom:10px;
+  }
+  .definition .text{
+    font-family:'Fraunces',serif;font-size:clamp(20px,3.4vw,25px);
+    font-weight:600;line-height:1.4;color:var(--ink);
+  }
+  .definition .text em{color:var(--purple);font-style:normal;}
+
+  /* ingredient cards */
+  .ingredients{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:28px 0 8px;}
+  .ingredient{
+    border:2px solid var(--purple-mid);border-radius:14px;padding:22px 20px;
+    cursor:pointer;transition:border-color .3s,box-shadow .3s,transform .15s;
+    background:#fff;
+  }
+  .ingredient:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(123,47,190,.12);}
+  .ingredient.open{border-color:var(--purple);background:var(--purple-light);}
+  .ingredient .i-num{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    color:var(--purple);letter-spacing:.12em;
+  }
+  .ingredient .i-title{
+    font-family:'Fraunces',serif;font-size:23px;font-weight:700;margin:6px 0 4px;
+  }
+  .ingredient .i-short{font-size:14px;color:var(--gray);}
+  .ingredient .i-detail{
+    display:none;font-size:14px;margin-top:12px;padding-top:12px;
+    border-top:1.5px dashed var(--purple-mid);line-height:1.6;
+  }
+  .ingredient.open .i-detail{display:block;}
+  .tap-hint{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);
+    text-align:center;margin-top:6px;
+  }
+
+  /* genre mixer sim */
+  .sim{
+    border:2px solid var(--purple);border-radius:18px;overflow:hidden;
+    margin:32px 0;background:#fff;
+  }
+  .sim-head{
+    background:var(--purple);color:#fff;padding:18px 26px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+  }
+  .sim-head .sh-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;}
+  .sim-head .sh-tag{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;background:rgba(255,255,255,.18);
+    padding:5px 12px;border-radius:999px;
+  }
+  .sim-body{padding:28px;}
+  .mixer-row{margin-bottom:22px;}
+  .mixer-label{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;
+  }
+  .chip-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{
+    font-family:'DM Sans',sans-serif;font-weight:500;font-size:14px;
+    padding:10px 18px;border:1.5px solid var(--purple-mid);border-radius:999px;
+    background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);
+  }
+  .chip:hover{border-color:var(--purple);}
+  .chip:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .chip.selected{background:var(--purple);border-color:var(--purple);color:#fff;font-weight:700;}
+  .mixer-result{
+    display:none;margin-top:6px;background:var(--purple-light);
+    border-radius:14px;padding:22px 26px;animation:pop .4s ease;
+  }
+  .mixer-result.show{display:block;}
+  @keyframes pop{0%{transform:scale(.97);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  .mixer-result .mr-label{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:6px;
+  }
+  .mixer-result .mr-name{
+    font-family:'Fraunces',serif;font-size:24px;font-weight:700;margin-bottom:6px;
+  }
+  .mixer-result .mr-text{font-size:15px;color:var(--gray);}
+  .sim-note{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:14px;
+  }
+
+  .callout{
+    background:var(--gold-light);border-left:5px solid var(--gold);
+    border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;
+  }
+  .callout b{color:var(--gold);}
+
+  /* quiz */
+  .quiz-q{
+    border:2px solid var(--purple-mid);border-radius:14px;
+    padding:24px 26px;margin-bottom:18px;background:#fff;
+  }
+  .quiz-q .qq-num{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    color:var(--purple);letter-spacing:.12em;margin-bottom:6px;
+  }
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{
+    display:block;width:100%;text-align:left;
+    font-family:'DM Sans',sans-serif;font-size:15px;
+    padding:12px 16px;margin-bottom:8px;
+    border:1.5px solid var(--purple-mid);border-radius:10px;
+    background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);
+  }
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{
+    display:none;font-size:14px;background:var(--gray-light);
+    border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);
+  }
+  .quiz-explain.show{display:block;}
+
+  .takeaways{
+    background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;
+  }
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;
+    background:rgba(255,255,255,.16);border-radius:8px;
+    min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;margin-top:2px;
+  }
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="fade">
+    <h1>What Is a Music Genre?</h1>
+    <p class="lede">You already use genres every day, even if you've never stopped to define one. Let's fix that in the next five minutes.</p>
+    <div class="meta">
+      <span>Reading time: 4 min</span>
+      <span>Interactive: 2 activities</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <!-- HOOK -->
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>A Question You've Already Answered</h2>
+    <p>Imagine a friend asks, "What kind of music do you like?"</p>
+    <p>You don't answer by humming every song on your playlist. You answer with a shortcut, a word or two that instantly tells your friend what your music sounds like and how it feels.</p>
+    <p>That shortcut has a name. It's called a <strong>genre</strong> (pronounced <em>ZHON-ruh</em>).</p>
+
+    <div class="definition">
+      <div class="label">Key Definition</div>
+      <div class="text">A music genre is a category or style of music that has a certain <em>sound</em>, <em>beat</em>, and <em>feeling</em>.</div>
+    </div>
+
+    <p>Think of genres like sections in a bookstore. Mystery books go on one shelf, comics on another. Nobody planned it that way at first. People just noticed that certain books felt similar, so they grouped them. Music works the same way. Songs that share a similar sound, beat, and feeling get grouped into a genre.</p>
+  </section>
+
+  <!-- THREE INGREDIENTS -->
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>The Three Ingredients</h2>
+    <p>Look back at the definition. It names three things that make a genre what it is: <strong>sound, beat, and feeling.</strong> Tap each one to see what it means.</p>
+
+    <div class="ingredients">
+      <div class="ingredient" role="button" tabindex="0" aria-expanded="false">
+        <div class="i-num">INGREDIENT 1</div>
+        <div class="i-title">Sound</div>
+        <div class="i-short">What you hear</div>
+        <div class="i-detail">The instruments and voices in the music. Is it electric guitars? A piano? A computer-made synth? A full orchestra? The mix of instruments gives every genre its signature sound.</div>
+      </div>
+      <div class="ingredient" role="button" tabindex="0" aria-expanded="false">
+        <div class="i-num">INGREDIENT 2</div>
+        <div class="i-title">Beat</div>
+        <div class="i-short">The rhythm and speed</div>
+        <div class="i-detail">The pulse of the song, the part that makes you nod your head or tap your foot. Is it fast or slow? Steady or bouncy? The beat is often the first clue your brain uses to recognize a genre.</div>
+      </div>
+      <div class="ingredient" role="button" tabindex="0" aria-expanded="false">
+        <div class="i-num">INGREDIENT 3</div>
+        <div class="i-title">Feeling</div>
+        <div class="i-short">The mood it creates</div>
+        <div class="i-detail">How the music makes you feel. Pumped up? Relaxed? Sad in a good way? Ready to dance? Two songs can use similar instruments but belong to different genres because they create totally different moods.</div>
+      </div>
+    </div>
+    <p class="tap-hint">Tap a card to expand it</p>
+  </section>
+
+  <!-- MIXER SIM -->
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>Try It: Mix Your Own Style</h2>
+    <p>Here's the fun part. If a genre is really just sound + beat + feeling, then picking those three ingredients should describe a style of music. Choose one option from each row and see what kind of style you've built.</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">The Style Mixer</div>
+        <div class="sh-tag">Simulation</div>
+      </div>
+      <div class="sim-body">
+        <div class="mixer-row">
+          <div class="mixer-label">1 &middot; Pick a sound</div>
+          <div class="chip-row" data-group="sound">
+            <button class="chip" data-val="guitars">Loud electric guitars</button>
+            <button class="chip" data-val="synths">Computer-made synths</button>
+            <button class="chip" data-val="acoustic">Soft acoustic instruments</button>
+          </div>
+        </div>
+        <div class="mixer-row">
+          <div class="mixer-label">2 &middot; Pick a beat</div>
+          <div class="chip-row" data-group="beat">
+            <button class="chip" data-val="fast">Fast and driving</button>
+            <button class="chip" data-val="bouncy">Bouncy and danceable</button>
+            <button class="chip" data-val="slow">Slow and gentle</button>
+          </div>
+        </div>
+        <div class="mixer-row">
+          <div class="mixer-label">3 &middot; Pick a feeling</div>
+          <div class="chip-row" data-group="feeling">
+            <button class="chip" data-val="energy">Full of energy</button>
+            <button class="chip" data-val="chill">Calm and chill</button>
+            <button class="chip" data-val="emotional">Deep and emotional</button>
+          </div>
+        </div>
+        <div class="mixer-result" id="mixerResult">
+          <div class="mr-label">Your style</div>
+          <div class="mr-name" id="mixerName"></div>
+          <div class="mr-text" id="mixerText"></div>
+        </div>
+        <div class="sim-note" id="mixerNote">Select one option from each row</div>
+      </div>
+    </div>
+
+    <div class="callout"><b>Notice something?</b> Just by choosing three ingredients, you described a whole style of music without playing a single note. That's the power of the genre idea: three ingredients tell you almost everything about how a song will sound before you press play.</div>
+  </section>
+
+  <!-- WHY IT MATTERS -->
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>Why Genres Matter in This Course</h2>
+    <p>Genres aren't just labels for fans. They're one of the most important tools in the whole music industry.</p>
+    <p>Streaming apps use genres to decide which songs to recommend to you. Radio stations use them to plan what to play. Record companies use them to figure out who might buy a new song. And here's the connection to our course: <strong>AI systems lean on genres constantly.</strong> When an app seems to magically know what you'll like next, it's often an AI grouping songs by their sound, beat, and feeling, the exact three ingredients you just learned.</p>
+    <p>In the next article, we'll tour the major genres themselves and get to know what makes each one tick.</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">What is a music genre?</div>
+      <button class="quiz-opt" data-c="0">A list of the most popular songs this week</button>
+      <button class="quiz-opt" data-c="1">A category or style of music with a certain sound, beat, and feeling</button>
+      <button class="quiz-opt" data-c="0">The name of the company that releases a song</button>
+      <div class="quiz-explain">A genre is a category or style of music. Songs in the same genre share a similar sound, beat, and feeling.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">Two songs use the exact same instruments, but one makes you want to dance and the other makes you want to cry. Based on the definition, why might they belong to different genres?</div>
+      <button class="quiz-opt" data-c="0">Because they were released in different years</button>
+      <button class="quiz-opt" data-c="0">Because different artists made them</button>
+      <button class="quiz-opt" data-c="1">Because they create different feelings, and feeling is one of the three ingredients of a genre</button>
+      <div class="quiz-explain">Sound is only one ingredient. Beat and feeling matter too, so two songs with the same instruments can still land in different genres.</div>
+    </div>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>A music genre is a category or style of music with a certain sound, beat, and feeling.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>The three ingredients, sound, beat, and feeling, are what your brain uses to recognize a style of music in seconds.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>Genres are working tools for the whole industry, and AI recommendation systems depend on them every day.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* fade in */
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(el=>observer.observe(el));
+
+/* ingredient cards */
+document.querySelectorAll('.ingredient').forEach(p=>{
+  const toggle=()=>{
+    const open=p.classList.toggle('open');
+    p.setAttribute('aria-expanded',open?'true':'false');
+  };
+  p.addEventListener('click',toggle);
+  p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+});
+
+/* style mixer */
+const picks={sound:null,beat:null,feeling:null};
+const soundWords={guitars:"guitar-driven",synths:"electronic",acoustic:"acoustic"};
+const beatWords={fast:"high-speed",bouncy:"danceable",slow:"slow-burning"};
+const feelWords={energy:"high-energy",chill:"laid-back",emotional:"heartfelt"};
+const soundDesc={guitars:"crashing electric guitars",synths:"shimmering computer-made sounds",acoustic:"warm, unplugged instruments"};
+const beatDesc={fast:"a beat that races forward",bouncy:"a rhythm that pulls people to the dance floor",slow:"a gentle pulse that takes its time"};
+const feelDesc={energy:"leaves listeners fired up",chill:"melts stress away",emotional:"hits people right in the heart"};
+
+document.querySelectorAll('.chip-row').forEach(row=>{
+  const group=row.dataset.group;
+  row.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      row.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
+      chip.classList.add('selected');
+      picks[group]=chip.dataset.val;
+      updateMixer();
+    });
+  });
+});
+function updateMixer(){
+  const note=document.getElementById('mixerNote');
+  const result=document.getElementById('mixerResult');
+  if(picks.sound&&picks.beat&&picks.feeling){
+    const name=capitalize(feelWords[picks.feeling])+" "+soundWords[picks.sound]+" music with a "+beatWords[picks.beat]+" beat";
+    document.getElementById('mixerName').textContent=name;
+    document.getElementById('mixerText').textContent="Your style features "+soundDesc[picks.sound]+", carried by "+beatDesc[picks.beat]+", and it "+feelDesc[picks.feeling]+". Somewhere out there, a real genre matches almost exactly what you just described. Try a different combination and watch the style change.";
+    result.classList.add('show');
+    note.textContent="Style complete. Change any ingredient to remix it.";
+  }else{
+    const remaining=3-Object.values(picks).filter(Boolean).length;
+    note.textContent=remaining+" more choice"+(remaining===1?"":"s")+" to go";
+  }
+}
+function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+
+/* quiz */
+document.querySelectorAll('.quiz-q').forEach(q=>{
+  const opts=q.querySelectorAll('.quiz-opt');
+  const explain=q.querySelector('.quiz-explain');
+  let done=false;
+  opts.forEach(o=>{
+    o.addEventListener('click',()=>{
+      if(done)return;
+      done=true;
+      opts.forEach(x=>{if(x.dataset.c==='1')x.classList.add('correct');});
+      if(o.dataset.c!=='1')o.classList.add('wrong');
+      explain.classList.add('show');
+    });
+  });
+});
+</script>
+</body>
+</html>
