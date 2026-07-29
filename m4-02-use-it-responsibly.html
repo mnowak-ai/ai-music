@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI &amp; Music: Use It Responsibly | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --red:#C0392B; --red-light:#FBEDEB;
+    --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(31px,5.6vw,48px);font-weight:700;line-height:1.13;padding-top:64px;margin:0 0 14px;letter-spacing:-.01em;}
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  .rules-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px;margin:30px 0;}
+  .rulec{border:2px solid var(--purple-mid);border-radius:16px;padding:20px;background:#fff;}
+  .rulec .rc-icon{font-size:26px;margin-bottom:8px;}
+  .rulec .rc-text{font-size:14.5px;font-weight:600;line-height:1.5;}
+
+  .studio{background:var(--ink);border-radius:20px;overflow:hidden;margin:32px 0;box-shadow:0 20px 50px rgba(26,21,35,.28);}
+  .studio-head{padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .studio-head .st-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#fff;}
+  .studio-head .st-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;background:rgba(188,135,230,.22);color:#D9BEF2;padding:5px 12px;border-radius:999px;}
+  .studio-body{padding:24px 26px 28px;}
+
+  /* footprint */
+  .fp-layout{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;}
+  @media (max-width:720px){.fp-layout{grid-template-columns:1fr;}}
+  .share-item{
+    display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.05);
+    border-radius:11px;padding:13px 15px;margin-bottom:8px;cursor:pointer;
+    border:2px solid transparent;transition:all .2s;
+  }
+  .share-item:hover{border-color:rgba(188,135,230,.4);}
+  .share-item.on{background:rgba(176,125,43,.16);border-color:rgba(176,125,43,.5);}
+  .share-box{
+    width:20px;height:20px;border-radius:6px;border:2px solid rgba(255,255,255,.3);
+    flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;
+    font-size:12px;color:#fff;transition:all .2s;
+  }
+  .share-item.on .share-box{background:#B07D2B;border-color:#B07D2B;}
+  .share-text{font-size:13.5px;color:#E4D3F5;line-height:1.5;}
+  .fp-panel{background:rgba(255,255,255,.06);border-radius:14px;padding:20px 22px;position:sticky;top:16px;}
+  .fp-label{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px;}
+  .risk-meter{height:9px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden;margin-bottom:6px;}
+  .risk-fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#1E8A5A,#B07D2B,#C0392B);transition:width .45s ease;}
+  .risk-word{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#D9BEF2;margin-bottom:16px;}
+  .cap-list{list-style:none;}
+  .cap-list li{
+    font-size:13px;color:#E4D3F5;line-height:1.55;padding-left:20px;position:relative;margin-bottom:9px;
+    animation:slideIn .3s ease;
+  }
+  @keyframes slideIn{0%{opacity:0;transform:translateX(-6px);}100%{opacity:1;transform:translateX(0);}}
+  .cap-list li::before{content:"→";position:absolute;left:0;color:#F0D08A;}
+  .cap-empty{font-size:13px;color:rgba(255,255,255,.45);line-height:1.6;}
+
+  /* consent tree */
+  .tree-path{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;min-height:26px;}
+  .path-chip{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;
+    background:rgba(188,135,230,.22);color:#D9BEF2;padding:5px 11px;border-radius:999px;
+    animation:slideIn .3s ease;
+  }
+  .tree-q{
+    background:rgba(255,255,255,.06);border-radius:14px;padding:22px 24px;margin-bottom:18px;
+  }
+  .tree-step{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:9px;}
+  .tree-text{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#fff;line-height:1.35;margin-bottom:8px;}
+  .tree-sub{font-size:13.5px;color:rgba(255,255,255,.62);line-height:1.55;}
+  .tree-btns{display:flex;gap:10px;flex-wrap:wrap;}
+  .tb{
+    flex:1;min-width:130px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14.5px;
+    padding:14px;border:2px solid rgba(188,135,230,.35);border-radius:12px;
+    background:rgba(255,255,255,.05);color:#fff;cursor:pointer;transition:all .2s;
+  }
+  .tb:hover{border-color:#BC87E6;background:rgba(188,135,230,.16);}
+  .tb:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .tree-result{border-radius:14px;padding:24px 26px;animation:pop .35s ease;}
+  @keyframes pop{0%{transform:scale(.97);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  .tree-result.stop{background:rgba(192,57,43,.2);border:2px solid rgba(192,57,43,.55);}
+  .tree-result.caution{background:rgba(176,125,43,.2);border:2px solid rgba(176,125,43,.55);}
+  .tree-result.go{background:rgba(30,138,90,.2);border:2px solid rgba(30,138,90,.55);}
+  .tr-icon{font-size:34px;margin-bottom:8px;}
+  .tr-title{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:10px;}
+  .tr-body{font-size:14.5px;color:#E4D3F5;line-height:1.65;margin-bottom:16px;}
+  .restart{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:13.5px;background:transparent;color:#D9BEF2;
+    border:2px solid rgba(188,135,230,.45);border-radius:999px;padding:11px 22px;cursor:pointer;transition:all .25s;
+  }
+  .restart:hover{border-color:#BC87E6;background:rgba(188,135,230,.14);}
+  .restart:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+
+  .law-list{margin:26px 0;}
+  .law-item{display:flex;gap:16px;margin-bottom:14px;background:var(--gray-light);border-radius:12px;padding:18px 20px;}
+  .law-tag{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;color:#fff;background:var(--purple);
+    border-radius:8px;padding:6px 10px;height:fit-content;flex-shrink:0;min-width:88px;text-align:center;
+  }
+  .law-body{font-size:14.5px;line-height:1.6;}
+  .law-body b{color:var(--purple-dark);}
+
+  .steps-list{margin:24px 0;}
+  .step-item{display:flex;gap:16px;margin-bottom:14px;background:var(--gray-light);border-radius:12px;padding:18px 20px;}
+  .step-item .si-num{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:#fff;background:var(--purple);
+    border-radius:8px;min-width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .step-item .si-body{font-size:14.5px;line-height:1.6;}
+  .step-item .si-body b{display:block;margin-bottom:2px;}
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+  .callout.green{background:var(--green-light);border-left-color:var(--green);}
+  .callout.green b{color:var(--green);}
+  .callout.red{background:var(--red-light);border-left-color:var(--red);}
+  .callout.red b{color:var(--red);}
+
+  .quiz-q{border:2px solid var(--purple-mid);border-radius:14px;padding:24px 26px;margin-bottom:18px;background:#fff;}
+  .quiz-q .qq-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--purple);letter-spacing:.12em;margin-bottom:6px;}
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--purple-mid);border-radius:10px;background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);}
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{display:none;font-size:14px;background:var(--gray-light);border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);}
+  .quiz-explain.show{display:block;}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+
+  .sources{margin-top:48px;border-top:2px solid var(--purple-mid);padding-top:24px;}
+  .sources .src-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+  .sources ul{list-style:none;}
+  .sources li{font-size:13.5px;color:var(--gray);margin-bottom:8px;line-height:1.55;}
+  .sources a{color:var(--purple);word-break:break-all;}
+  .disclaimer{font-size:13px;color:var(--gray);font-style:italic;margin-top:16px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <h1>Use It Responsibly</h1>
+    <p class="lede">The last article was about your work. This one is about people, including you. Your face and your voice used to be things only you had. Now they are data, and data can be copied.</p>
+    <div class="meta">
+      <span>Reading time: 10 min</span>
+      <span>Interactive: 2 exercises</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>Four Rules, Two Directions</h2>
+    <p>Everything in this article comes down to four rules. Two of them protect other people from you. Two of them protect you from other people.</p>
+
+    <div class="rules-grid">
+      <div class="rulec">
+        <div class="rc-icon">🧑‍🎤</div>
+        <div class="rc-text">Be careful when sharing your image or likeness in music videos and cover art</div>
+      </div>
+      <div class="rulec">
+        <div class="rc-icon">🙋</div>
+        <div class="rc-text">Don't use someone's voice, or face, without asking them first</div>
+      </div>
+      <div class="rulec">
+        <div class="rc-icon">🎙️</div>
+        <div class="rc-text">Remember: AI can copy voices, so protect your own</div>
+      </div>
+      <div class="rulec">
+        <div class="rc-icon">🚫</div>
+        <div class="rc-text">Don't use music to make fun of, embarrass, or bully someone</div>
+      </div>
+    </div>
+
+    <p>None of this means hide. Musicians have to be visible, and a career in this industry is built partly on people seeing your face and hearing your voice. The goal is not to disappear. The goal is to be visible <em>on purpose</em>, and to know what you are handing over when you post.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>What One Post Actually Gives Away</h2>
+    <p>Here is the thing that surprises people. No single post is the problem. The problem is combinations. A clear photo of your face is one thing. A clear photo plus twenty seconds of your speaking voice plus your real full name is a different thing entirely.</p>
+    <p>Check off what a public version of you already has out there, and watch what becomes possible.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">🔍 The Footprint Simulator</div>
+        <div class="st-tag">What Becomes Possible</div>
+      </div>
+      <div class="studio-body">
+        <div class="fp-layout">
+          <div id="shareList"></div>
+          <div class="fp-panel">
+            <div class="fp-label">Exposure level</div>
+            <div class="risk-meter"><div class="risk-fill" id="riskFill"></div></div>
+            <div class="risk-word" id="riskWord">Nothing shared</div>
+            <div class="fp-label">What someone could now do</div>
+            <ul class="cap-list" id="capList"></ul>
+            <div class="cap-empty" id="capEmpty">Check items on the left to see how capabilities stack up.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout"><b>Read that list again, then take a breath.</b> This is not a reason to delete your accounts, and an artist who never posts anything does not have a career. It is a reason to make deliberate choices: which platforms get your face, whether your singing voice needs to sit on a public account with your legal name attached, and whether your location needs to be in the caption. Visibility is your job. Carelessness is optional.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>Rule 3, Specifically: Your Voice</h2>
+    <p>Voice deserves its own section, because singers are unusually exposed and most people have not thought about it.</p>
+    <p>Voice cloning tools have gotten good enough that a fairly short clean sample can produce a convincing imitation. For a singer, clean vocal samples are not rare, they are your entire public output. That is not a reason to stop posting your music. It is a reason to know two things.</p>
+    <p><strong>First, this is a real and growing problem, not a hypothetical one.</strong> The FBI's 2025 Internet Crime Report logged more than 22,000 AI-related fraud complaints with losses exceeding $893 million, and voice cloning is a significant part of that picture. Much of it is not aimed at musicians at all, it is aimed at their families: a cloned voice on a phone call asking a relative for money urgently.</p>
+    <p><strong>Second, protect the people around you, not just yourself.</strong> The single most effective thing you can do costs nothing: <em>agree on a family code word.</em> A word only your household knows, that anyone claiming an emergency has to say. It sounds almost too simple to work, which is exactly why it works, because a voice clone cannot know something it was never trained on.</p>
+
+    <div class="callout green"><b>Do this one today.</b> Pick a word with your family. Something random, not your dog's name or your street. If a call ever comes that sounds like you and asks for money or help urgently, the word is what settles it. Tell them the reason too, so nobody dismisses it as paranoid.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>Using Someone Else: The Consent Check</h2>
+    <p>Now the other direction. You want to put a friend's face in your music video, sample your cousin's voice, or make a track featuring someone.</p>
+    <p>Work through the questions below. There are hard stops in here, and they are hard stops for a reason.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">✋ The Consent Check</div>
+        <div class="st-tag">Decision Tree</div>
+      </div>
+      <div class="studio-body">
+        <div class="tree-path" id="treePath"></div>
+        <div id="treeHost"></div>
+      </div>
+    </div>
+
+    <div class="callout"><b>Notice where the hardest stop was.</b> It was not the consent question. It was the one about intent. Even a yes does not make it okay to humiliate someone, and a yes you pressured out of a person was never really a yes. Consent is necessary. It is not sufficient.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>Rule 4: The Line Between a Joke and Harm</h2>
+    <p>Music has always roasted people. Diss tracks are a real tradition, comedy songs are a real genre, and nobody is asking you to be humorless.</p>
+    <p>But AI changed the math in a specific way, and it is worth naming precisely. Before, making a convincing video or recording of someone saying something they never said took real skill and effort. Now it takes a few minutes. The effort barrier that used to stop most impulsive cruelty is gone.</p>
+    <p>So here is the practical difference. <strong>A joke invites the other person to laugh. Harassment does not.</strong> If the content only works because the target is humiliated, if you would not show it to them first, if it puts words in their mouth they never said, or if you are making it because you are angry at them, it has stopped being a joke regardless of how funny your friends find it.</p>
+    <p>And understand the stakes clearly: this category is where AI misuse stops being a school discipline issue and becomes a legal one.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">06</span>
+    <h2>Where the Law Actually Stands</h2>
+    <p>This area has changed fast, and most people have not caught up. A short, current picture:</p>
+
+    <div class="law-list">
+      <div class="law-item">
+        <div class="law-tag">FEDERAL</div>
+        <div class="law-body">The <b>TAKE IT DOWN Act</b>, signed into law in May 2025, makes it a federal crime to knowingly publish non-consensual intimate images of adults or minors, and it expressly includes AI-generated "digital forgeries." Penalties reach two years in prison, and three when a minor is depicted.</div>
+      </div>
+      <div class="law-item">
+        <div class="law-tag">PLATFORMS</div>
+        <div class="law-body">That same law requires covered platforms to run a notice-and-removal process and to <b>take reported content down within 48 hours</b> of a valid request, plus make reasonable efforts to remove reposts. That platform requirement took effect in May 2026, so the process exists now.</div>
+      </div>
+      <div class="law-item">
+        <div class="law-tag">VOICE</div>
+        <div class="law-body">Tennessee's <b>ELVIS Act</b> was written specifically to protect musicians' voices from unauthorized AI cloning, and a growing list of states including California, Illinois, New York, Washington and others have laws restricting harmful or commercial use of a cloned voice or likeness.</div>
+      </div>
+      <div class="law-item">
+        <div class="law-tag">FRAUD</div>
+        <div class="law-body">The FCC has ruled that AI voice-clone robocalls are illegal, and the FTC's impersonation rule bars using cloned voices to pose as businesses or government agencies. Using a voice clone to trick someone out of money can also trigger ordinary fraud and identity theft laws in every state.</div>
+      </div>
+    </div>
+
+    <p>Worth being precise about one gap, because you will hear it argued: the federal law is narrower than people assume. It targets non-consensual intimate imagery specifically. A non-intimate deepfake, say a fake video of a classmate saying something they never said, is generally handled by state law, platform rules, and school policy rather than that particular statute. That does not make it acceptable, and it does not make it consequence-free.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">07</span>
+    <h2>If This Happens to You</h2>
+    <p>If someone makes AI content of your face or voice without your permission, here is what to do. Read this now so you are not reading it for the first time in a bad moment.</p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="si-num">1</div>
+        <div class="si-body"><b>Understand that it is not your fault.</b> Not because of what you posted, not because of what you wore, not because you are a performer with a public voice. Someone else chose to do something wrong. Start from there, because shame is what keeps people from reporting.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">2</div>
+        <div class="si-body"><b>Save evidence before anything else.</b> Screenshots, links, URLs, usernames, dates, and the account that posted it. Content gets deleted and re-uploaded constantly, and having the record first makes every later step possible.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">3</div>
+        <div class="si-body"><b>Report it on the platform.</b> Look for impersonation, synthetic media, or non-consensual content in the reporting menu, since a correctly categorized report moves much faster than a generic one. For intimate content, the 48-hour takedown requirement now applies.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">4</div>
+        <div class="si-body"><b>Tell a trusted adult, and do not do this alone.</b> A parent, teacher, counselor, or coach. If you are a student, your school almost certainly has a policy covering this, and adults can escalate in ways you cannot. For serious cases, this is also worth reporting to law enforcement.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">5</div>
+        <div class="si-body"><b>Know that free help exists.</b> If you are under 18 and intimate images of you are circulating, the National Center for Missing &amp; Exploited Children runs a free service called Take It Down that helps get such content removed from participating platforms. You do not have to hand your images to anyone to use it.</div>
+      </div>
+    </div>
+
+    <div class="callout red"><b>And if you are the one who did it.</b> Take it down immediately, apologize directly and without excuses, and tell an adult yourself before they find out another way. That is genuinely the best version of a bad situation, for you and for the person you hurt. Trying to hide it makes everything that follows worse.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">08</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">Why is a family code word an effective protection against voice cloning scams?</div>
+      <button class="quiz-opt" data-c="0">It stops AI tools from being able to copy your voice at all</button>
+      <button class="quiz-opt" data-c="1">A cloned voice can imitate how you sound, but it cannot know a private word it was never trained on</button>
+      <button class="quiz-opt" data-c="0">Phone companies automatically verify code words on all calls</button>
+      <div class="quiz-explain">Cloning copies sound, not knowledge. A shared secret is something the clone has no way to access, which is why such a simple step works so well.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">Someone gives you clear permission to use their face in a video you are making to mock them. What does the Consent Check say?</div>
+      <button class="quiz-opt" data-c="0">Go ahead, since you have their consent</button>
+      <button class="quiz-opt" data-c="1">Stop. Consent is necessary but not sufficient, and content designed to humiliate someone is not okay even with a yes</button>
+      <button class="quiz-opt" data-c="0">Go ahead as long as you do not post it publicly</button>
+      <div class="quiz-explain">Intent matters alongside consent. A yes obtained under social pressure is also not real consent, which is why the intent question is a hard stop.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 3</div>
+      <div class="qq-text">Under the TAKE IT DOWN Act, how quickly must a covered platform remove reported non-consensual intimate content after a valid request?</div>
+      <button class="quiz-opt" data-c="0">Within 30 days</button>
+      <button class="quiz-opt" data-c="1">Within 48 hours</button>
+      <button class="quiz-opt" data-c="0">There is no required timeframe</button>
+      <div class="quiz-explain">48 hours, plus reasonable efforts to remove duplicates and reposts. The platform requirement took effect in May 2026.</div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>No single post is the risk. Combinations are. Face plus voice plus real name plus location unlocks far more than any one of them alone.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>Singers are unusually exposed to voice cloning because clean vocal samples are their public output. A family code word is a free, genuinely effective protection.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>Ask before using anyone's face or voice, get a parent's permission for minors, and remember that consent does not make humiliating content acceptable.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>If it happens to you: it is not your fault, save evidence, report it on the platform, and tell a trusted adult. Real legal protections and free help now exist.</p>
+      </div>
+    </div>
+    <p class="disclaimer">This article is educational material, not legal advice. Laws covering AI likeness, voice, and synthetic media vary by state and are changing quickly. For a specific situation, talk to a trusted adult and, where appropriate, a qualified attorney or law enforcement.</p>
+  </section>
+
+  <div class="sources fade">
+    <div class="src-label">Sources</div>
+    <ul>
+      <li>Skadden, "Take It Down Act Requires Online Platforms To Remove Unauthorized Intimate Images and Deepfakes When Notified" &mdash; <a href="https://www.skadden.com/insights/publications/2025/06/take-it-down-act" target="_blank" rel="noopener">https://www.skadden.com/insights/publications/2025/06/take-it-down-act</a></li>
+      <li>Recording Law, "Deepfake &amp; AI Voice Cloning Laws by State (2026)" (TAKE IT DOWN Act details, ELVIS Act, state voice laws, FCC and FTC rules) &mdash; <a href="https://www.recordinglaw.com/us-laws/deepfake-laws/" target="_blank" rel="noopener">https://www.recordinglaw.com/us-laws/deepfake-laws/</a></li>
+      <li>Latham &amp; Watkins, "President Trump Signs Take It Down Act Into Law" &mdash; <a href="https://www.lw.com/en/insights/president-trump-signs-take-it-down-act-into-law" target="_blank" rel="noopener">https://www.lw.com/en/insights/president-trump-signs-take-it-down-act-into-law</a></li>
+      <li>CybelAngel, on FBI 2025 Internet Crime Report AI-fraud complaint volume and losses &mdash; <a href="https://cybelangel.com/blog/deepfake-ceo-fraud-how-voice-cloning-targets-us-executives/" target="_blank" rel="noopener">https://cybelangel.com/blog/deepfake-ceo-fraud-how-voice-cloning-targets-us-executives/</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target);} });
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(function(el){ observer.observe(el); });
+
+/* ================= FOOTPRINT SIMULATOR ================= */
+var SHARES=[
+ {key:'face', t:'Clear photos of my face on a public profile', w:1},
+ {key:'voice',t:'Videos where I talk, on a public account', w:1},
+ {key:'sing', t:'Clips of me singing, posted publicly', w:1},
+ {key:'name', t:'My real full name attached to those accounts', w:1},
+ {key:'place',t:'My school, city, or regular venues tagged in posts', w:1},
+ {key:'art',  t:'High-resolution cover art or promo shots with my face', w:1}
+];
+var on={};
+var CAPS=[
+ {need:['face'], txt:'Build a realistic still image of you in a place you have never been.'},
+ {need:['voice'], txt:'Produce a short clip of you saying words you never said.'},
+ {need:['sing'], txt:'Create a singing voice model that imitates your tone and style.'},
+ {need:['face','voice'], txt:'Generate a video that looks and sounds like you talking, convincingly enough to fool people who know you casually.'},
+ {need:['voice','name'], txt:'Call someone who knows you, sound like you, and use your real name to make the request believable.'},
+ {need:['sing','name'], txt:'Release AI songs under your name that listeners may believe you recorded.'},
+ {need:['face','name'], txt:'Create fake accounts that impersonate you and message your followers.'},
+ {need:['face','place'], txt:'Work out where you physically are on a predictable schedule.'},
+ {need:['art'], txt:'Pull a high-resolution, well-lit image of your face, which is exactly what makes convincing fakes easier.'},
+ {need:['face','voice','name','place'], txt:'Assemble a complete impersonation package: your look, your sound, your name, and your whereabouts.'}
+];
+var listHost=document.getElementById('shareList');
+SHARES.forEach(function(s,i){
+  var d=document.createElement('div');
+  d.className='share-item';
+  d.setAttribute('role','checkbox');
+  d.setAttribute('tabindex','0');
+  d.setAttribute('aria-checked','false');
+  d.innerHTML='<div class="share-box">✓</div><div class="share-text">'+s.t+'</div>';
+  var toggle=function(){
+    on[s.key]=!on[s.key];
+    d.classList.toggle('on',!!on[s.key]);
+    d.setAttribute('aria-checked',on[s.key]?'true':'false');
+    renderFootprint();
+  };
+  d.addEventListener('click',toggle);
+  d.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
+  listHost.appendChild(d);
+});
+function renderFootprint(){
+  var count=0;
+  SHARES.forEach(function(s){ if(on[s.key]){ count++; } });
+  var caps=CAPS.filter(function(c){
+    return c.need.every(function(n){ return on[n]; });
+  });
+  var fill=document.getElementById('riskFill');
+  var word=document.getElementById('riskWord');
+  var pct=Math.min(100,(caps.length/CAPS.length)*100);
+  fill.style.width=pct+'%';
+  if(count===0){ word.textContent='Nothing shared'; }
+  else if(caps.length<=2){ word.textContent='Low exposure'; }
+  else if(caps.length<=5){ word.textContent='Moderate exposure'; }
+  else { word.textContent='High exposure'; }
+
+  var ul=document.getElementById('capList');
+  var empty=document.getElementById('capEmpty');
+  ul.innerHTML=caps.map(function(c){ return '<li>'+c.txt+'</li>'; }).join('');
+  empty.style.display=caps.length?'none':'block';
+}
+renderFootprint();
+
+/* ================= CONSENT CHECK ================= */
+var NODES={
+ start:{step:'Question 1',
+   q:'Does your project use a real person\u2019s voice, face, or likeness?',
+   sub:'This includes friends, family, classmates, and public figures. It also includes AI-generated versions of them.',
+   a:[{t:'Yes',go:'intent',chip:'Uses a real person'},
+      {t:'No, it\u2019s all mine or fully fictional',go:'clear',chip:'No real person'}]},
+
+ intent:{step:'Question 2',
+   q:'Could this make them look bad, embarrassed, or mocked?',
+   sub:'Be honest. Would they be hurt, humiliated, or angry if they saw it, even if you think it is funny?',
+   a:[{t:'Yes, or maybe',go:'stopIntent',chip:'Could embarrass them'},
+      {t:'No, it\u2019s respectful',go:'asked',chip:'Respectful use'}]},
+
+ asked:{step:'Question 3',
+   q:'Did you actually ask them, and did they clearly say yes?',
+   sub:'Asking means they knew exactly what you were making and where it would go. Silence is not a yes. Neither is "they probably wouldn\u2019t mind."',
+   a:[{t:'Yes, clearly',go:'pressure',chip:'They said yes'},
+      {t:'Not yet, or not clearly',go:'stopAsk',chip:'No clear yes'}]},
+
+ pressure:{step:'Question 4',
+   q:'Was that yes freely given?',
+   sub:'Did you have to push, repeat the ask, or make it awkward to say no? Were you in a position where they might feel they could not refuse?',
+   a:[{t:'Freely given',go:'minor',chip:'Free consent'},
+      {t:'I had to push a bit',go:'stopPressure',chip:'Pressured yes'}]},
+
+ minor:{step:'Question 5',
+   q:'Is the person under 18?',
+   sub:'This changes what permission you need, regardless of how enthusiastic they are about it.',
+   a:[{t:'Yes',go:'stopMinor',chip:'Person is a minor'},
+      {t:'No',go:'public',chip:'Adult'}]},
+
+ public:{step:'Question 6',
+   q:'Will this be public, or will you make money from it?',
+   sub:'Posting publicly or using it commercially raises the stakes, for both of you.',
+   a:[{t:'Yes, public or commercial',go:'writing',chip:'Public / commercial'},
+      {t:'No, just for us',go:'greenPrivate',chip:'Private use'}]},
+
+ writing:{step:'Question 7',
+   q:'Do you have that permission in writing?',
+   sub:'Even a text message saying what they agreed to counts. Memories differ, and friendships change.',
+   a:[{t:'Yes',go:'greenFull',chip:'In writing'},
+      {t:'Not yet',go:'cautionWriting',chip:'Nothing in writing'}]}
+};
+var RESULTS={
+ clear:{kind:'go',icon:'✅',title:'You\u2019re clear',
+   body:'Nobody else\u2019s likeness is involved, so the consent rules do not apply here. The rest of the course\u2019s ethics still do: be honest about what AI made, and do not imitate a specific artist\u2019s voice or identity.'},
+ stopIntent:{kind:'stop',icon:'🛑',title:'Stop here',
+   body:'This is the hard stop, and it comes before the consent question on purpose. Content designed to embarrass or mock a real person is not okay even if they somehow agreed to it. It is also the category most likely to become a school discipline issue or a legal one. If you are making it because you are angry at someone, that is the clearest signal of all. Make something else.'},
+ stopAsk:{kind:'stop',icon:'🛑',title:'Ask first',
+   body:'Do not build it yet. Go ask them, explain exactly what you are making and where it will be posted, and accept whatever answer you get. "They probably would not mind" is not consent, and finding out you were wrong after posting is a genuinely bad way to lose a friend.'},
+ stopPressure:{kind:'stop',icon:'🛑',title:'That was not really a yes',
+   body:'A yes you had to work for is not consent, it is compliance. If someone needed convincing, the honest read is that they did not want to and found it hard to say so. Let it go, and notice that they will remember whether you respected that.'},
+ stopMinor:{kind:'caution',icon:'⚠️',title:'You need a parent or guardian too',
+   body:'For anyone under 18, permission from the person is not enough on its own. You need a parent or guardian\u2019s approval as well, especially for anything public. Schools and platforms both take this seriously, and so should you. Get the adult yes, then come back through this check.'},
+ greenPrivate:{kind:'go',icon:'✅',title:'Good to go',
+   body:'You asked, they freely agreed, it is respectful, and it stays private. That is exactly how this should work. One habit worth keeping anyway: if they ever change their mind later, take it down without arguing.'},
+ greenFull:{kind:'go',icon:'✅',title:'Green light',
+   body:'Asked, freely agreed, respectful, adult, and documented. That is a genuinely professional standard, and it is the same process real music video sets follow with release forms. Keep the message thread somewhere you can find it.'},
+ cautionWriting:{kind:'caution',icon:'⚠️',title:'Get it in writing first',
+   body:'Verbal permission between friends is fine until something changes: the video gets attention, someone gets embarrassed, or the friendship cools. A single text saying "yes, you can use my face and voice in your video, including posting it publicly" takes thirty seconds and protects both of you. Send it now, then proceed.'}
+};
+
+var path=[], node='start';
+function renderTree(){
+  var host=document.getElementById('treeHost');
+  var pathEl=document.getElementById('treePath');
+  pathEl.innerHTML=path.map(function(p){ return '<span class="path-chip">'+p+'</span>'; }).join('');
+
+  if(RESULTS[node]){
+    var r=RESULTS[node];
+    host.innerHTML='<div class="tree-result '+r.kind+'">'
+      +'<div class="tr-icon">'+r.icon+'</div>'
+      +'<div class="tr-title">'+r.title+'</div>'
+      +'<div class="tr-body">'+r.body+'</div>'
+      +'<button class="restart" id="restartBtn">Start over</button>'
+      +'</div>';
+    document.getElementById('restartBtn').addEventListener('click',function(){
+      path=[]; node='start'; renderTree();
+    });
+    return;
+  }
+  var n=NODES[node];
+  host.innerHTML='<div class="tree-q">'
+    +'<div class="tree-step">'+n.step+'</div>'
+    +'<div class="tree-text">'+n.q+'</div>'
+    +'<div class="tree-sub">'+n.sub+'</div>'
+    +'</div>'
+    +'<div class="tree-btns">'
+    +n.a.map(function(a,i){ return '<button class="tb" data-i="'+i+'">'+a.t+'</button>'; }).join('')
+    +'</div>';
+  host.querySelectorAll('.tb').forEach(function(b){
+    b.addEventListener('click',function(){
+      var a=n.a[parseInt(b.getAttribute('data-i'),10)];
+      path.push(a.chip);
+      node=a.go;
+      renderTree();
+    });
+  });
+}
+renderTree();
+
+/* ================= quiz ================= */
+document.querySelectorAll('.quiz-q').forEach(function(q){
+  var opts=q.querySelectorAll('.quiz-opt');
+  var explain=q.querySelector('.quiz-explain');
+  var done=false;
+  opts.forEach(function(o){
+    o.addEventListener('click',function(){
+      if(done){ return; }
+      done=true;
+      opts.forEach(function(x){ if(x.getAttribute('data-c')==='1'){ x.classList.add('correct'); } });
+      if(o.getAttribute('data-c')!=='1'){ o.classList.add('wrong'); }
+      explain.classList.add('show');
+    });
+  });
+});
+
+})();
+</script>
+</body>
+</html>
