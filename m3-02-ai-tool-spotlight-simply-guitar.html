@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tool Spotlight: Simply Guitar | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --red:#C0392B; --red-light:#FBEDEB;
+    --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(30px,5.6vw,46px);font-weight:700;line-height:1.14;padding-top:64px;margin:0 0 14px;letter-spacing:-.01em;}
+  .spotlight-badge{
+    display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);background:var(--purple-light);
+    border-radius:999px;padding:7px 16px;margin-top:64px;
+  }
+  .spotlight-badge + h1{padding-top:14px;}
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  /* app id card */
+  .app-card{border:2px solid var(--purple);border-radius:18px;padding:28px 30px;margin:28px 0;background:var(--purple-light);}
+  .app-card .ac-top{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
+  .app-card .ac-icon{font-size:36px;}
+  .app-card .ac-name{font-family:'Fraunces',serif;font-size:24px;font-weight:700;}
+  .app-card .ac-maker{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--gray);}
+  .app-card .ac-tagline{font-size:15px;color:var(--purple-dark);font-weight:600;margin-bottom:14px;}
+  .feat-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;}
+  .feat-item{background:#fff;border-radius:10px;padding:12px 16px;font-size:14px;display:flex;gap:10px;align-items:flex-start;}
+  .feat-item .fi-check{color:var(--green);font-weight:700;flex-shrink:0;}
+  .best-for{margin-top:14px;background:#fff;border-radius:10px;padding:12px 16px;font-size:14px;}
+  .best-for b{color:var(--purple-dark);}
+
+  /* sim shell */
+  .sim{border:2px solid var(--purple);border-radius:18px;overflow:hidden;margin:32px 0;background:#fff;}
+  .sim-head{background:var(--purple);color:#fff;padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .sim-head .sh-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;}
+  .sim-head .sh-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.18);padding:5px 12px;border-radius:999px;}
+  .sim-body{padding:28px;}
+
+  /* lesson walkthrough */
+  .step-track{display:flex;gap:6px;margin-bottom:24px;}
+  .step-seg{height:6px;flex:1;background:var(--purple-mid);border-radius:99px;transition:background .4s;}
+  .step-seg.done{background:var(--purple);}
+  .step-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:6px;}
+  .step-title{font-family:'Fraunces',serif;font-size:23px;font-weight:700;margin-bottom:10px;}
+  .step-text{font-size:15.5px;margin-bottom:20px;min-height:60px;}
+  .sim-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;
+    background:var(--purple);color:#fff;border:none;border-radius:999px;
+    padding:13px 30px;cursor:pointer;transition:background .3s,transform .15s;
+  }
+  .sim-btn:hover{background:var(--purple-dark);transform:translateY(-1px);}
+  .sim-btn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .sim-btn.secondary{background:#fff;color:var(--purple);border:2px solid var(--purple);}
+  .sim-note{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:14px;}
+
+  /* fit check */
+  .profile-card{background:var(--purple-light);border-radius:14px;padding:24px 26px;margin-bottom:20px;}
+  .profile-card .pc-label{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+  .profile-card .pc-text{font-size:15.5px;line-height:1.65;font-style:italic;}
+  .fit-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .fit-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;padding:16px;
+    border:2px solid var(--purple-mid);border-radius:12px;background:#fff;cursor:pointer;
+    transition:all .25s;color:var(--ink);
+  }
+  .fit-btn:hover{border-color:var(--purple);background:var(--purple-light);}
+  .fit-btn:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .fit-btn.correct{background:var(--green-light);border-color:var(--green);color:var(--green);}
+  .fit-btn.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .fit-feedback{margin-top:16px;border-radius:10px;padding:14px 18px;font-size:14.5px;display:none;}
+  .fit-feedback.good{display:block;background:var(--green-light);color:var(--green);}
+  .fit-feedback.bad{display:block;background:var(--red-light);color:var(--red);}
+  .fit-score{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gray);margin-top:16px;}
+  .fit-score b{color:var(--purple);}
+  .fit-progress{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin-bottom:14px;}
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+
+  .quiz-q{border:2px solid var(--purple-mid);border-radius:14px;padding:24px 26px;margin-bottom:18px;background:#fff;}
+  .quiz-q .qq-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--purple);letter-spacing:.12em;margin-bottom:6px;}
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--purple-mid);border-radius:10px;background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);}
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{display:none;font-size:14px;background:var(--gray-light);border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);}
+  .quiz-explain.show{display:block;}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+
+  .sources{margin-top:48px;border-top:2px solid var(--purple-mid);padding-top:24px;}
+  .sources .src-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+  .sources ul{list-style:none;}
+  .sources li{font-size:13.5px;color:var(--gray);margin-bottom:8px;line-height:1.55;}
+  .sources a{color:var(--purple);word-break:break-all;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <div class="spotlight-badge">🔦 AI Tool Spotlight</div>
+    <h1>Simply Guitar: Real-Life Guitar Hero</h1>
+    <p class="lede">You've learned the theory behind AI practice tools. Now let's zoom into one real app and see exactly how the theory plays out, note by note.</p>
+    <div class="meta">
+      <span>Reading time: 6 min</span>
+      <span>Interactive: 2 activities</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <!-- HOOK -->
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>Remember Guitar Hero?</h2>
+    <p>If you've ever played the video game Guitar Hero, you know the feeling: colored notes scroll toward you, you hit the matching button in time, and the game scores you instantly. It's addictive because the feedback is instant.</p>
+    <p>Now imagine that same instant-feedback feeling, except instead of a plastic toy guitar and made-up buttons, you're holding a real guitar and playing real notes. That's the entire idea behind <strong>Simply Guitar</strong>, an app built by a company called Simply (formerly known as JoyTunes), which also makes the popular piano app Simply Piano. It's real music, played on a real instrument, with the instant feedback loop of a video game.</p>
+  </section>
+
+  <!-- APP CARD -->
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>Meet the App</h2>
+
+    <div class="app-card">
+      <div class="ac-top">
+        <div class="ac-icon">🎸</div>
+        <div>
+          <div class="ac-name">Simply Guitar (and Simply Piano)</div>
+          <div class="ac-maker">Made by Simply, formerly JoyTunes &middot; Tel Aviv, Israel</div>
+        </div>
+      </div>
+      <div class="ac-tagline">"Real Life Guitar Hero": learn guitar (or piano) with real-time audio recognition and instant feedback.</div>
+      <div class="feat-list">
+        <div class="feat-item"><span class="fi-check">✓</span> Real-time audio recognition listens as you play guitar, free to start</div>
+        <div class="feat-item"><span class="fi-check">✓</span> Instant feedback on timing, pitch, and rhythm</div>
+        <div class="feat-item"><span class="fi-check">✓</span> Tracks your progress through structured lessons and games</div>
+        <div class="feat-item"><span class="fi-check">✓</span> Built-in tuner and a growing library of real songs to learn</div>
+      </div>
+      <div class="best-for"><b>Best for:</b> beginner to intermediate players who want interactive lessons paired with real-time feedback, rather than a static video or lesson book.</div>
+    </div>
+
+    <p>Here's how it actually works, according to the company: you place your phone or tablet where it can hear your guitar, and its <strong>audio recognition engine</strong> (technology that identifies exactly which notes and chords you're playing from sound alone) listens in real time. If you play the right note at the right time, the app confirms it instantly. If you're early, late, or off-pitch, it tells you that too, on the spot, not after the fact.</p>
+  </section>
+
+  <!-- LESSON WALKTHROUGH -->
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>Walk Through One Lesson</h2>
+    <p>Let's break down exactly what happens during a few minutes with an app like this. Click through the five steps of a typical practice moment.</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">Inside a Simply Guitar Lesson</div>
+        <div class="sh-tag">Step-by-Step</div>
+      </div>
+      <div class="sim-body">
+        <div class="step-track" id="stepTrack"></div>
+        <div class="step-label" id="stepLabel"></div>
+        <div class="step-title" id="stepTitle"></div>
+        <div class="step-text" id="stepText"></div>
+        <button class="sim-btn" id="stepNext">Start the lesson</button>
+        <div class="sim-note" id="stepNote">Step 0 of 5</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FIT CHECK -->
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>You Try It: Is This App the Right Fit?</h2>
+    <p>Not every tool fits every learner. Here are four short learner profiles. For each one, decide: would an app like Simply Guitar, real-time feedback and structured lessons, be a strong fit, or would this person likely be better served another way?</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <div class="sh-title">Good Fit or Not?</div>
+        <div class="sh-tag">Scenario Challenge</div>
+      </div>
+      <div class="sim-body">
+        <div class="fit-progress" id="fitProgress">Scenario 1 of 4</div>
+        <div class="profile-card">
+          <div class="pc-label">Learner Profile</div>
+          <div class="pc-text" id="fitText"></div>
+        </div>
+        <div class="fit-options">
+          <button class="fit-btn" data-fit="yes">Strong Fit</button>
+          <button class="fit-btn" data-fit="no">Not the Best Fit</button>
+        </div>
+        <div class="fit-feedback" id="fitFeedback"></div>
+        <div class="fit-score">Score: <b id="fitScore">0</b> / 4</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY IT MATTERS -->
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>The Bigger Lesson Here</h2>
+    <p>Simply Guitar is just one example, but it's a perfect case study of a pattern you'll see across the entire music AI landscape: <strong>a real, complex human skill (playing an instrument) gets broken into small pieces a computer can measure (note, pitch, timing), and AI gives instant feedback on those pieces.</strong></p>
+    <p>That pattern shows up everywhere in this course, not just in learning apps. Whenever you see "AI" attached to a music tool, a useful habit is to ask: what specific thing is the AI measuring or listening for, and what is it doing with that information? For Simply Guitar, the answer is simple: it measures notes, pitch, and timing, and it responds instantly. That clarity is exactly why it works.</p>
+  </section>
+
+  <div class="callout fade"><b>Worth remembering:</b> like the other apps in this space, Simply Guitar can tell you <em>what</em> note you played and <em>when</em>, but it can't fully judge your posture, your tone quality, or your musical expression the way a human teacher's ear can. It's an excellent daily practice partner, not a total replacement for a teacher.</div>
+
+  <!-- QUIZ -->
+  <section class="fade">
+    <span class="section-num">06</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">How does Simply Guitar know whether you played the right note?</div>
+      <button class="quiz-opt" data-c="0">A person listens to a recording of you later and emails you feedback</button>
+      <button class="quiz-opt" data-c="1">An audio recognition engine listens to your guitar in real time and identifies the notes you play</button>
+      <button class="quiz-opt" data-c="0">You have to type in what note you think you played</button>
+      <div class="quiz-explain">The app's audio recognition engine listens through your device's microphone and identifies notes, pitch, and timing instantly, without any typing or waiting.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">What is the "bigger lesson" this article draws from the Simply Guitar example?</div>
+      <button class="quiz-opt" data-c="0">All AI music tools are exactly the same as each other</button>
+      <button class="quiz-opt" data-c="1">AI tools often break a complex human skill into measurable pieces and give instant feedback on those pieces</button>
+      <button class="quiz-opt" data-c="0">AI can fully replace a human music teacher in every way</button>
+      <div class="quiz-explain">Simply Guitar breaks playing guitar into measurable pieces, notes, pitch, timing, and gives instant feedback on them. That same pattern shows up across many AI music tools.</div>
+    </div>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>Simply Guitar (and its sister app Simply Piano) use real-time audio recognition to listen as you play and give instant feedback on timing, pitch, and rhythm.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>The app is best suited to beginner and intermediate players who want interactive lessons paired with instant feedback, rather than static videos or books.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>The broader pattern: AI tools break complex human skills into small, measurable pieces and respond to them instantly, a pattern worth recognizing across many music AI tools.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>Even the best practice app can't fully judge posture or musical expression, so it works best as a daily companion alongside occasional human instruction.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sources fade">
+    <div class="src-label">Sources</div>
+    <ul>
+      <li>Wikipedia, "Simply (software company)," overview of Simply Guitar and Simply Piano &mdash; <a href="https://en.wikipedia.org/wiki/Simply_(software_company)" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Simply_(software_company)</a></li>
+      <li>Simply Guitar, official app description, Apple App Store &mdash; <a href="https://apps.apple.com/us/app/simply-guitar-learn-guitar/id1476695335" target="_blank" rel="noopener">https://apps.apple.com/us/app/simply-guitar-learn-guitar/id1476695335</a></li>
+      <li>Simply, official product page for Simply Guitar &mdash; <a href="https://www.hellosimply.com/simply-guitar" target="_blank" rel="noopener">https://www.hellosimply.com/simply-guitar</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(el=>observer.observe(el));
+
+/* ---------- lesson walkthrough ---------- */
+const steps=[
+  {label:"Getting ready",title:"Set up your instrument",text:"You prop your phone or tablet up near your guitar. No cables, no MIDI adapter required, just the device's microphone pointed toward the strings."},
+  {label:"Step 1 · Listen",title:"The app opens its ears",text:"You tap into a lesson, maybe your first open chord. The app's audio recognition engine activates, ready to listen for the exact notes that chord requires."},
+  {label:"Step 2 · Play",title:"You strum",text:"You place your fingers and strum the chord. In a traditional lesson book, this is where you'd have to just guess if it sounded right."},
+  {label:"Step 3 · Recognize",title:"The engine identifies your notes",text:"Instantly, the app analyzes the sound and identifies exactly which notes rang out, and compares them to the notes the chord should contain."},
+  {label:"Step 4 · Feedback",title:"You see the result immediately",text:"The screen lights up: which strings rang clearly, which were muted or buzzing, and whether your timing matched the beat. No waiting for a teacher's next comment."},
+  {label:"Step 5 · Progress",title:"Your growth gets tracked",text:"The app logs this chord as practiced, adjusts your next challenge based on how you did, and your progress bar climbs. Tomorrow's lesson picks up exactly where today left off."}
+];
+let stepIndex=0;
+const stepTrack=document.getElementById('stepTrack');
+for(let i=0;i<steps.length-1;i++){
+  const seg=document.createElement('div');
+  seg.className='step-seg';
+  stepTrack.appendChild(seg);
+}
+const stepSegs=document.querySelectorAll('.step-seg');
+const stepBtn=document.getElementById('stepNext');
+function renderStep(){
+  const s=steps[stepIndex];
+  document.getElementById('stepLabel').textContent=s.label;
+  document.getElementById('stepTitle').textContent=s.title;
+  document.getElementById('stepText').textContent=s.text;
+  stepSegs.forEach((seg,i)=>seg.classList.toggle('done',i<stepIndex));
+  document.getElementById('stepNote').textContent='Step '+stepIndex+' of '+(steps.length-1);
+  if(stepIndex===0){stepBtn.textContent='Start the lesson';stepBtn.classList.remove('secondary');}
+  else if(stepIndex<steps.length-1){stepBtn.textContent='Next step';stepBtn.classList.remove('secondary');}
+  else{stepBtn.textContent='Restart walkthrough';stepBtn.classList.add('secondary');}
+}
+stepBtn.addEventListener('click',()=>{
+  if(stepIndex===steps.length-1){stepIndex=0;}
+  else{stepIndex++;}
+  renderStep();
+});
+renderStep();
+
+/* ---------- fit check ---------- */
+const scenarios=[
+ {text:"Jamal is 13 and has never touched a guitar. He wants to learn a few chords over the summer and likes video games with instant scoring.",fit:"yes",why:"A total beginner who's motivated by instant, game-like feedback is exactly who tools like this are designed for."},
+ {text:"Mariana is training for a classical guitar conservatory audition and needs expert feedback on her hand posture, tone quality, and interpretation of a specific piece.",fit:"no",why:"Posture, tone, and artistic interpretation at an audition level need a real teacher's trained eye and ear, not just note and timing detection."},
+ {text:"Devon plays drums already and wants to pick up guitar as a fun second instrument, practicing 15 minutes a day whenever he has free time, with no fixed lesson schedule.",fit:"yes",why:"Flexible, self-paced daily practice with instant feedback is one of this kind of app's biggest strengths."},
+ {text:"Priya is a complete beginner who lives in a shared apartment with paper-thin walls and can only practice guitar silently using headphones and an electric guitar plugged in directly.",fit:"no",why:"These apps typically listen through a microphone to sound in the room, so a fully silent, headphone-only setup may not give the app anything to listen to."}
+];
+let fIndex=0,fScore=0,fAnswered=false;
+function renderScenario(){
+  const s=scenarios[fIndex];
+  document.getElementById('fitProgress').textContent='Scenario '+(fIndex+1)+' of '+scenarios.length;
+  document.getElementById('fitText').textContent=s.text;
+  document.getElementById('fitFeedback').className='fit-feedback';
+  document.querySelectorAll('.fit-btn').forEach(b=>{b.className='fit-btn';b.disabled=false;});
+  fAnswered=false;
+}
+document.querySelectorAll('.fit-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(fAnswered)return;
+    fAnswered=true;
+    const s=scenarios[fIndex];
+    const pick=btn.dataset.fit;
+    document.querySelectorAll('.fit-btn').forEach(b=>{
+      b.disabled=true;
+      if(b.dataset.fit===s.fit)b.classList.add('correct');
+    });
+    const fb=document.getElementById('fitFeedback');
+    if(pick===s.fit){
+      fScore++;
+      document.getElementById('fitScore').textContent=fScore;
+      fb.className='fit-feedback good';
+      fb.textContent='Right call. '+s.why;
+    }else{
+      btn.classList.add('wrong');
+      fb.className='fit-feedback bad';
+      fb.textContent='Not quite. '+s.why;
+    }
+    setTimeout(()=>{
+      if(fIndex<scenarios.length-1){fIndex++;renderScenario();}
+      else{
+        document.getElementById('fitProgress').textContent='Challenge complete';
+        document.getElementById('fitText').textContent='You scored '+fScore+' of '+scenarios.length+'. '+(fScore>=3?'You clearly understand what this kind of tool is, and isn\'t, built for.':'Good effort. The key question is always: can the app actually hear what it needs to hear, and does the learner need a human judgment call it can\'t make?');
+        fb.className='fit-feedback';
+        document.querySelectorAll('.fit-btn').forEach(b=>b.style.display='none');
+      }
+    },3000);
+  });
+});
+renderScenario();
+
+/* quiz */
+document.querySelectorAll('.quiz-q').forEach(q=>{
+  const opts=q.querySelectorAll('.quiz-opt');
+  const explain=q.querySelector('.quiz-explain');
+  let done=false;
+  opts.forEach(o=>{
+    o.addEventListener('click',()=>{
+      if(done)return;
+      done=true;
+      opts.forEach(x=>{if(x.dataset.c==='1')x.classList.add('correct');});
+      if(o.dataset.c!=='1')o.classList.add('wrong');
+      explain.classList.add('show');
+    });
+  });
+});
+</script>
+</body>
+</html>
