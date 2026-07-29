@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI &amp; Ethics: The Three Golden Rules | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --red:#C0392B; --red-light:#FBEDEB;
+    --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(32px,6vw,50px);font-weight:700;line-height:1.12;padding-top:64px;margin:0 0 14px;letter-spacing:-.01em;}
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  h3{font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin:32px 0 10px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  /* golden rules */
+  .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:32px 0;}
+  .rule{
+    border-radius:18px;padding:26px 24px;background:linear-gradient(165deg,#5A1F8E,#7B2FBE);color:#fff;
+    position:relative;overflow:hidden;
+  }
+  .rule .r-num{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;
+    color:rgba(255,255,255,.55);margin-bottom:8px;
+  }
+  .rule .r-name{
+    font-family:'Fraunces',serif;font-size:25px;font-weight:700;font-style:italic;
+    letter-spacing:.02em;margin-bottom:10px;
+  }
+  .rule .r-text{font-size:14px;line-height:1.6;color:rgba(255,255,255,.9);}
+  .rule .r-short{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;
+    color:#D9BEF2;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.2);
+  }
+
+  .studio{background:var(--ink);border-radius:20px;overflow:hidden;margin:32px 0;box-shadow:0 20px 50px rgba(26,21,35,.28);}
+  .studio-head{padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .studio-head .st-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#fff;}
+  .studio-head .st-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;background:rgba(188,135,230,.22);color:#D9BEF2;padding:5px 12px;border-radius:999px;}
+  .studio-body{padding:24px 26px 28px;}
+
+  /* the line */
+  .scenario-count{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:10px;}
+  .scenario-text{font-size:16.5px;color:#fff;line-height:1.6;margin-bottom:24px;min-height:78px;}
+  .line-wrap{position:relative;margin:0 6px 8px;}
+  .line-track{position:relative;height:10px;background:linear-gradient(90deg,#C0392B,#B07D2B,#1E8A5A);border-radius:99px;opacity:.55;}
+  .consider-band{
+    position:absolute;top:-5px;height:20px;border-radius:6px;
+    background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.55);
+    opacity:0;transition:opacity .5s ease;pointer-events:none;
+  }
+  .consider-band.show{opacity:1;}
+  input[type=range].line-input{
+    -webkit-appearance:none;appearance:none;width:100%;background:transparent;
+    position:absolute;top:-8px;left:0;height:26px;margin:0;
+  }
+  input[type=range].line-input::-webkit-slider-thumb{
+    -webkit-appearance:none;width:24px;height:24px;border-radius:50%;
+    background:#fff;border:4px solid #7B2FBE;cursor:grab;box-shadow:0 3px 10px rgba(0,0,0,.4);
+  }
+  input[type=range].line-input::-moz-range-thumb{
+    width:20px;height:20px;border-radius:50%;background:#fff;border:4px solid #7B2FBE;cursor:grab;
+  }
+  input[type=range].line-input:focus-visible{outline:3px solid #BC87E6;outline-offset:6px;}
+  .line-labels{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.4);margin:14px 6px 20px;}
+
+  .commit-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .commit-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:14.5px;background:var(--purple);color:#fff;
+    border:none;border-radius:999px;padding:13px 28px;cursor:pointer;transition:background .25s,transform .12s;
+  }
+  .commit-btn:hover{background:#9350D1;}
+  .commit-btn:active{transform:scale(.97);}
+  .commit-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .commit-btn.ghost{background:transparent;color:#D9BEF2;border:2px solid rgba(188,135,230,.45);}
+  .commit-btn.ghost:hover{background:rgba(188,135,230,.14);border-color:#BC87E6;}
+
+  .reveal{display:none;margin-top:20px;}
+  .reveal.show{display:block;animation:pop .4s ease;}
+  @keyframes pop{0%{transform:scale(.98);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  .reveal-tag{
+    display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;
+    letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:12px;
+  }
+  .reveal-tag.rule1{background:rgba(147,80,209,.35);color:#D9BEF2;}
+  .reveal-tag.rule2{background:rgba(176,125,43,.32);color:#F0D08A;}
+  .reveal-tag.rule3{background:rgba(30,138,90,.3);color:#8FE3BC;}
+  .reveal-body{font-size:14.5px;color:#E4D3F5;line-height:1.65;}
+  .reveal-body b{color:#fff;}
+  .contested{
+    margin-top:12px;background:rgba(176,125,43,.18);border-radius:10px;padding:12px 15px;
+    font-size:13px;color:#F0D08A;line-height:1.55;
+  }
+
+  /* verify trap */
+  .claim{
+    background:rgba(255,255,255,.05);border-radius:14px;padding:18px 20px;margin-bottom:12px;
+    border-left:4px solid rgba(188,135,230,.4);
+  }
+  .claim-head{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+  .claim-av{width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,#9350D1,#5A1F8E);display:flex;align-items:center;justify-content:center;font-size:12px;}
+  .claim-src{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);}
+  .claim-text{font-size:14.5px;color:#fff;line-height:1.6;margin-bottom:14px;}
+  .claim-btns{display:flex;gap:8px;flex-wrap:wrap;}
+  .claim-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:12.5px;padding:9px 16px;
+    border:2px solid rgba(188,135,230,.3);border-radius:999px;background:rgba(255,255,255,.05);
+    color:rgba(255,255,255,.72);cursor:pointer;transition:all .2s;
+  }
+  .claim-btn:hover{border-color:#BC87E6;color:#fff;}
+  .claim-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .claim-btn.picked{background:#7B2FBE;border-color:#BC87E6;color:#fff;}
+  .claim-verdict{display:none;margin-top:13px;border-radius:10px;padding:12px 15px;font-size:13px;line-height:1.6;}
+  .claim-verdict.show{display:block;}
+  .claim-verdict.true{background:rgba(30,138,90,.22);color:#8FE3BC;}
+  .claim-verdict.false{background:rgba(192,57,43,.24);color:#F5A9A0;}
+  .claim-verdict b{color:#fff;}
+  .claim.wrongcall{border-left-color:#C0392B;}
+  .claim.rightcall{border-left-color:#1E8A5A;}
+  .trap-result{
+    display:none;margin-top:18px;background:rgba(188,135,230,.16);border-radius:14px;padding:20px 22px;
+    color:#E4D3F5;font-size:14.5px;line-height:1.65;
+  }
+  .trap-result.show{display:block;animation:pop .4s ease;}
+  .trap-result b{color:#fff;}
+
+  .studio-msg{
+    margin-top:18px;background:rgba(188,135,230,.14);border-radius:12px;padding:14px 18px;
+    color:#E4D3F5;font-size:14px;line-height:1.6;display:flex;gap:10px;align-items:flex-start;
+  }
+  .studio-msg b{color:#fff;}
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+  .callout.green{background:var(--green-light);border-left-color:var(--green);}
+  .callout.green b{color:var(--green);}
+
+  .policy{background:var(--purple-light);border-radius:18px;padding:30px 34px;margin:32px 0;}
+  .policy h3{margin-top:0;color:var(--purple-dark);}
+  .policy ol{list-style:none;counter-reset:pol;}
+  .policy li{
+    counter-increment:pol;padding-left:44px;position:relative;margin-bottom:14px;font-size:15px;line-height:1.6;
+  }
+  .policy li::before{
+    content:counter(pol);position:absolute;left:0;top:1px;
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:12px;color:#fff;background:var(--purple);
+    width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  }
+  .policy li b{color:var(--purple-dark);}
+
+  .quiz-q{border:2px solid var(--purple-mid);border-radius:14px;padding:24px 26px;margin-bottom:18px;background:#fff;}
+  .quiz-q .qq-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--purple);letter-spacing:.12em;margin-bottom:6px;}
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--purple-mid);border-radius:10px;background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);}
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{display:none;font-size:14px;background:var(--gray-light);border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);}
+  .quiz-explain.show{display:block;}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <h1>AI &amp; Ethics</h1>
+    <p class="lede">You now know how to use these tools. This article is about the harder question: when should you, and when should you stop? There is an old line about power arriving with responsibility. It applies here more than most places.</p>
+    <div class="meta">
+      <span>Reading time: 9 min</span>
+      <span>Interactive: 2 exercises</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>Nobody Is Going to Tell You the Rules</h2>
+    <p>Here is the awkward reality of entering the music industry right now. The laws are being written while you work. Platform policies change every few months. Your teachers, your future manager, and the label down the street may all have different opinions about what is acceptable.</p>
+    <p>So you cannot wait for someone to hand you the rules. You need a set of your own, simple enough to actually use when you are tired and on a deadline and nobody is watching.</p>
+    <p>Three rules will carry you through almost every situation you will face.</p>
+
+    <div class="rules">
+      <div class="rule">
+        <div class="r-num">RULE 01</div>
+        <div class="r-name">Assist</div>
+        <div class="r-text">AI works for you, not instead of you. Use it to speed up, sharpen, and support the work. The moment it is doing the thinking you were supposed to do, you have swapped a tool for a replacement.</div>
+        <div class="r-short">Ask: am I still the one making this?</div>
+      </div>
+      <div class="rule">
+        <div class="r-num">RULE 02</div>
+        <div class="r-name">Verify</div>
+        <div class="r-text">Check everything before it leaves your hands. AI states wrong things with exactly the same confidence it states right ones. Whatever you publish, you own, including the mistakes you did not catch.</div>
+        <div class="r-short">Ask: do I actually know this is true?</div>
+      </div>
+      <div class="rule">
+        <div class="r-name" style="margin-top:0;"><span class="r-num" style="display:block;">RULE 03</span>Respect Originality</div>
+        <div class="r-text">Other people's work is not raw material. Do not pass off generated work as your own performance, and do not use AI to imitate a specific artist's voice or identity.</div>
+        <div class="r-short">Ask: whose work is this really?</div>
+      </div>
+    </div>
+
+    <p>Simple to say. Much harder in the moment, because real situations are rarely clean. So let's practice on some that are not.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>Practice: Where Is the Line?</h2>
+    <p>Six situations. For each one, drag the marker to where you think it sits, from clearly not okay to clearly fine. Then lock it in and see the reasoning.</p>
+    <p>Fair warning: <strong>one of these has no clean answer,</strong> and the reveal will say so. Ethics is not a quiz with a key at the back.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">⚖️ The Line</div>
+        <div class="st-tag">Judgment Exercise</div>
+      </div>
+      <div class="studio-body">
+        <div class="scenario-count" id="scCount"></div>
+        <div class="scenario-text" id="scText"></div>
+
+        <div class="line-wrap">
+          <div class="line-track"></div>
+          <div class="consider-band" id="band"></div>
+          <input type="range" class="line-input" id="lineInput" min="0" max="100" value="50" aria-label="Place this scenario from not okay to fine">
+        </div>
+        <div class="line-labels">
+          <span>Clearly not okay</span>
+          <span>Depends</span>
+          <span>Clearly fine</span>
+        </div>
+
+        <div class="commit-row">
+          <button class="commit-btn" id="commitBtn">Lock in my answer</button>
+          <button class="commit-btn ghost" id="nextBtn" style="display:none;">Next situation →</button>
+        </div>
+
+        <div class="reveal" id="reveal">
+          <div class="reveal-tag" id="revealTag"></div>
+          <div class="reveal-body" id="revealBody"></div>
+          <div class="contested" id="contested" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>Rule Two Deserves Its Own Test</h2>
+    <p>Of the three rules, <strong>Verify</strong> is the one people break without noticing. Assist and Respect Originality involve a choice you can feel yourself making. Verify fails silently, because bad information does not look like bad information.</p>
+    <p>Below are five statements about the music industry, presented the way an AI assistant would present them. For each one, decide what you would do if you were about to put this in a school project, a blog post, or a pitch email.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">🔍 The Verify Trap</div>
+        <div class="st-tag">Do Not Trust This</div>
+      </div>
+      <div class="studio-body">
+        <div id="claimList"></div>
+        <div class="commit-row" style="margin-top:16px;">
+          <button class="commit-btn" id="revealClaims">Reveal the answers</button>
+        </div>
+        <div class="trap-result" id="trapResult"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>What "Respect Originality" Actually Means</h2>
+    <p>This is the rule students ask the most questions about, because the boundary genuinely is blurry. Here is how to think about it.</p>
+
+    <h3>Style is not owned. Identity is protected.</h3>
+    <p>Nobody owns a genre, a chord progression, or a general vibe. Making a song that sounds like it belongs in the same world as music you love is what every artist in history has done. That is influence, and it is how music works.</p>
+    <p>What is different is using AI to copy a <em>specific person</em>: cloning a recognizable voice, generating a track marketed as sounding like a named living artist, or imitating someone's identity closely enough that listeners could be confused about who made it. That crosses from influence into impersonation, and it can carry real legal exposure around name, image, likeness, and voice rights.</p>
+
+    <h3>Credit costs you nothing.</h3>
+    <p>If AI helped, say so. Not in a self-flagellating way, just factually, the way you would credit a co-writer or a sample. The people who get hurt by AI disclosure are the ones who hid it and got found out. Nobody has ever damaged their career by being straightforward about their process.</p>
+
+    <h3>Remember whose work trained the tool.</h3>
+    <p>As you learned in the last article, the models behind these tools learned from enormous amounts of existing music, and whether that was fair is being fought over in courts right now. You do not have to resolve that debate to hold a simple position: the musicians whose work made these tools possible are real people, and pretending otherwise is the easiest way to end up on the wrong side of this.</p>
+
+    <div class="callout green"><b>A test that works when you are unsure:</b> would you be comfortable if the person most affected by this could see exactly what you did? Not the public, not your teacher, the specific artist or listener on the other end. If the answer makes you wince, you already know.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>Write Your Own AI Policy</h2>
+    <p>Professionals in every creative field are writing these now. Yours can be five lines. Here is a starting draft you are welcome to adopt or argue with.</p>
+
+    <div class="policy">
+      <h3>My AI Use Policy</h3>
+      <ol>
+        <li><b>I use AI to assist, not to replace my judgment.</b> If I could not explain and defend every choice in the finished work, I have gone too far.</li>
+        <li><b>I verify anything factual before it leaves my hands.</b> Names, dates, numbers, legal claims, and anything I would be embarrassed to get wrong in public.</li>
+        <li><b>I disclose AI use plainly</b> when it contributed meaningfully to something I release or submit.</li>
+        <li><b>I do not imitate specific artists' voices or identities,</b> and I do not present generated work as my own performance.</li>
+        <li><b>I read the terms</b> of any tool before I use its output commercially, and I do not assume that being allowed to use something means I own it.</li>
+      </ol>
+    </div>
+
+    <p>Print it, save it, adapt it. The point is not the exact wording. The point is deciding what you stand for <em>before</em> you are in a situation where the wrong choice would be convenient.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">06</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">What does the "Assist" rule mean in practice?</div>
+      <button class="quiz-opt" data-c="0">Only use AI tools that are free</button>
+      <button class="quiz-opt" data-c="1">AI should speed up and support your work, not do the thinking you were supposed to do</button>
+      <button class="quiz-opt" data-c="0">Always ask an assistant before using AI</button>
+      <div class="quiz-explain">The test is whether you are still the one making the work. If you could not explain and defend every choice, AI has moved from tool to replacement.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">Why is "Verify" the rule people break most often without noticing?</div>
+      <button class="quiz-opt" data-c="0">Because verifying takes weeks of research</button>
+      <button class="quiz-opt" data-c="1">Because AI states false information with the same confidence as true information, so errors do not look like errors</button>
+      <button class="quiz-opt" data-c="0">Because AI tools refuse to state facts at all</button>
+      <div class="quiz-explain">There is no change in tone when AI is wrong. That is exactly why you cannot catch mistakes by reading carefully. You have to actually check.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 3</div>
+      <div class="qq-text">Under "Respect Originality," what is the key difference between influence and impersonation?</div>
+      <button class="quiz-opt" data-c="0">Influence is legal only if you pay a fee first</button>
+      <button class="quiz-opt" data-c="1">Making music in a general style is normal influence; cloning a specific person's voice or identity is impersonation</button>
+      <button class="quiz-opt" data-c="0">There is no difference, both are always fine</button>
+      <div class="quiz-explain">Nobody owns a genre or a vibe. Copying a specific identifiable person's voice or identity is a different act, and can carry real legal exposure.</div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p><b>Assist:</b> AI works for you, not instead of you. If you cannot explain every choice in the finished work, you have handed over too much.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p><b>Verify:</b> check everything factual before you publish. Whatever goes out under your name is yours, including the mistakes you did not catch.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p><b>Respect Originality:</b> general style is influence, copying a specific artist's voice or identity is impersonation. Disclose AI use plainly.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>Decide what you stand for before the wrong choice becomes the convenient one, and write it down as your own short AI policy.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target);} });
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(function(el){ observer.observe(el); });
+
+/* ================= THE LINE ================= */
+var SCENARIOS=[
+ {text:'You generate background music with an AI tool for a video you made for a class project, and you say in the description that the music is AI-generated.',
+  lo:82,hi:100,rule:1,ruleName:'Rule 1 · Assist',
+  body:'<b>Clearly fine.</b> This is the least controversial use of generative music there is. You needed background audio, you had no budget and no composer, and you were upfront about where it came from. Nobody lost work here that was ever going to be paid for. The disclosure costs you nothing and makes the whole thing clean.'},
+
+ {text:'You ask AI to write your artist bio. You take the draft, cut half of it, rewrite it in your own voice, and post it on your profile without mentioning AI.',
+  lo:62,hi:88,rule:1,ruleName:'Rule 1 · Assist',
+  body:'<b>Generally fine.</b> A bio is functional writing, not a creative work you are claiming as art, and you substantially rewrote it. Most people would treat this like using spellcheck or asking a friend to help you word something. If you had posted the draft untouched, that would sit lower, because then the AI wrote your voice for you.'},
+
+ {text:'You generate a complete track from a single prompt, change nothing, upload it to streaming platforms under your artist name, and say nothing about how it was made.',
+  lo:2,hi:18,rule:1,ruleName:'Rule 1 · Assist &amp; Rule 3 · Respect Originality',
+  body:'<b>Not okay.</b> This breaks two rules at once. You did not assist anything, you commissioned it and put your name on it. And you presented a machine\u2019s output as your own artistic work to an audience who reasonably assumed otherwise. Remember from the last article: a fully generated track with no human authorship may not even be protectable, so you are also claiming something you may not own.'},
+
+ {text:'You prompt an AI tool to make a song that sounds like a specific, famous living singer, including imitating their voice, and you release it publicly.',
+  lo:2,hi:14,rule:3,ruleName:'Rule 3 · Respect Originality',
+  body:'<b>Not okay, and potentially a legal problem.</b> This is not influence, it is impersonation of a specific identifiable person. Voice, name, image, and likeness carry real legal protections, and this is exactly the use case that pushed the industry toward the licensing deals and lawsuits you read about. Making music inspired by an artist is normal. Making music that pretends to be them is not.'},
+
+ {text:'You use AI to generate a melody. You then write all the lyrics yourself, sing it yourself, arrange it, and release it crediting yourself as the songwriter.',
+  lo:36,hi:78,rule:1,ruleName:'Rule 1 · Assist',contested:true,
+  body:'<b>This is the genuinely hard one.</b> You did most of the human work: the words, the performance, the arrangement. Many people would call the melody generator a tool, no different from a chord-suggestion plugin. Others would say the melody is the heart of a song and calling yourself the songwriter without noting that is misleading.',
+  contestedText:'Reasonable people disagree here, and that is the point of including it. The safest position, and the one that costs you nothing, is to credit yourself for what you did and note that the melody was AI-assisted. Specific credit is almost always better than a vague claim in either direction.'},
+
+ {text:'You record your own song, then use an AI mastering tool to polish the final mix before release.',
+  lo:88,hi:100,rule:2,ruleName:'Rule 1 · Assist',
+  body:'<b>Clearly fine.</b> This is AI doing a technical job, on your work, at your direction. It is the same category as using a compressor or a reverb plugin. Nobody is being imitated, nothing is being misrepresented, and the creative work is entirely yours. Most disclosure norms would not even consider this worth mentioning, though there is no harm in saying it.'}
+];
+
+var scIdx=0, committed=false;
+var lineInput=document.getElementById('lineInput');
+var band=document.getElementById('band');
+
+function renderScenario(){
+  var s=SCENARIOS[scIdx];
+  document.getElementById('scCount').textContent='Situation '+(scIdx+1)+' of '+SCENARIOS.length;
+  document.getElementById('scText').textContent=s.text;
+  lineInput.value=50;
+  lineInput.disabled=false;
+  band.classList.remove('show');
+  document.getElementById('reveal').classList.remove('show');
+  document.getElementById('contested').style.display='none';
+  document.getElementById('commitBtn').style.display='inline-block';
+  document.getElementById('nextBtn').style.display='none';
+  committed=false;
+}
+document.getElementById('commitBtn').addEventListener('click',function(){
+  if(committed){ return; }
+  committed=true;
+  var s=SCENARIOS[scIdx];
+  var pos=parseInt(lineInput.value,10);
+  band.style.left=s.lo+'%';
+  band.style.width=(s.hi-s.lo)+'%';
+  band.classList.add('show');
+  lineInput.disabled=true;
+
+  var tag=document.getElementById('revealTag');
+  tag.className='reveal-tag rule'+s.rule;
+  tag.innerHTML=s.ruleName;
+
+  var inRange=(pos>=s.lo-8 && pos<=s.hi+8);
+  var opener=inRange
+    ? '<b>Your call lines up with the considered view.</b> '
+    : (pos<s.lo ? '<b>You placed this stricter than most would.</b> ' : '<b>You placed this more permissive than most would.</b> ');
+  document.getElementById('revealBody').innerHTML=opener+s.body;
+
+  if(s.contested){
+    var c=document.getElementById('contested');
+    c.style.display='block';
+    c.innerHTML='⚖️ '+s.contestedText;
+  }
+  document.getElementById('reveal').classList.add('show');
+  document.getElementById('commitBtn').style.display='none';
+  if(scIdx<SCENARIOS.length-1){
+    document.getElementById('nextBtn').style.display='inline-block';
+  }else{
+    var n=document.getElementById('nextBtn');
+    n.style.display='inline-block';
+    n.textContent='↺ Start over';
+  }
+});
+document.getElementById('nextBtn').addEventListener('click',function(){
+  scIdx=(scIdx+1)%SCENARIOS.length;
+  if(scIdx===0){ document.getElementById('nextBtn').textContent='Next situation →'; }
+  renderScenario();
+});
+renderScenario();
+
+/* ================= VERIFY TRAP ================= */
+var CLAIMS=[
+ {text:'In June 2024, the RIAA filed copyright lawsuits against the AI music generators Suno and Udio on behalf of the major record labels.',
+  ok:true,
+  verdict:'<b>True.</b> This is accurate and well documented. Even so, the right instinct was still to check it, because you had no way to know that from reading it.'},
+ {text:'The Recording Academy created a dedicated "Best AI-Assisted Album" Grammy category in 2025.',
+  ok:false,
+  verdict:'<b>False, and invented.</b> No such category exists. The Academy\u2019s actual position is that AI-assisted work can be eligible, but only human creators can be nominated or win, and the human contribution must be meaningful. Notice how ordinary the fake sounded.'},
+ {text:'Prince changed his name to an unpronounceable symbol in 1997 as part of his dispute with Warner Bros.',
+  ok:false,
+  verdict:'<b>False. It was 1993,</b> on his 35th birthday. This is the most dangerous kind of error: the story is right, the framing is right, and one detail is quietly wrong. A four-year slip is exactly what gets past a careful reader.'},
+ {text:'Spotify pays artists approximately five cents per stream.',
+  ok:false,
+  verdict:'<b>False and far too high.</b> Per-stream payouts are commonly estimated at a fraction of a cent, and Spotify has said it does not pay a fixed per-stream rate at all, since payouts depend on many factors. Numbers are where AI errors do the most damage, because people quote them.'},
+ {text:'Under U.S. copyright principles, a work generated entirely by AI with no meaningful human creative input is generally not protected by copyright.',
+  ok:true,
+  verdict:'<b>True.</b> Copyright protects human authorship. Accurate, and still worth verifying, especially because this is an area where guidance continues to evolve.'}
+];
+
+var picks=[];
+var claimHost=document.getElementById('claimList');
+CLAIMS.forEach(function(c,i){
+  picks.push(null);
+  var d=document.createElement('div');
+  d.className='claim';
+  d.setAttribute('data-i',String(i));
+  d.innerHTML='<div class="claim-head"><div class="claim-av">🤖</div><div class="claim-src">AI assistant · claim '+(i+1)+'</div></div>'
+    +'<div class="claim-text">'+c.text+'</div>'
+    +'<div class="claim-btns">'
+    +'<button class="claim-btn" data-p="use">Use it as-is</button>'
+    +'<button class="claim-btn" data-p="check">Check it first</button>'
+    +'</div>'
+    +'<div class="claim-verdict"></div>';
+  d.querySelectorAll('.claim-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      picks[i]=b.getAttribute('data-p');
+      d.querySelectorAll('.claim-btn').forEach(function(x){ x.classList.remove('picked'); });
+      b.classList.add('picked');
+    });
+  });
+  claimHost.appendChild(d);
+});
+
+document.getElementById('revealClaims').addEventListener('click',function(){
+  var burned=0, caught=0, unanswered=0;
+  CLAIMS.forEach(function(c,i){
+    var d=claimHost.querySelector('[data-i="'+i+'"]');
+    var v=d.querySelector('.claim-verdict');
+    v.className='claim-verdict show '+(c.ok?'true':'false');
+    v.innerHTML=c.verdict;
+    d.querySelectorAll('.claim-btn').forEach(function(b){ b.disabled=true; });
+    if(picks[i]===null){ unanswered++; return; }
+    if(!c.ok && picks[i]==='use'){ burned++; d.classList.add('wrongcall'); }
+    else if(!c.ok && picks[i]==='check'){ caught++; d.classList.add('rightcall'); }
+    else if(c.ok && picks[i]==='check'){ d.classList.add('rightcall'); }
+  });
+  var r=document.getElementById('trapResult');
+  var falseCount=CLAIMS.filter(function(c){ return !c.ok; }).length;
+  var msg='';
+  if(unanswered===CLAIMS.length){
+    msg='<b>You did not answer any of them, which is its own kind of honest.</b> Go back, make a call on each one, and reveal again. The exercise only bites if you commit first.';
+  }else if(burned===0){
+    msg='<b>You would have caught all '+falseCount+' of the false claims.</b> Now notice what that required: you had to be suspicious of everything, including the true ones. That is the actual lesson. You cannot sort true from false by reading, so the only working policy is to check anything you would be embarrassed to get wrong.';
+  }else{
+    msg='<b>'+burned+' false claim'+(burned===1?'':'s')+' would have made it into your work.</b> That is not a reflection on you. Every one of those statements was written to sound exactly as reasonable as the true ones, because that is precisely how AI errors arrive: fluent, confident, and indistinguishable from fact.<br><br>Three of the five were false. If you had published them in a school assignment, a pitch email, or a blog post, they would have gone out under your name.';
+  }
+  msg+='<br><br><b>The rule this teaches:</b> the correct answer to every single claim was "check it first." Not because AI is usually wrong, but because you have no way of telling which time is the exception.';
+  r.innerHTML=msg;
+  r.classList.add('show');
+});
+
+/* ================= quiz ================= */
+document.querySelectorAll('.quiz-q').forEach(function(q){
+  var opts=q.querySelectorAll('.quiz-opt');
+  var explain=q.querySelector('.quiz-explain');
+  var done=false;
+  opts.forEach(function(o){
+    o.addEventListener('click',function(){
+      if(done){ return; }
+      done=true;
+      opts.forEach(function(x){ if(x.getAttribute('data-c')==='1'){ x.classList.add('correct'); } });
+      if(o.getAttribute('data-c')!=='1'){ o.classList.add('wrong'); }
+      explain.classList.add('show');
+    });
+  });
+});
+
+})();
+</script>
+</body>
+</html>
