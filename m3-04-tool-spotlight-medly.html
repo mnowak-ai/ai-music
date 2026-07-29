@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tool Spotlight: Medly | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --red:#C0392B; --red-light:#FBEDEB;
+    --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(31px,5.6vw,48px);font-weight:700;line-height:1.13;margin:0 0 14px;letter-spacing:-.01em;}
+  .spotlight-badge{
+    display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);background:var(--purple-light);
+    border-radius:999px;padding:7px 16px;margin-top:64px;margin-bottom:14px;
+  }
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  /* studio shell */
+  .studio{background:var(--ink);border-radius:20px;overflow:hidden;margin:32px 0;box-shadow:0 20px 50px rgba(26,21,35,.28);}
+  .studio-head{padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .studio-head .st-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#fff;}
+  .studio-head .st-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;background:rgba(188,135,230,.22);color:#D9BEF2;padding:5px 12px;border-radius:999px;}
+  .studio-body{padding:24px 26px 28px;}
+  .transport{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
+  .play-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;background:var(--purple);color:#fff;
+    border:none;border-radius:999px;padding:13px 28px;cursor:pointer;transition:background .25s,transform .12s;
+    display:flex;align-items:center;gap:9px;
+  }
+  .play-btn:hover{background:#9350D1;}
+  .play-btn:active{transform:scale(.97);}
+  .play-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .play-btn.playing{background:#C0392B;}
+  .ghost-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:13.5px;background:transparent;color:#D9BEF2;
+    border:2px solid rgba(188,135,230,.45);border-radius:999px;padding:11px 18px;cursor:pointer;transition:all .25s;
+  }
+  .ghost-btn:hover{border-color:#BC87E6;background:rgba(188,135,230,.14);}
+  .ghost-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+
+  /* instrument picker */
+  .inst-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .inst-btn{
+    font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;padding:9px 16px;
+    border:2px solid rgba(188,135,230,.35);border-radius:999px;background:rgba(255,255,255,.05);
+    color:rgba(255,255,255,.72);cursor:pointer;transition:all .22s;
+  }
+  .inst-btn:hover{border-color:#BC87E6;color:#fff;}
+  .inst-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .inst-btn.active{background:#7B2FBE;border-color:#BC87E6;color:#fff;}
+
+  /* piano roll */
+  .roll-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;}
+  .roll{display:flex;flex-direction:column;gap:5px;min-width:540px;}
+  .roll-row{display:flex;align-items:center;gap:5px;}
+  .roll-note{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:rgba(255,255,255,.45);
+    width:34px;flex-shrink:0;text-align:right;
+  }
+  .cell{
+    flex:1;height:26px;min-width:20px;border-radius:5px;border:none;cursor:pointer;padding:0;
+    background:rgba(255,255,255,.07);transition:background .12s,transform .08s,box-shadow .12s;
+  }
+  .cell:hover{background:rgba(188,135,230,.3);}
+  .cell:focus-visible{outline:2px solid #BC87E6;outline-offset:2px;}
+  .cell.on{background:#BC87E6;box-shadow:0 0 10px rgba(188,135,230,.5);}
+  .cell.beatline{background:rgba(255,255,255,.12);}
+  .cell.beatline.on{background:#BC87E6;}
+  .cell.now{box-shadow:inset 0 0 0 2px rgba(255,255,255,.5);}
+
+  .studio-msg{
+    margin-top:18px;background:rgba(188,135,230,.14);border-radius:12px;padding:14px 18px;
+    color:#E4D3F5;font-size:14px;line-height:1.6;display:flex;gap:10px;align-items:flex-start;
+  }
+  .studio-msg b{color:#fff;}
+  .audio-hint{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.4);margin-top:14px;}
+
+  /* section builder */
+  .sec-palette{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+  .sec-add{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;padding:11px 18px;border:none;
+    border-radius:10px;cursor:pointer;color:#fff;transition:transform .12s,filter .2s;
+  }
+  .sec-add:hover{filter:brightness(1.15);}
+  .sec-add:active{transform:scale(.96);}
+  .sec-add:focus-visible{outline:3px solid #fff;outline-offset:2px;}
+  .timeline{
+    background:rgba(255,255,255,.05);border:2px dashed rgba(188,135,230,.3);border-radius:14px;
+    min-height:86px;padding:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px;
+  }
+  .timeline-empty{
+    color:rgba(255,255,255,.4);font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+    text-align:center;width:100%;
+  }
+  .tl-block{
+    border-radius:10px;padding:12px 16px;color:#fff;font-weight:700;font-size:13px;
+    display:flex;flex-direction:column;gap:2px;min-width:84px;transition:transform .2s,box-shadow .2s;
+    animation:popIn .3s ease;
+  }
+  @keyframes popIn{0%{transform:scale(.85);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  .tl-block .tb-sub{font-weight:400;font-size:10.5px;opacity:.8;font-family:'IBM Plex Mono',monospace;}
+  .tl-block.active{transform:translateY(-5px) scale(1.05);box-shadow:0 8px 22px rgba(188,135,230,.55);}
+  .layer-readout{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;}
+  .layer-chip{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+    padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.35);
+    transition:all .25s;
+  }
+  .layer-chip.lit{background:#7B2FBE;color:#fff;}
+
+  /* comparison table */
+  .compare{border:2px solid var(--purple-mid);border-radius:16px;overflow:hidden;margin:28px 0;}
+  .cmp-row{display:grid;grid-template-columns:1.3fr 1fr 1fr;border-bottom:1px solid var(--purple-mid);}
+  .cmp-row:last-child{border-bottom:none;}
+  .cmp-row.head{background:var(--purple);color:#fff;}
+  .cmp-cell{padding:14px 16px;font-size:14px;}
+  .cmp-row.head .cmp-cell{font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
+  .cmp-row:not(.head) .cmp-cell:first-child{font-weight:700;background:var(--gray-light);}
+  .cmp-yes{color:var(--green);font-weight:700;}
+  .cmp-no{color:var(--gray);}
+  @media (max-width:600px){
+    .cmp-row{grid-template-columns:1fr;}
+    .cmp-row:not(.head) .cmp-cell:first-child{background:var(--purple-light);}
+    .cmp-row.head{display:none;}
+    .cmp-cell{border-bottom:1px solid var(--purple-light);}
+  }
+
+  /* id card */
+  .id-card{border:2px solid var(--purple);border-radius:16px;padding:26px 28px;margin:28px 0;background:var(--purple-light);}
+  .id-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
+  .id-item{background:#fff;border-radius:10px;padding:13px 16px;}
+  .id-item .idl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);}
+  .id-item .idv{font-size:14px;font-weight:600;margin-top:3px;line-height:1.4;}
+
+  /* first 20 min */
+  .steps-list{counter-reset:s;margin:24px 0;}
+  .step-item{
+    display:flex;gap:16px;margin-bottom:14px;background:var(--gray-light);border-radius:12px;padding:18px 20px;
+  }
+  .step-item .si-num{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:#fff;background:var(--purple);
+    border-radius:8px;min-width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .step-item .si-body{font-size:14.5px;line-height:1.6;}
+  .step-item .si-body b{display:block;margin-bottom:2px;}
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+
+  .quiz-q{border:2px solid var(--purple-mid);border-radius:14px;padding:24px 26px;margin-bottom:18px;background:#fff;}
+  .quiz-q .qq-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--purple);letter-spacing:.12em;margin-bottom:6px;}
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--purple-mid);border-radius:10px;background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);}
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{display:none;font-size:14px;background:var(--gray-light);border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);}
+  .quiz-explain.show{display:block;}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+
+  .sources{margin-top:48px;border-top:2px solid var(--purple-mid);padding-top:24px;}
+  .sources .src-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+  .sources ul{list-style:none;}
+  .sources li{font-size:13.5px;color:var(--gray);margin-bottom:8px;line-height:1.55;}
+  .sources a{color:var(--purple);word-break:break-all;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <div class="spotlight-badge">🔦 Tool Spotlight</div>
+    <h1>Medly: Draw a Note, Make a Song</h1>
+    <p class="lede">Most music software assumes you already know music. Medly assumes you do not, and that turns out to be the whole point.</p>
+    <div class="meta">
+      <span>Reading time: 8 min</span>
+      <span>Interactive: 2 live studios</span>
+      <span>Turn your sound on</span>
+    </div>
+  </header>
+
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>The Blank Page Problem</h2>
+    <p>Here is why most people who want to make music never actually make any: they open a professional program, see forty buttons they do not understand, and quietly close it. The tool assumed they already spoke the language.</p>
+    <p>Medly's answer to that problem is almost aggressively simple. You do not record. You do not play an instrument. <strong>You draw notes on a grid.</strong> Pick a sound, tap squares, hear music. That is the whole starting experience.</p>
+    <p>Rather than describe it, here it is. This grid works the same way Medly's does. Higher squares are higher notes, and time runs left to right. <strong>Press Play, then draw.</strong></p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">🎨 The Note Painter</div>
+        <div class="st-tag">Live Audio Studio</div>
+      </div>
+      <div class="studio-body">
+        <div class="transport">
+          <button class="play-btn" id="rollPlay"><span id="rollIcon">▶</span> <span id="rollLabel">Play</span></button>
+          <button class="ghost-btn" id="rollRandom">✨ Surprise Me</button>
+          <button class="ghost-btn" id="rollClear">Clear</button>
+        </div>
+        <div class="inst-row" id="instRow"></div>
+        <div class="roll-scroll">
+          <div class="roll" id="roll"></div>
+        </div>
+        <div class="studio-msg" id="rollMsg">
+          <span>🎹</span>
+          <span><b>Try this:</b> tap a few squares anywhere on the grid, then press Play. Then switch instruments and listen to the same melody become a totally different mood.</span>
+        </div>
+        <div class="audio-hint">Sound is generated live in your browser. If you hear nothing, check your volume and make sure this tab is not muted.</div>
+      </div>
+    </div>
+
+    <div class="callout"><b>Did you notice you could not make it sound bad?</b> That was on purpose. This grid only contains notes from one scale, a family of notes that sound good together. Medly and apps like it use the same trick. Removing the possibility of a "wrong" note is the single biggest reason beginners keep going instead of quitting.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>So What Exactly Is Medly?</h2>
+    <p>Medly is a music-making app built by a small Canadian company called Medly Labs. It runs on phones, tablets, and Mac, and it is aimed at exactly the person this course is written for: someone curious about making music who has never done it before.</p>
+
+    <div class="id-card">
+      <div class="id-grid">
+        <div class="id-item"><div class="idl">Made by</div><div class="idv">Medly Labs Inc. (Canada)</div></div>
+        <div class="id-item"><div class="idl">Where it runs</div><div class="idv">iPhone, iPad, Android, Mac</div></div>
+        <div class="id-item"><div class="idl">Free tier</div><div class="idv">Starter Pack: 17 instruments, 100+ loops and samples</div></div>
+        <div class="id-item"><div class="idl">Paid tier</div><div class="idv">Medly Member: 3,500+ instruments, loops and extras, with a 7-day free trial</div></div>
+        <div class="id-item"><div class="idl">Recognition</div><div class="idv">Best of App Store 2016 winner; iPad App of the Year in Japan and South Korea</div></div>
+        <div class="id-item"><div class="idl">You can export</div><div class="idv">Audio, video, MIDI, or straight to SoundCloud</div></div>
+      </div>
+    </div>
+
+    <p>The features that matter most for a beginner: you draw notes instead of playing them, you can drag in pre-made loops, you can record your own voice or an instrument, and there is a History tool that lets you rewind any mistake. That last one sounds small. It is not. Knowing you cannot permanently ruin anything is what makes people brave enough to experiment.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>Medly's Real Trick: Sections</h2>
+    <p>Here is the part that separates Medly from a toy. Medly breaks a song into <strong>Sections</strong>, short chunks of music you build once and then copy, paste, and rearrange to assemble a full song.</p>
+    <p>This is genuinely how professional songs are structured. An intro, a verse, a chorus, another verse, that chorus again. You are not writing three minutes of music. You are writing about thirty seconds of music and arranging it.</p>
+    <p>Build a song below. Click section buttons to add them to your timeline, then press Play and listen to your arrangement play through. Watch which instrument layers turn on and off as each section arrives.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">🧱 The Section Builder</div>
+        <div class="st-tag">Song Arranger</div>
+      </div>
+      <div class="studio-body">
+        <div class="sec-palette" id="secPalette"></div>
+        <div class="timeline" id="timeline">
+          <div class="timeline-empty">Your song is empty. Click a section above to add it. Most pop songs start with an Intro.</div>
+        </div>
+        <div class="transport">
+          <button class="play-btn" id="secPlay"><span id="secIcon">▶</span> <span id="secLabel">Play Song</span></button>
+          <button class="ghost-btn" id="secPreset">📀 Load a Classic Pop Structure</button>
+          <button class="ghost-btn" id="secUndo">Undo</button>
+          <button class="ghost-btn" id="secClear">Clear</button>
+        </div>
+        <div class="layer-readout" id="layerReadout"></div>
+        <div class="studio-msg" id="secMsg">
+          <span>🧱</span>
+          <span><b>Try this order:</b> Intro, Verse, Chorus, Verse, Chorus, Outro. That is the skeleton under a startling number of hit songs.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>Is Medly Actually an "AI" Tool?</h2>
+    <p>Time for some honesty, because this is an AI course and telling the difference matters.</p>
+    <p><strong>Medly is not primarily an AI tool.</strong> It does not generate songs for you or master your track with one click. What it has is superb design and enormous libraries of professionally recorded sounds. The reason it feels magical is that a team of humans thought very carefully about how to remove intimidation from the process.</p>
+    <p>That is a genuinely useful thing to notice. A lot of software gets called "AI-powered" in marketing when the real story is smart design. Being able to ask <em>"what is this tool actually doing?"</em> is one of the most valuable AI skills you can build in this course, and it applies far beyond music.</p>
+    <p>Which brings us to the tool that <em>does</em> bring the AI to this stage.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>Medly vs. BandLab: Which One, When?</h2>
+    <p>These two get mentioned together constantly, and they are genuinely different tools. Neither is better. They are good at different jobs.</p>
+
+    <div class="compare">
+      <div class="cmp-row head">
+        <div class="cmp-cell">Feature</div>
+        <div class="cmp-cell">Medly</div>
+        <div class="cmp-cell">BandLab</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-cell">Where it runs</div>
+        <div class="cmp-cell">Phone, tablet, Mac app</div>
+        <div class="cmp-cell">Any web browser, plus apps</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-cell">Cost to start</div>
+        <div class="cmp-cell">Free starter pack, paid membership for the full library</div>
+        <div class="cmp-cell cmp-yes">Free, with no core features locked</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-cell">Draw-the-notes composing</div>
+        <div class="cmp-cell cmp-yes">Its signature strength</div>
+        <div class="cmp-cell">Available, less central</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-cell">One-click AI mastering</div>
+        <div class="cmp-cell cmp-no">Not a feature</div>
+        <div class="cmp-cell cmp-yes">Yes, built in and free</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-cell">Cloud collaboration with friends</div>
+        <div class="cmp-cell cmp-no">Not a feature</div>
+        <div class="cmp-cell cmp-yes">Yes, live, many people at once</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-cell">Best for</div>
+        <div class="cmp-cell">Composing ideas anywhere, on a phone, with zero experience</div>
+        <div class="cmp-cell">Classroom projects, group work, and finishing a track for release</div>
+      </div>
+    </div>
+
+    <p>The honest recommendation for a beginner: <strong>use both.</strong> Sketch ideas in Medly on your phone when inspiration hits on the bus. Bring the finished idea into BandLab when you want to collaborate, polish, and master it for release. They are two stages of the same journey, not competitors.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">06</span>
+    <h2>Your First Twenty Minutes</h2>
+    <p>Curiosity dies fast without a first step. Here is a concrete one you could do today, for free, in about twenty minutes.</p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="si-num">1</div>
+        <div class="si-body"><b>Download it and open a blank project.</b> Do not watch a tutorial first. The interface is designed to be figured out, and struggling for four minutes teaches more than a video.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">2</div>
+        <div class="si-body"><b>Add a drum loop from the library.</b> Do not build drums from scratch yet. A loop gives you a heartbeat to write against, which is far easier than writing into silence.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">3</div>
+        <div class="si-body"><b>Add one instrument and draw eight notes.</b> Exactly like the Note Painter above. Keep it short. Eight notes that repeat will teach you more than thirty that wander.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">4</div>
+        <div class="si-body"><b>Copy that section and change one thing.</b> Now you have a verse and a chorus, and you have learned the single most important arranging skill there is: repeat with variation.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">5</div>
+        <div class="si-body"><b>Export it and send it to one person.</b> This is the step people skip, and it is the one that matters. A finished thirty-second idea that somebody heard beats a perfect song nobody knows exists.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">07</span>
+    <h2>Why This Matters for Getting Into the Industry</h2>
+    <p>Think back to the careers you explored earlier in this course. Nearly every one of them, producer, artist, engineer, even marketer, gets easier to enter when you can point at something you made.</p>
+    <p>Tools like Medly matter because they collapse the distance between "I am curious about music" and "here is a track I made." That used to take a studio, money, and permission. Now it takes an app and an afternoon.</p>
+    <p>You are not going to make a hit in your first twenty minutes. That is not the point. The point is that the barrier that stopped previous generations, the cost and the intimidation, is mostly gone. What is left is whether you start.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">08</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">What is Medly's signature way of creating music?</div>
+      <button class="quiz-opt" data-c="0">Recording a live band with studio microphones</button>
+      <button class="quiz-opt" data-c="1">Drawing notes onto a grid and choosing instrument sounds, with no playing skill required</button>
+      <button class="quiz-opt" data-c="0">Typing lyrics and letting AI generate the entire song</button>
+      <div class="quiz-explain">Medly's core idea is that you draw notes rather than perform them, which removes the need to play an instrument before you can create.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">What are "Sections" in Medly?</div>
+      <button class="quiz-opt" data-c="0">Different price tiers of the app</button>
+      <button class="quiz-opt" data-c="1">Short chunks of music you build once, then copy, paste, and rearrange to assemble a full song</button>
+      <button class="quiz-opt" data-c="0">Groups of users who collaborate online</button>
+      <div class="quiz-explain">Sections let you write about thirty seconds of music and arrange it into a full song, which is how professional songs are actually structured.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 3</div>
+      <div class="qq-text">Which of these features belongs to BandLab rather than Medly?</div>
+      <button class="quiz-opt" data-c="0">Drawing notes on a grid</button>
+      <button class="quiz-opt" data-c="1">One-click AI mastering and live cloud collaboration with friends</button>
+      <button class="quiz-opt" data-c="0">Exporting your song as an audio file</button>
+      <div class="quiz-explain">AI mastering and live collaboration are BandLab strengths. Medly's strength is composing by drawing notes. Many creators use both, at different stages.</div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>Medly is a beginner-friendly music app for phone, tablet, and Mac where you create by drawing notes on a grid instead of playing an instrument.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>Its Sections feature lets you build short chunks of music and rearrange them into a full song, which is how real songs are structured.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>Medly is powered by excellent design and huge sound libraries more than by AI. Asking what a tool is actually doing is a real skill.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>Medly and BandLab do different jobs: sketch ideas in Medly, then collaborate, polish, and AI-master in BandLab.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sources fade">
+    <div class="src-label">Sources</div>
+    <ul>
+      <li>Medly Labs, official app listing describing the Starter Pack, Sections, instruments, and export options &mdash; <a href="https://medlylabs.com/" target="_blank" rel="noopener">https://medlylabs.com/</a></li>
+      <li>Common Sense Media, Medly app review (pricing, free instruments and loops, publisher) &mdash; <a href="https://www.commonsensemedia.org/app-reviews/medly" target="_blank" rel="noopener">https://www.commonsensemedia.org/app-reviews/medly</a></li>
+      <li>BandLab AI, official overview of AI Mastering, SongStarter, and collaboration features &mdash; <a href="https://bandlabai.com/" target="_blank" rel="noopener">https://bandlabai.com/</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target);} });
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(function(el){ observer.observe(el); });
+
+/* ---------- audio core ---------- */
+var ctx=null, noiseBuf=null;
+function audio(){
+  if(!ctx){
+    var AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC){ return null; }
+    ctx=new AC();
+    var len=Math.floor(ctx.sampleRate);
+    noiseBuf=ctx.createBuffer(1,len,ctx.sampleRate);
+    var d=noiseBuf.getChannelData(0);
+    for(var i=0;i<len;i++){ d[i]=Math.random()*2-1; }
+  }
+  if(ctx.state==='suspended'){ ctx.resume(); }
+  return ctx;
+}
+function noiseSrc(){ var s=ctx.createBufferSource(); s.buffer=noiseBuf; s.loop=true; return s; }
+
+function tone(t,freq,opt){
+  opt=opt||{};
+  var o=ctx.createOscillator(), g=ctx.createGain(), f=ctx.createBiquadFilter();
+  o.type=opt.wave||'triangle';
+  o.frequency.setValueAtTime(freq,t);
+  f.type='lowpass';
+  f.frequency.setValueAtTime(opt.cutoff||5000,t);
+  var peak=opt.gain||0.3, dec=opt.decay||0.45;
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(peak,t+(opt.attack||0.008));
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dec);
+  o.connect(f); f.connect(g); g.connect(ctx.destination);
+  o.start(t); o.stop(t+dec+0.03);
+}
+function kick(t,gain){
+  var o=ctx.createOscillator(), g=ctx.createGain();
+  o.type='sine';
+  o.frequency.setValueAtTime(150,t);
+  o.frequency.exponentialRampToValueAtTime(45,t+0.11);
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(gain||0.85,t+0.005);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+0.32);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(t); o.stop(t+0.34);
+}
+function snare(t,gain){
+  var n=noiseSrc(), nf=ctx.createBiquadFilter(), ng=ctx.createGain();
+  nf.type='bandpass'; nf.frequency.value=1900; nf.Q.value=0.8;
+  ng.gain.setValueAtTime(gain||0.42,t);
+  ng.gain.exponentialRampToValueAtTime(0.0001,t+0.16);
+  n.connect(nf); nf.connect(ng); ng.connect(ctx.destination);
+  n.start(t); n.stop(t+0.18);
+}
+function hat(t,gain){
+  var n=noiseSrc(), f=ctx.createBiquadFilter(), g=ctx.createGain();
+  f.type='highpass'; f.frequency.value=7800;
+  g.gain.setValueAtTime(gain||0.14,t);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+0.05);
+  n.connect(f); f.connect(g); g.connect(ctx.destination);
+  n.start(t); n.stop(t+0.07);
+}
+
+/* ---------- 1. NOTE PAINTER ---------- */
+var PITCHES=[
+  {n:'E5',f:659.25},{n:'D5',f:587.33},{n:'C5',f:523.25},{n:'A4',f:440.00},
+  {n:'G4',f:392.00},{n:'E4',f:329.63},{n:'D4',f:293.66},{n:'C4',f:261.63}
+];
+var RSTEPS=16;
+var rollGrid=[];
+for(var r=0;r<PITCHES.length;r++){ rollGrid.push(new Array(RSTEPS).fill(false)); }
+
+var INSTRUMENTS=[
+  {name:'Piano',   wave:'triangle', cutoff:4200, decay:0.55, gain:0.32},
+  {name:'Synth',   wave:'sawtooth', cutoff:1700, decay:0.40, gain:0.20},
+  {name:'Bells',   wave:'sine',     cutoff:6000, decay:0.95, gain:0.30},
+  {name:'Pluck',   wave:'square',   cutoff:1500, decay:0.22, gain:0.15}
+];
+var instIdx=0;
+
+var instRow=document.getElementById('instRow');
+INSTRUMENTS.forEach(function(ins,i){
+  var b=document.createElement('button');
+  b.className='inst-btn'+(i===0?' active':'');
+  b.textContent=ins.name;
+  b.addEventListener('click',function(){
+    instIdx=i;
+    document.querySelectorAll('.inst-btn').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
+    var c=audio();
+    if(c){ tone(c.currentTime+0.01,392.00,INSTRUMENTS[instIdx]); }
+    setRollMsg('🎛️','<b>Same notes, new instrument.</b> This is what "virtual instruments" means: one melody can become a piano ballad or a synth banger with one tap.');
+  });
+  instRow.appendChild(b);
+});
+
+var rollEl=document.getElementById('roll');
+var cellEls=[];
+PITCHES.forEach(function(p,ri){
+  var row=document.createElement('div');
+  row.className='roll-row';
+  var lbl=document.createElement('div');
+  lbl.className='roll-note'; lbl.textContent=p.n;
+  row.appendChild(lbl);
+  cellEls.push([]);
+  for(var s=0;s<RSTEPS;s++){
+    (function(rowI,stepI){
+      var c=document.createElement('button');
+      c.className='cell'+(stepI%4===0?' beatline':'');
+      c.setAttribute('aria-label',p.n+' step '+(stepI+1));
+      c.setAttribute('aria-pressed','false');
+      c.addEventListener('click',function(){
+        rollGrid[rowI][stepI]=!rollGrid[rowI][stepI];
+        c.classList.toggle('on',rollGrid[rowI][stepI]);
+        c.setAttribute('aria-pressed',rollGrid[rowI][stepI]?'true':'false');
+        if(rollGrid[rowI][stepI]){
+          var a=audio();
+          if(a){ tone(a.currentTime+0.01,PITCHES[rowI].f,INSTRUMENTS[instIdx]); }
+        }
+      });
+      row.appendChild(c);
+      cellEls[rowI].push(c);
+    })(ri,s);
+  }
+  rollEl.appendChild(row);
+});
+function paintRoll(){
+  for(var r=0;r<PITCHES.length;r++){
+    for(var s=0;s<RSTEPS;s++){
+      cellEls[r][s].classList.toggle('on',rollGrid[r][s]);
+      cellEls[r][s].setAttribute('aria-pressed',rollGrid[r][s]?'true':'false');
+    }
+  }
+}
+function setRollMsg(icon,html){
+  document.getElementById('rollMsg').innerHTML='<span>'+icon+'</span><span>'+html+'</span>';
+}
+
+var rollPlaying=false, rollStep=0, rollNext=0, rollTimer=null, rollQueue=[], rollDrawn=-1;
+var ROLL_BPM=104;
+function rollStepDur(){ return (60.0/ROLL_BPM)/4; }
+function rollSchedule(){
+  if(!ctx){ return; }
+  while(rollNext < ctx.currentTime+0.12){
+    for(var r=0;r<PITCHES.length;r++){
+      if(rollGrid[r][rollStep]){ tone(rollNext,PITCHES[r].f,INSTRUMENTS[instIdx]); }
+    }
+    rollQueue.push({step:rollStep,time:rollNext});
+    rollNext+=rollStepDur();
+    rollStep=(rollStep+1)%RSTEPS;
+  }
+}
+document.getElementById('rollPlay').addEventListener('click',function(){
+  var c=audio();
+  if(!c){ setRollMsg('⚠️','Your browser does not support live audio, but the rest of this page works fine.'); return; }
+  var btn=this;
+  if(!rollPlaying){
+    rollPlaying=true; rollStep=0; rollNext=c.currentTime+0.06; rollQueue=[];
+    rollTimer=setInterval(rollSchedule,25);
+    btn.classList.add('playing');
+    document.getElementById('rollIcon').textContent='■';
+    document.getElementById('rollLabel').textContent='Stop';
+  }else{
+    rollPlaying=false; clearInterval(rollTimer); rollTimer=null; rollQueue=[]; rollDrawn=-1;
+    for(var r=0;r<PITCHES.length;r++){
+      for(var s=0;s<RSTEPS;s++){ cellEls[r][s].classList.remove('now'); }
+    }
+    btn.classList.remove('playing');
+    document.getElementById('rollIcon').textContent='▶';
+    document.getElementById('rollLabel').textContent='Play';
+  }
+});
+document.getElementById('rollClear').addEventListener('click',function(){
+  for(var r=0;r<PITCHES.length;r++){ rollGrid[r]=new Array(RSTEPS).fill(false); }
+  paintRoll();
+  setRollMsg('🧹','<b>Empty grid.</b> Try drawing a shape rather than thinking about music: a staircase going up, or a zigzag. Shapes become melodies here.');
+});
+document.getElementById('rollRandom').addEventListener('click',function(){
+  for(var r=0;r<PITCHES.length;r++){ rollGrid[r]=new Array(RSTEPS).fill(false); }
+  for(var s=0;s<RSTEPS;s+=2){
+    if(Math.random()<0.78){
+      var pick=Math.floor(Math.random()*PITCHES.length);
+      rollGrid[pick][s]=true;
+      if(Math.random()<0.25){
+        var second=Math.min(PITCHES.length-1,pick+2);
+        rollGrid[second][s]=true;
+      }
+    }
+  }
+  paintRoll();
+  audio();
+  setRollMsg('✨','<b>A random melody, and it still sounds fine.</b> Because every square on this grid belongs to one scale, even randomness lands on something musical. That is the safety net beginners need.');
+});
+
+/* ---------- 2. SECTION BUILDER ---------- */
+var CHORDS=[
+  [261.63,329.63,392.00],
+  [220.00,261.63,329.63],
+  [174.61,220.00,261.63],
+  [196.00,246.94,293.66]
+];
+var BASSES=[130.81,110.00,87.31,98.00];
+var LEAD=[523.25,0,587.33,0,659.25,0,587.33,0,523.25,0,440.00,0,392.00,0,0,0];
+
+var SECTION_TYPES=[
+  {name:'Intro',  color:'#5A1F8E', layers:{drums:false,bass:false,chords:true, lead:false}, sub:'chords only'},
+  {name:'Verse',  color:'#7B2FBE', layers:{drums:true, bass:true, chords:true, lead:false}, sub:'beat + bass'},
+  {name:'Chorus', color:'#A96CDD', layers:{drums:true, bass:true, chords:true, lead:true},  sub:'everything'},
+  {name:'Bridge', color:'#6B29A8', layers:{drums:false,bass:false,chords:true, lead:true},  sub:'melody only'},
+  {name:'Outro',  color:'#40157A', layers:{drums:false,bass:true, chords:true, lead:false}, sub:'winding down'}
+];
+var arrangement=[];
+
+var palette=document.getElementById('secPalette');
+SECTION_TYPES.forEach(function(st,i){
+  var b=document.createElement('button');
+  b.className='sec-add';
+  b.style.background=st.color;
+  b.textContent='+ '+st.name;
+  b.addEventListener('click',function(){
+    if(arrangement.length>=10){
+      setSecMsg('📏','<b>Ten sections is plenty.</b> Real songs are usually six to eight. Press Play and hear what you built.');
+      return;
+    }
+    arrangement.push(i);
+    renderTimeline();
+    audio();
+  });
+  palette.appendChild(b);
+});
+
+function renderTimeline(){
+  var tl=document.getElementById('timeline');
+  if(arrangement.length===0){
+    tl.innerHTML='<div class="timeline-empty">Your song is empty. Click a section above to add it. Most pop songs start with an Intro.</div>';
+    return;
+  }
+  tl.innerHTML='';
+  arrangement.forEach(function(idx,pos){
+    var st=SECTION_TYPES[idx];
+    var d=document.createElement('div');
+    d.className='tl-block';
+    d.style.background=st.color;
+    d.setAttribute('data-pos',String(pos));
+    d.innerHTML=st.name+'<span class="tb-sub">'+st.sub+'</span>';
+    tl.appendChild(d);
+  });
+}
+function setSecMsg(icon,html){
+  document.getElementById('secMsg').innerHTML='<span>'+icon+'</span><span>'+html+'</span>';
+}
+var LAYER_NAMES=[['drums','Drums'],['bass','Bass'],['chords','Chords'],['lead','Lead Melody']];
+function renderLayers(active){
+  document.getElementById('layerReadout').innerHTML=LAYER_NAMES.map(function(l){
+    var lit=active&&active[l[0]];
+    return '<span class="layer-chip'+(lit?' lit':'')+'">'+l[1]+'</span>';
+  }).join('');
+}
+renderLayers(null);
+
+document.getElementById('secPreset').addEventListener('click',function(){
+  arrangement=[0,1,2,1,2,4];
+  renderTimeline();
+  audio();
+  setSecMsg('📀','<b>Intro, Verse, Chorus, Verse, Chorus, Outro.</b> That is the classic pop skeleton. Press Play Song and listen to how the energy rises and falls.');
+});
+document.getElementById('secUndo').addEventListener('click',function(){
+  arrangement.pop();
+  renderTimeline();
+});
+document.getElementById('secClear').addEventListener('click',function(){
+  arrangement=[];
+  renderTimeline();
+  renderLayers(null);
+  setSecMsg('🧱','<b>Blank timeline.</b> Try an unusual order and see how it feels. Chorus first is a real technique, and plenty of hits do it.');
+});
+
+var secPlaying=false, secTimer=null, secNext=0, secPos=0, secStep=0, secQueue=[];
+var SEC_BPM=110, SEC_STEPS=16;
+function secStepDur(){ return (60.0/SEC_BPM)/2; }
+
+function secSchedule(){
+  if(!ctx){ return; }
+  while(secNext < ctx.currentTime+0.15){
+    if(secPos>=arrangement.length){
+      var endAt=secNext;
+      setTimeout(function(){ stopSection(); },Math.max(0,(endAt-ctx.currentTime)*1000));
+      return;
+    }
+    var st=SECTION_TYPES[arrangement[secPos]];
+    var L=st.layers;
+    var chordIdx=Math.floor(secStep/4)%4;
+
+    if(L.drums){
+      if(secStep%4===0){ kick(secNext); }
+      if(secStep%4===2){ snare(secNext); }
+      hat(secNext,0.12);
+    }
+    if(L.bass && secStep%4===0){
+      tone(secNext,BASSES[chordIdx],{wave:'sawtooth',cutoff:520,decay:0.5,gain:0.30});
+    }
+    if(L.chords && secStep%4===0){
+      CHORDS[chordIdx].forEach(function(f){
+        tone(secNext,f,{wave:'triangle',cutoff:2600,decay:1.0,gain:0.10,attack:0.05});
+      });
+    }
+    if(L.lead && LEAD[secStep]){
+      tone(secNext,LEAD[secStep],{wave:'square',cutoff:2600,decay:0.30,gain:0.13});
+    }
+
+    secQueue.push({pos:secPos,layers:L,time:secNext});
+    secNext+=secStepDur();
+    secStep++;
+    if(secStep>=SEC_STEPS){ secStep=0; secPos++; }
+  }
+}
+var secDrawnPos=-1;
+function secDraw(){
+  if(secPlaying && ctx){
+    while(secQueue.length && secQueue[0].time < ctx.currentTime){
+      var ev=secQueue.shift();
+      if(ev.pos!==secDrawnPos){
+        secDrawnPos=ev.pos;
+        document.querySelectorAll('.tl-block').forEach(function(b){
+          b.classList.toggle('active',parseInt(b.getAttribute('data-pos'),10)===ev.pos);
+        });
+        renderLayers(ev.layers);
+      }
+    }
+  }
+  requestAnimationFrame(secDraw);
+}
+requestAnimationFrame(secDraw);
+
+function stopSection(){
+  secPlaying=false;
+  clearInterval(secTimer); secTimer=null;
+  secQueue=[]; secDrawnPos=-1;
+  document.querySelectorAll('.tl-block').forEach(function(b){ b.classList.remove('active'); });
+  renderLayers(null);
+  var btn=document.getElementById('secPlay');
+  btn.classList.remove('playing');
+  document.getElementById('secIcon').textContent='▶';
+  document.getElementById('secLabel').textContent='Play Song';
+}
+document.getElementById('secPlay').addEventListener('click',function(){
+  var c=audio();
+  if(!c){ return; }
+  if(arrangement.length===0){
+    setSecMsg('👆','<b>Add some sections first.</b> Click the colored buttons above, or hit "Load a Classic Pop Structure" to see a real arrangement.');
+    return;
+  }
+  if(!secPlaying){
+    secPlaying=true; secPos=0; secStep=0; secQueue=[]; secDrawnPos=-1;
+    secNext=c.currentTime+0.08;
+    secTimer=setInterval(secSchedule,25);
+    this.classList.add('playing');
+    document.getElementById('secIcon').textContent='■';
+    document.getElementById('secLabel').textContent='Stop';
+    setSecMsg('🎧','<b>Listen to the layers.</b> Watch the chips below light up as instruments enter and leave. That rise and fall of energy is called arrangement, and it is what makes a chorus feel like a chorus.');
+  }else{
+    stopSection();
+  }
+});
+
+/* ---------- quiz ---------- */
+document.querySelectorAll('.quiz-q').forEach(function(q){
+  var opts=q.querySelectorAll('.quiz-opt');
+  var explain=q.querySelector('.quiz-explain');
+  var done=false;
+  opts.forEach(function(o){
+    o.addEventListener('click',function(){
+      if(done){ return; }
+      done=true;
+      opts.forEach(function(x){ if(x.getAttribute('data-c')==='1'){ x.classList.add('correct'); } });
+      if(o.getAttribute('data-c')!=='1'){ o.classList.add('wrong'); }
+      explain.classList.add('show');
+    });
+  });
+});
+
+})();
+</script>
+</body>
+</html>
