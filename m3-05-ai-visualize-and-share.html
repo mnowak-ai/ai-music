@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI: Visualize &amp; Share | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --red:#C0392B; --red-light:#FBEDEB;
+    --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(31px,5.6vw,48px);font-weight:700;line-height:1.13;padding-top:64px;margin:0 0 14px;letter-spacing:-.01em;}
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  .studio{background:var(--ink);border-radius:20px;overflow:hidden;margin:32px 0;box-shadow:0 20px 50px rgba(26,21,35,.28);}
+  .studio-head{padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .studio-head .st-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#fff;}
+  .studio-head .st-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;background:rgba(188,135,230,.22);color:#D9BEF2;padding:5px 12px;border-radius:999px;}
+  .studio-body{padding:24px 26px 28px;}
+
+  /* video preview */
+  .preview{
+    position:relative;border-radius:16px;overflow:hidden;height:230px;margin-bottom:18px;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;
+    background:linear-gradient(135deg,#3a2160,#6B29A8);transition:background .12s;
+  }
+  .preview .pv-emoji{font-size:64px;line-height:1;transition:transform .1s ease;}
+  .preview .pv-label{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.85);}
+  .preview .pv-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;}
+  .preview .pv-badge{
+    position:absolute;top:12px;left:14px;font-family:'IBM Plex Mono',monospace;font-size:10px;
+    letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.7);
+    background:rgba(0,0,0,.3);padding:4px 10px;border-radius:999px;
+  }
+  .preview .pv-caption{
+    position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
+    font-weight:700;font-size:19px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.7);
+    white-space:nowrap;
+  }
+
+  .transport{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .play-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;background:var(--purple);color:#fff;
+    border:none;border-radius:999px;padding:13px 28px;cursor:pointer;transition:background .25s,transform .12s;
+    display:flex;align-items:center;gap:9px;
+  }
+  .play-btn:hover{background:#9350D1;}
+  .play-btn:active{transform:scale(.97);}
+  .play-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .play-btn.playing{background:#C0392B;}
+  .ghost-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:13.5px;background:transparent;color:#D9BEF2;
+    border:2px solid rgba(188,135,230,.45);border-radius:999px;padding:11px 18px;cursor:pointer;transition:all .25s;
+  }
+  .ghost-btn:hover{border-color:#BC87E6;background:rgba(188,135,230,.14);}
+  .ghost-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+
+  .mode-toggle{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+  .mode-btn{
+    flex:1;min-width:160px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14.5px;
+    padding:15px 12px;border:2px solid rgba(188,135,230,.35);border-radius:14px;
+    background:rgba(255,255,255,.05);color:rgba(255,255,255,.72);cursor:pointer;transition:all .25s;
+  }
+  .mode-btn:hover{border-color:#BC87E6;color:#fff;}
+  .mode-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .mode-btn.active{background:#7B2FBE;border-color:#BC87E6;color:#fff;}
+  .mode-btn .mb-sub{display:block;font-weight:400;font-size:11.5px;opacity:.78;margin-top:3px;}
+
+  /* timeline */
+  .tl-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px;}
+  .tl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;margin-bottom:16px;}
+  .tl-strip{display:flex;gap:4px;min-width:480px;}
+  .tl-slot{
+    flex:1;min-width:24px;height:46px;border-radius:6px;border:none;cursor:pointer;padding:0;position:relative;
+    background:rgba(255,255,255,.07);transition:background .12s,box-shadow .12s;
+  }
+  .tl-slot.beat{background:rgba(255,255,255,.14);}
+  .tl-slot:hover{background:rgba(188,135,230,.35);}
+  .tl-slot:focus-visible{outline:2px solid #BC87E6;outline-offset:2px;}
+  .tl-slot.cut{background:#BC87E6;}
+  .tl-slot.cut.offbeat{background:#C0392B;}
+  .tl-slot.now{box-shadow:inset 0 0 0 2px rgba(255,255,255,.7);}
+  .tl-legend{display:flex;gap:16px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:rgba(255,255,255,.5);margin-bottom:16px;}
+  .tl-legend span{display:flex;align-items:center;gap:6px;}
+  .lg-dot{width:11px;height:11px;border-radius:3px;display:inline-block;}
+
+  .fx-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;}
+  .fx-btn{
+    font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;padding:9px 16px;
+    border:2px solid rgba(188,135,230,.35);border-radius:999px;background:rgba(255,255,255,.05);
+    color:rgba(255,255,255,.72);cursor:pointer;transition:all .22s;
+  }
+  .fx-btn:hover{border-color:#BC87E6;color:#fff;}
+  .fx-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .fx-btn.on{background:#7B2FBE;border-color:#BC87E6;color:#fff;}
+
+  .studio-msg{
+    margin-top:18px;background:rgba(188,135,230,.14);border-radius:12px;padding:14px 18px;
+    color:#E4D3F5;font-size:14px;line-height:1.6;display:flex;gap:10px;align-items:flex-start;
+  }
+  .studio-msg b{color:#fff;}
+  .audio-hint{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.4);margin-top:14px;}
+
+  /* caption race */
+  .race-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+  @media (max-width:600px){.race-grid{grid-template-columns:1fr;}}
+  .race-col{background:rgba(255,255,255,.05);border-radius:14px;padding:20px;border:2px solid transparent;transition:border-color .3s;}
+  .race-col.done{border-color:#BC87E6;}
+  .race-col .rc-title{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:4px;}
+  .race-col .rc-sub{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:14px;}
+  .race-timer{font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:600;color:#D9BEF2;margin-bottom:12px;}
+  .word-strip{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;min-height:56px;}
+  .word-chip{
+    font-size:13px;padding:6px 11px;border-radius:7px;background:rgba(255,255,255,.09);
+    color:rgba(255,255,255,.4);transition:all .2s;
+  }
+  .word-chip.timed{background:#7B2FBE;color:#fff;}
+  .word-chip.pending{background:rgba(188,135,230,.3);color:#fff;box-shadow:0 0 0 2px #BC87E6;}
+  .race-btn{
+    width:100%;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;padding:13px;
+    border:none;border-radius:12px;cursor:pointer;transition:filter .2s,transform .12s;color:#fff;
+  }
+  .race-btn:active{transform:scale(.97);}
+  .race-btn:focus-visible{outline:3px solid #fff;outline-offset:2px;}
+  .race-btn.manual{background:#5A1F8E;}
+  .race-btn.ai{background:linear-gradient(100deg,#9350D1,#5A1F8E);}
+  .race-btn:disabled{opacity:.45;cursor:default;}
+  .race-verdict{
+    display:none;background:rgba(188,135,230,.16);border-radius:12px;padding:16px 20px;
+    color:#E4D3F5;font-size:14.5px;line-height:1.6;
+  }
+  .race-verdict.show{display:block;animation:pop .35s ease;}
+  @keyframes pop{0%{transform:scale(.97);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  .race-verdict b{color:#fff;}
+
+  /* id card */
+  .id-card{border:2px solid var(--purple);border-radius:16px;padding:26px 28px;margin:28px 0;background:var(--purple-light);}
+  .id-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
+  .id-item{background:#fff;border-radius:10px;padding:13px 16px;}
+  .id-item .idl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);}
+  .id-item .idv{font-size:14px;font-weight:600;margin-top:3px;line-height:1.4;}
+
+  .steps-list{margin:24px 0;}
+  .step-item{display:flex;gap:16px;margin-bottom:14px;background:var(--gray-light);border-radius:12px;padding:18px 20px;}
+  .step-item .si-num{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:#fff;background:var(--purple);
+    border-radius:8px;min-width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .step-item .si-body{font-size:14.5px;line-height:1.6;}
+  .step-item .si-body b{display:block;margin-bottom:2px;}
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+
+  .quiz-q{border:2px solid var(--purple-mid);border-radius:14px;padding:24px 26px;margin-bottom:18px;background:#fff;}
+  .quiz-q .qq-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--purple);letter-spacing:.12em;margin-bottom:6px;}
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--purple-mid);border-radius:10px;background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);}
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{display:none;font-size:14px;background:var(--gray-light);border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);}
+  .quiz-explain.show{display:block;}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+
+  .sources{margin-top:48px;border-top:2px solid var(--purple-mid);padding-top:24px;}
+  .sources .src-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+  .sources ul{list-style:none;}
+  .sources li{font-size:13.5px;color:var(--gray);margin-bottom:8px;line-height:1.55;}
+  .sources a{color:var(--purple);word-break:break-all;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <h1>AI: Visualize &amp; Share</h1>
+    <p class="lede">You finished the song. Now comes the part that decides whether anyone hears it, and it has almost nothing to do with music.</p>
+    <div class="meta">
+      <span>Reading time: 8 min</span>
+      <span>Interactive: 2 live studios</span>
+      <span>Turn your sound on</span>
+    </div>
+  </header>
+
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>Music Is Discovered With Eyes Now</h2>
+    <p>Here is an uncomfortable truth for musicians: most people will not discover your song by listening to it. They will discover it while <em>watching something.</em> A clip. A snippet. Fifteen seconds of video with your track underneath.</p>
+    <p>That means a song without visuals is, for most of the internet, invisible. And it means one of the most valuable skills a modern artist can have is not musical at all. It is the ability to cut video to a beat.</p>
+    <p>Which sounds hard. It used to be. Let's find out how hard it actually is now.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>The Difference One Feature Makes</h2>
+    <p>Below is a music video editor. The purple bar is your song's timeline. Each slot is a moment in time, and the <strong>brighter slots are the beats</strong>. Where you place a cut, the video switches to a new shot.</p>
+    <p>Right now, three cuts are placed sloppily, landing between the beats. Press Play and watch. Then hit <strong>AI Beat Sync</strong> and watch again.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">🎬 The Beat-Sync Studio</div>
+        <div class="st-tag">Live Audio Studio</div>
+      </div>
+      <div class="studio-body">
+
+        <div class="preview" id="preview">
+          <div class="pv-badge" id="pvBadge">SHOT 1 / 4</div>
+          <div class="pv-emoji" id="pvEmoji">🎤</div>
+          <div class="pv-label" id="pvLabel">Artist close-up</div>
+          <div class="pv-flash" id="pvFlash"></div>
+        </div>
+
+        <div class="transport">
+          <button class="play-btn" id="vPlay"><span id="vIcon">▶</span> <span id="vLabel">Play</span></button>
+          <button class="ghost-btn" id="vReset">Reset cuts</button>
+        </div>
+
+        <div class="mode-toggle">
+          <button class="mode-btn active" data-mode="raw">
+            Raw Cuts
+            <span class="mb-sub">Placed by hand, wherever they land</span>
+          </button>
+          <button class="mode-btn" data-mode="sync">
+            🤖 AI Beat Sync
+            <span class="mb-sub">Every cut snapped to the beat</span>
+          </button>
+        </div>
+
+        <div class="tl-label">Timeline &mdash; click any slot to add or remove a cut</div>
+        <div class="tl-scroll"><div class="tl-strip" id="tlStrip"></div></div>
+        <div class="tl-legend">
+          <span><i class="lg-dot" style="background:rgba(255,255,255,.14)"></i> Beat</span>
+          <span><i class="lg-dot" style="background:#C0392B"></i> Cut landing off the beat</span>
+          <span><i class="lg-dot" style="background:#BC87E6"></i> Cut landing on the beat</span>
+        </div>
+
+        <div class="tl-label">AI-generated effects</div>
+        <div class="fx-row" id="fxRow"></div>
+
+        <div class="studio-msg" id="vMsg">
+          <span>🎬</span>
+          <span><b>Press Play first.</b> Watch how the shot changes feel random and a little sloppy, like the video and the song are ignoring each other.</span>
+        </div>
+        <div class="audio-hint">Sound is generated live in your browser. If you hear nothing, check your volume and make sure this tab is not muted.</div>
+      </div>
+    </div>
+
+    <div class="callout"><b>That is the entire magic trick.</b> Nothing about the footage changed. Nothing about the song changed. The only thing that changed was <b>when</b> the cuts happened, and suddenly it looks professional. Cutting on the beat is the single biggest difference between a video that feels amateur and one that feels intentional, and AI does it in one tap.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>The Tool Most Artists Use for This</h2>
+    <p>The feature you just used is real, and the most common place people use it is <strong>CapCut</strong>, a free video editor owned by ByteDance, the same company behind TikTok. Its Beat Sync feature analyzes a song, finds the beats, and snaps your clips to them automatically.</p>
+
+    <div class="id-card">
+      <div class="id-grid">
+        <div class="id-item"><div class="idl">Made by</div><div class="idv">ByteDance (also makes TikTok)</div></div>
+        <div class="id-item"><div class="idl">Where it runs</div><div class="idv">Phone, tablet, desktop app, and web browser</div></div>
+        <div class="id-item"><div class="idl">Cost to start</div><div class="idv">Free tier with full basic editing, Beat Sync, templates, and 1080p export</div></div>
+        <div class="id-item"><div class="idl">Free auto-captions</div><div class="idv">Yes, with a monthly usage limit; more advanced caption styles are paid</div></div>
+        <div class="id-item"><div class="idl">Caption languages</div><div class="idv">More than 16, though accuracy is strongest in widely spoken ones</div></div>
+        <div class="id-item"><div class="idl">Paid tier</div><div class="idv">CapCut Pro exists for 4K export, advanced AI, and commercial rights</div></div>
+      </div>
+    </div>
+
+    <p>Three things CapCut and tools like it give an artist who has no video experience and no budget:</p>
+    <p><strong>Auto-sync music with video edits.</strong> The feature you just tried. <strong>AI-generated effects.</strong> Transitions, motion tracking, and looks that used to require expensive software and real training are now one tap. <strong>Music, sound effects, and auto-captions.</strong> Which brings us to the least glamorous and possibly most important feature of the three.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>Why Captions Are Not Optional</h2>
+    <p>A large share of social video gets watched with the sound off. People scroll in class, on buses, in waiting rooms, next to sleeping babies. If your video needs sound to make sense, you lose those viewers instantly.</p>
+    <p>Captions fix that, and they also make your work accessible to people who are deaf or hard of hearing. The catch has always been that captioning is <em>miserable</em> work. Do not take my word for it. Do it yourself.</p>
+    <p>Below is one short lyric line, seven words. Caption it the old way: click the button once per word to mark its timing. Then try the other button.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">⏱️ The Caption Race</div>
+        <div class="st-tag">Manual vs. AI</div>
+      </div>
+      <div class="studio-body">
+        <div class="race-grid">
+          <div class="race-col" id="manualCol">
+            <div class="rc-title">By Hand</div>
+            <div class="rc-sub">Click once per word</div>
+            <div class="race-timer" id="manualTimer">0.0s</div>
+            <div class="word-strip" id="manualWords"></div>
+            <button class="race-btn manual" id="manualBtn">Start captioning</button>
+          </div>
+          <div class="race-col" id="aiCol">
+            <div class="rc-title">🤖 AI Auto-Caption</div>
+            <div class="rc-sub">One click, all words</div>
+            <div class="race-timer" id="aiTimer">0.0s</div>
+            <div class="word-strip" id="aiWords"></div>
+            <button class="race-btn ai" id="aiBtn">Generate captions</button>
+          </div>
+        </div>
+        <div class="race-verdict" id="raceVerdict"></div>
+      </div>
+    </div>
+
+    <div class="callout"><b>Now scale that up.</b> You just timed seven words. A three-minute video has roughly four hundred. That is the real story of AI captioning: it is not that the AI is clever, it is that it removes a boring task big enough to stop people from posting at all. Just remember to read what it produced. Auto-captions still misread accents, fast delivery, and unusual words, so a quick check before posting is part of the job.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>Make a Music Video This Weekend</h2>
+    <p>Here is a plan that costs nothing, needs only a phone, and works even if you have never edited a video.</p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="si-num">1</div>
+        <div class="si-body"><b>Shoot three to five short clips. That is all.</b> Something moving (walking, driving, a hand on strings), something still and pretty, and one shot of you. Ten seconds each is plenty.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">2</div>
+        <div class="si-body"><b>Drop them into a free editor with your song.</b> Import the clips, add your track, and put them on the timeline in any order. It will look bad right now. That is expected.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">3</div>
+        <div class="si-body"><b>Turn on beat sync.</b> This is the step you just simulated. Watch it go from homemade to intentional in one tap.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">4</div>
+        <div class="si-body"><b>Add auto-captions for your lyrics or a hook line.</b> Then actually read them and fix the words the AI got wrong. It will get some wrong.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">5</div>
+        <div class="si-body"><b>Export vertical and post it.</b> Not when it is perfect. When it is finished. Perfect is a trap, and the algorithm rewards people who post again next week.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">06</span>
+    <h2>Two Honest Things Before You Download Anything</h2>
+    <p><strong>First, availability.</strong> CapCut is owned by ByteDance, and it was pulled into the same U.S. regulatory fight as TikTok in 2025. It remains available in the U.S. as of mid-2026, but this is a genuinely moving situation, and some school districts and workplaces block ByteDance apps entirely on their networks. If yours does, that is not a dead end. Browser-based editors and free desktop editors do beat-syncing and captions too, and the skills transfer completely.</p>
+    <p><strong>Second, the skill is the point, not the app.</strong> Editing software changes constantly. What does not change is knowing <em>why</em> a cut belongs on a beat, <em>why</em> captions matter, and <em>what</em> makes fifteen seconds worth watching. Learn the reasoning here and you can pick up any editor in an afternoon.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">07</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">What does "beat sync" do in a video editor?</div>
+      <button class="quiz-opt" data-c="0">It makes the song play faster to match the video length</button>
+      <button class="quiz-opt" data-c="1">It finds the beats in a song and snaps your video cuts to land on them</button>
+      <button class="quiz-opt" data-c="0">It removes the music from a video automatically</button>
+      <div class="quiz-explain">Beat sync detects where the beats fall and aligns your cuts to them. You heard the difference: same footage, same song, completely different feel.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">Why are captions important for an artist posting video online?</div>
+      <button class="quiz-opt" data-c="0">Platforms refuse to upload videos without captions</button>
+      <button class="quiz-opt" data-c="1">Many people watch with the sound off, and captions also make videos accessible to deaf and hard-of-hearing viewers</button>
+      <button class="quiz-opt" data-c="0">Captions make the audio quality sound better</button>
+      <div class="quiz-explain">Silent scrolling is extremely common, and captions serve both those viewers and people who are deaf or hard of hearing.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 3</div>
+      <div class="qq-text">After generating auto-captions with AI, what should you always do?</div>
+      <button class="quiz-opt" data-c="0">Nothing, AI captions are always perfect</button>
+      <button class="quiz-opt" data-c="1">Read them and fix errors, since auto-captions misread accents, fast delivery, and unusual words</button>
+      <button class="quiz-opt" data-c="0">Delete them and type the captions manually instead</button>
+      <div class="quiz-explain">AI does the tedious ninety percent, and a human checks the last ten. That review step is part of the job.</div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>Most people discover new music while watching video, so visuals are now part of releasing a song, not an optional extra.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>Beat sync automatically lands video cuts on the beat, which is the single biggest thing separating amateur-looking edits from intentional ones.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>AI auto-captions remove a genuinely miserable task, but they need a human read-through since they misread accents and unusual words.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>Learn the reasoning, not the buttons. Apps change and get blocked, but knowing why a cut belongs on a beat transfers to any editor.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sources fade">
+    <div class="src-label">Sources</div>
+    <ul>
+      <li>CapCut Video Editor: Full Features Guide (2026), covering free tier features, auto-caption limits, and U.S. availability status &mdash; <a href="https://capcutguide.com/capcut-video-editor-features-guide/" target="_blank" rel="noopener">https://capcutguide.com/capcut-video-editor-features-guide/</a></li>
+      <li>CapCut Auto Captions: Complete Guide (2026), on cloud speech recognition, accuracy, and workflow &mdash; <a href="https://capcutguide.com/capcut-auto-captions/" target="_blank" rel="noopener">https://capcutguide.com/capcut-auto-captions/</a></li>
+      <li>CapCut AI Features: Complete Guide &amp; Review (2026), on free versus paid AI features &mdash; <a href="https://freeacademy.ai/blog/capcut-ai-features-complete-guide-review-2026" target="_blank" rel="noopener">https://freeacademy.ai/blog/capcut-ai-features-complete-guide-review-2026</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target);} });
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(function(el){ observer.observe(el); });
+
+/* ---------- audio ---------- */
+var ctx=null, noiseBuf=null;
+function audio(){
+  if(!ctx){
+    var AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC){ return null; }
+    ctx=new AC();
+    var len=Math.floor(ctx.sampleRate);
+    noiseBuf=ctx.createBuffer(1,len,ctx.sampleRate);
+    var d=noiseBuf.getChannelData(0);
+    for(var i=0;i<len;i++){ d[i]=Math.random()*2-1; }
+  }
+  if(ctx.state==='suspended'){ ctx.resume(); }
+  return ctx;
+}
+function noiseSrc(){ var s=ctx.createBufferSource(); s.buffer=noiseBuf; s.loop=true; return s; }
+function kick(t){
+  var o=ctx.createOscillator(), g=ctx.createGain();
+  o.type='sine';
+  o.frequency.setValueAtTime(150,t);
+  o.frequency.exponentialRampToValueAtTime(45,t+0.11);
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(0.9,t+0.005);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+0.32);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(t); o.stop(t+0.34);
+}
+function snare(t){
+  var n=noiseSrc(), f=ctx.createBiquadFilter(), g=ctx.createGain();
+  f.type='bandpass'; f.frequency.value=1900; f.Q.value=0.8;
+  g.gain.setValueAtTime(0.42,t);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+0.16);
+  n.connect(f); f.connect(g); g.connect(ctx.destination);
+  n.start(t); n.stop(t+0.18);
+}
+function hat(t){
+  var n=noiseSrc(), f=ctx.createBiquadFilter(), g=ctx.createGain();
+  f.type='highpass'; f.frequency.value=7800;
+  g.gain.setValueAtTime(0.12,t);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+0.05);
+  n.connect(f); f.connect(g); g.connect(ctx.destination);
+  n.start(t); n.stop(t+0.07);
+}
+function chord(t,freqs){
+  freqs.forEach(function(fr){
+    var o=ctx.createOscillator(), g=ctx.createGain(), f=ctx.createBiquadFilter();
+    o.type='triangle'; o.frequency.setValueAtTime(fr,t);
+    f.type='lowpass'; f.frequency.value=2400;
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(0.09,t+0.04);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+0.9);
+    o.connect(f); f.connect(g); g.connect(ctx.destination);
+    o.start(t); o.stop(t+0.95);
+  });
+}
+function whoosh(t){
+  var n=noiseSrc(), f=ctx.createBiquadFilter(), g=ctx.createGain();
+  f.type='bandpass'; f.Q.value=1.2;
+  f.frequency.setValueAtTime(600,t);
+  f.frequency.exponentialRampToValueAtTime(4200,t+0.16);
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(0.16,t+0.05);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+0.2);
+  n.connect(f); f.connect(g); g.connect(ctx.destination);
+  n.start(t); n.stop(t+0.22);
+}
+
+/* ---------- beat sync studio ---------- */
+var VSTEPS=16, V_BPM=92;
+function vStepDur(){ return (60.0/V_BPM)/2; }
+var CHORDS=[[261.63,329.63,392.00],[220.00,261.63,329.63],[174.61,220.00,261.63],[196.00,246.94,293.66]];
+
+var SHOTS=[
+  {emoji:'🎤', label:'Artist close-up',   grad:'linear-gradient(135deg,#3a2160,#6B29A8)'},
+  {emoji:'🌆', label:'City rooftop',      grad:'linear-gradient(135deg,#5A1F8E,#B0508F)'},
+  {emoji:'🎸', label:'Guitar detail',     grad:'linear-gradient(135deg,#2b1a4d,#7B2FBE)'},
+  {emoji:'💃', label:'Crowd dancing',     grad:'linear-gradient(135deg,#7B2FBE,#D96BA0)'}
+];
+var DEFAULT_CUTS=[3,7,13];
+var rawCuts=DEFAULT_CUTS.slice();
+var vMode='raw';
+
+function isBeat(step){ return step%2===0; }
+function snapToBeat(step){
+  var lower=step-(step%2);
+  var upper=lower+2;
+  if(upper>=VSTEPS){ upper=lower; }
+  return (step-lower)<=(upper-step)?lower:upper;
+}
+function activeCuts(){
+  if(vMode==='raw'){ return rawCuts.slice().sort(function(a,b){return a-b;}); }
+  var snapped=[];
+  rawCuts.forEach(function(c){
+    var s=snapToBeat(c);
+    if(snapped.indexOf(s)===-1){ snapped.push(s); }
+  });
+  return snapped.sort(function(a,b){return a-b;});
+}
+
+var tlStrip=document.getElementById('tlStrip');
+var slotEls=[];
+for(var i=0;i<VSTEPS;i++){
+  (function(step){
+    var b=document.createElement('button');
+    b.className='tl-slot'+(isBeat(step)?' beat':'');
+    b.setAttribute('aria-label','Timeline slot '+(step+1)+(isBeat(step)?' (on beat)':''));
+    b.addEventListener('click',function(){
+      var idx=rawCuts.indexOf(step);
+      if(idx>-1){ rawCuts.splice(idx,1); }
+      else if(rawCuts.length<7){ rawCuts.push(step); }
+      renderTimeline();
+      audio();
+    });
+    tlStrip.appendChild(b);
+    slotEls.push(b);
+  })(i);
+}
+function renderTimeline(){
+  var cuts=activeCuts();
+  slotEls.forEach(function(el,step){
+    var isCut=cuts.indexOf(step)>-1;
+    el.classList.toggle('cut',isCut);
+    el.classList.toggle('offbeat',isCut && !isBeat(step));
+  });
+}
+renderTimeline();
+
+var FX={pulse:false,flash:false,whoosh:false};
+var FX_DEFS=[
+  {key:'pulse',  label:'💓 Beat Pulse'},
+  {key:'flash',  label:'⚡ Cut Flash'},
+  {key:'whoosh', label:'🌬️ Transition Whoosh'}
+];
+var fxRow=document.getElementById('fxRow');
+FX_DEFS.forEach(function(fx){
+  var b=document.createElement('button');
+  b.className='fx-btn';
+  b.textContent=fx.label;
+  b.addEventListener('click',function(){
+    FX[fx.key]=!FX[fx.key];
+    b.classList.toggle('on',FX[fx.key]);
+    audio();
+    if(FX[fx.key]){
+      setVMsg('✨','<b>Effect on.</b> These are the "AI-generated effects" part. In a real editor these are one-tap looks that used to require expensive software and real training.');
+    }
+  });
+  fxRow.appendChild(b);
+});
+
+document.querySelectorAll('.mode-btn').forEach(function(b){
+  b.addEventListener('click',function(){
+    vMode=b.getAttribute('data-mode');
+    document.querySelectorAll('.mode-btn').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
+    renderTimeline();
+    if(vMode==='sync'){
+      setVMsg('🤖','<b>Every cut just jumped onto a beat.</b> Press Play and watch the same footage suddenly feel deliberate. Nothing changed except the timing.');
+    }else{
+      setVMsg('🎬','<b>Back to raw cuts.</b> Notice the red slots. Those are cuts landing between beats, and that is what makes an edit feel accidental.');
+    }
+  });
+});
+document.getElementById('vReset').addEventListener('click',function(){
+  rawCuts=DEFAULT_CUTS.slice();
+  renderTimeline();
+  setVMsg('↩️','<b>Cuts reset.</b> Try clicking your own cuts anywhere on the timeline, then flip on AI Beat Sync and watch them snap.');
+});
+function setVMsg(icon,html){
+  document.getElementById('vMsg').innerHTML='<span>'+icon+'</span><span>'+html+'</span>';
+}
+
+var vPlaying=false, vTimer=null, vNext=0, vStep=0, vQueue=[], vDrawn=-1, shotIdx=0;
+var previewEl=document.getElementById('preview');
+var pvEmoji=document.getElementById('pvEmoji');
+var pvLabel=document.getElementById('pvLabel');
+var pvBadge=document.getElementById('pvBadge');
+var pvFlash=document.getElementById('pvFlash');
+
+function vSchedule(){
+  if(!ctx){ return; }
+  var cuts=activeCuts();
+  while(vNext < ctx.currentTime+0.14){
+    if(vStep===0||vStep===8){ kick(vNext); }
+    if(vStep===4||vStep===12){ snare(vNext); }
+    if(vStep===6||vStep===14){ kick(vNext); }
+    if(vStep%2===0){ hat(vNext); }
+    if(vStep%4===0){ chord(vNext,CHORDS[(vStep/4)%4]); }
+    var isCut=cuts.indexOf(vStep)>-1;
+    if(isCut && FX.whoosh){ whoosh(vNext); }
+    vQueue.push({step:vStep,time:vNext,cut:isCut,beat:isBeat(vStep)});
+    vNext+=vStepDur();
+    vStep=(vStep+1)%VSTEPS;
+  }
+}
+function applyShot(i){
+  var s=SHOTS[i%SHOTS.length];
+  previewEl.style.background=s.grad;
+  pvEmoji.textContent=s.emoji;
+  pvLabel.textContent=s.label;
+  pvBadge.textContent='SHOT '+((i%SHOTS.length)+1)+' / 4';
+}
+function vDraw(){
+  if(vPlaying && ctx){
+    while(vQueue.length && vQueue[0].time < ctx.currentTime){
+      var ev=vQueue.shift();
+      vDrawn=ev.step;
+      slotEls.forEach(function(el,st){ el.classList.toggle('now',st===ev.step); });
+      if(ev.cut){
+        shotIdx++;
+        applyShot(shotIdx);
+        if(FX.flash){
+          pvFlash.style.transition='none';
+          pvFlash.style.opacity='0.85';
+          setTimeout(function(){
+            pvFlash.style.transition='opacity .28s ease';
+            pvFlash.style.opacity='0';
+          },20);
+        }
+      }
+      if(FX.pulse && (ev.step===0||ev.step===8||ev.step===6||ev.step===14)){
+        pvEmoji.style.transform='scale(1.32)';
+        setTimeout(function(){ pvEmoji.style.transform='scale(1)'; },110);
+      }
+    }
+  }
+  requestAnimationFrame(vDraw);
+}
+requestAnimationFrame(vDraw);
+
+document.getElementById('vPlay').addEventListener('click',function(){
+  var c=audio();
+  if(!c){ setVMsg('⚠️','Your browser does not support live audio, but the rest of this page works fine.'); return; }
+  if(!vPlaying){
+    vPlaying=true; vStep=0; vNext=c.currentTime+0.06; vQueue=[]; shotIdx=0;
+    applyShot(0);
+    vTimer=setInterval(vSchedule,25);
+    this.classList.add('playing');
+    document.getElementById('vIcon').textContent='■';
+    document.getElementById('vLabel').textContent='Stop';
+  }else{
+    vPlaying=false; clearInterval(vTimer); vTimer=null; vQueue=[];
+    slotEls.forEach(function(el){ el.classList.remove('now'); });
+    this.classList.remove('playing');
+    document.getElementById('vIcon').textContent='▶';
+    document.getElementById('vLabel').textContent='Play';
+  }
+});
+
+/* ---------- caption race ---------- */
+var WORDS=['I','been','up','all','night','chasing','daylight'];
+var manualIdx=-1, manualStart=0, manualRAF=null, manualDone=false, aiDone=false;
+
+function renderWords(containerId,timedCount,pendingIdx){
+  var el=document.getElementById(containerId);
+  el.innerHTML=WORDS.map(function(w,i){
+    var cls='word-chip';
+    if(i<timedCount){ cls+=' timed'; }
+    else if(i===pendingIdx){ cls+=' pending'; }
+    return '<span class="'+cls+'">'+w+'</span>';
+  }).join('');
+}
+renderWords('manualWords',0,-1);
+renderWords('aiWords',0,-1);
+
+function manualTick(){
+  if(manualIdx<0||manualDone){ return; }
+  var el=document.getElementById('manualTimer');
+  el.textContent=((performance.now()-manualStart)/1000).toFixed(1)+'s';
+  manualRAF=requestAnimationFrame(manualTick);
+}
+document.getElementById('manualBtn').addEventListener('click',function(){
+  var btn=this;
+  if(manualDone){ return; }
+  if(manualIdx<0){
+    manualIdx=0; manualStart=performance.now();
+    renderWords('manualWords',0,0);
+    btn.textContent='Mark "'+WORDS[0]+'" ('+1+'/'+WORDS.length+')';
+    manualTick();
+    return;
+  }
+  manualIdx++;
+  if(manualIdx>=WORDS.length){
+    manualDone=true;
+    cancelAnimationFrame(manualRAF);
+    var secs=((performance.now()-manualStart)/1000);
+    document.getElementById('manualTimer').textContent=secs.toFixed(1)+'s';
+    renderWords('manualWords',WORDS.length,-1);
+    btn.textContent='Done, finally';
+    btn.disabled=true;
+    document.getElementById('manualCol').classList.add('done');
+    checkVerdict(secs);
+  }else{
+    renderWords('manualWords',manualIdx,manualIdx);
+    btn.textContent='Mark "'+WORDS[manualIdx]+'" ('+(manualIdx+1)+'/'+WORDS.length+')';
+  }
+});
+
+document.getElementById('aiBtn').addEventListener('click',function(){
+  var btn=this;
+  if(aiDone){ return; }
+  btn.disabled=true;
+  btn.textContent='Listening to audio...';
+  audio();
+  var t0=performance.now();
+  var shown=0;
+  var iv=setInterval(function(){
+    shown++;
+    renderWords('aiWords',shown,-1);
+    if(shown>=WORDS.length){
+      clearInterval(iv);
+      aiDone=true;
+      var secs=(performance.now()-t0)/1000;
+      document.getElementById('aiTimer').textContent=secs.toFixed(1)+'s';
+      btn.textContent='7 words captioned';
+      document.getElementById('aiCol').classList.add('done');
+      checkVerdict(null);
+    }
+  },55);
+});
+
+var manualSecs=null;
+function checkVerdict(secs){
+  if(secs!==null){ manualSecs=secs; }
+  if(!(manualDone&&aiDone)){ return; }
+  var v=document.getElementById('raceVerdict');
+  var per=manualSecs/WORDS.length;
+  var projected=Math.round(per*400/60);
+  v.innerHTML='<b>Seven words took you '+manualSecs.toFixed(1)+' seconds.</b> The AI did the same seven in well under one. '
+    +'At your pace, captioning a three-minute video with roughly 400 words would take about <b>'+projected+' minutes</b> of clicking. '
+    +'That is not a hard task. It is a boring one, and boring tasks are exactly what stops artists from posting consistently.';
+  v.classList.add('show');
+}
+
+/* ---------- quiz ---------- */
+document.querySelectorAll('.quiz-q').forEach(function(q){
+  var opts=q.querySelectorAll('.quiz-opt');
+  var explain=q.querySelector('.quiz-explain');
+  var done=false;
+  opts.forEach(function(o){
+    o.addEventListener('click',function(){
+      if(done){ return; }
+      done=true;
+      opts.forEach(function(x){ if(x.getAttribute('data-c')==='1'){ x.classList.add('correct'); } });
+      if(o.getAttribute('data-c')!=='1'){ o.classList.add('wrong'); }
+      explain.classList.add('show');
+    });
+  });
+});
+
+})();
+</script>
+</body>
+</html>
