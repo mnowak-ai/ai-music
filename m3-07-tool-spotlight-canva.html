@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tool Spotlight: Canva | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --red:#C0392B; --red-light:#FBEDEB;
+    --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(31px,5.6vw,48px);font-weight:700;line-height:1.13;margin:0 0 14px;letter-spacing:-.01em;}
+  .spotlight-badge{
+    display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);background:var(--purple-light);
+    border-radius:999px;padding:7px 16px;margin-top:64px;margin-bottom:14px;
+  }
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  .studio{background:var(--ink);border-radius:20px;overflow:hidden;margin:32px 0;box-shadow:0 20px 50px rgba(26,21,35,.28);}
+  .studio-head{padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .studio-head .st-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#fff;}
+  .studio-head .st-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;background:rgba(188,135,230,.22);color:#D9BEF2;padding:5px 12px;border-radius:999px;}
+  .studio-body{padding:24px 26px 28px;}
+
+  /* ---- magic tools lab ---- */
+  .lab-layout{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start;}
+  @media (max-width:720px){.lab-layout{grid-template-columns:1fr;}}
+  .photo-stage{display:flex;flex-direction:column;align-items:center;gap:12px;}
+  .photo-wrap{
+    position:relative;width:300px;height:230px;border-radius:12px;overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.45);transition:width .7s cubic-bezier(.2,.7,.3,1);
+    background-image:
+      repeating-conic-gradient(#3a3a44 0% 25%, #2a2a32 0% 50%);
+    background-size:18px 18px;
+  }
+  .ph-layer{position:absolute;inset:0;transition:opacity .6s ease,transform .7s cubic-bezier(.2,.7,.3,1);}
+  .ph-sky{background:linear-gradient(180deg,#F5A25D 0%,#E2607A 55%,#7B2FBE 100%);}
+  .ph-sun{position:absolute;left:22%;top:26%;width:54px;height:54px;border-radius:50%;background:rgba(255,240,200,.92);filter:blur(1px);}
+  .ph-ground{position:absolute;left:0;right:0;bottom:0;height:62px;background:linear-gradient(180deg,#3A1352,#1B0A2A);}
+  .ph-subject{display:flex;align-items:flex-end;justify-content:center;}
+  .ph-distract{
+    position:absolute;right:16px;bottom:56px;width:34px;height:64px;border-radius:4px;
+    background:linear-gradient(180deg,#FFD84D,#E8901F);box-shadow:0 4px 12px rgba(0,0,0,.35);
+    display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#5A2E00;
+    font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;
+  }
+  .ph-expandzone{
+    position:absolute;top:0;bottom:0;right:0;width:0;
+    border-left:2px dashed rgba(255,255,255,.55);opacity:0;transition:opacity .5s ease;
+    pointer-events:none;
+  }
+  .photo-cap{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);}
+
+  .tool-list{display:flex;flex-direction:column;gap:8px;}
+  .tool-btn{
+    text-align:left;font-family:'DM Sans',sans-serif;padding:13px 16px;border-radius:12px;
+    border:2px solid rgba(188,135,230,.3);background:rgba(255,255,255,.05);cursor:pointer;
+    transition:all .22s;color:#fff;
+  }
+  .tool-btn:hover{border-color:#BC87E6;background:rgba(188,135,230,.14);}
+  .tool-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .tool-btn.done{border-color:#7B2FBE;background:rgba(123,47,190,.28);}
+  .tool-btn .tb-name{font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:8px;}
+  .tool-btn .tb-tag{
+    font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+    padding:3px 7px;border-radius:999px;margin-left:auto;
+  }
+  .tb-tag.free{background:rgba(30,138,90,.3);color:#8FE3BC;}
+  .tb-tag.pro{background:rgba(176,125,43,.3);color:#F0D08A;}
+  .tool-btn .tb-desc{font-size:12.5px;color:rgba(255,255,255,.6);margin-top:3px;line-height:1.45;}
+
+  .reset-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;background:transparent;color:#D9BEF2;
+    border:2px solid rgba(188,135,230,.45);border-radius:999px;padding:10px 18px;cursor:pointer;transition:all .25s;
+  }
+  .reset-btn:hover{border-color:#BC87E6;background:rgba(188,135,230,.14);}
+  .reset-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+
+  .magic-write{
+    margin-top:12px;background:rgba(255,255,255,.06);border-radius:12px;padding:14px 16px;
+    font-size:13.5px;color:#E4D3F5;line-height:1.6;min-height:44px;
+  }
+  .magic-write .mw-label{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px;}
+
+  .studio-msg{
+    margin-top:18px;background:rgba(188,135,230,.14);border-radius:12px;padding:14px 18px;
+    color:#E4D3F5;font-size:14px;line-height:1.6;display:flex;gap:10px;align-items:flex-start;
+  }
+  .studio-msg b{color:#fff;}
+
+  /* ---- release kit ---- */
+  .kit-layout{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:start;}
+  @media (max-width:720px){.kit-layout{grid-template-columns:1fr;}}
+  .asset-list{display:flex;flex-direction:column;gap:7px;}
+  .asset-btn{
+    text-align:left;font-family:'DM Sans',sans-serif;padding:11px 14px;border-radius:10px;
+    border:2px solid rgba(188,135,230,.25);background:rgba(255,255,255,.04);cursor:pointer;
+    transition:all .2s;color:#fff;display:flex;align-items:center;gap:10px;
+  }
+  .asset-btn:hover{border-color:#BC87E6;}
+  .asset-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .asset-btn.active{background:#7B2FBE;border-color:#BC87E6;}
+  .asset-btn.seen .ab-dot{background:#8FE3BC;}
+  .ab-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;transition:background .3s;}
+  .ab-name{font-weight:600;font-size:13.5px;}
+  .ab-dim{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,.45);margin-left:auto;}
+
+  .preview-pane{display:flex;flex-direction:column;align-items:center;gap:12px;width:230px;}
+  @media (max-width:720px){.preview-pane{width:100%;}}
+  .pv-frame{
+    border-radius:10px;overflow:hidden;box-shadow:0 10px 28px rgba(0,0,0,.45);
+    display:flex;align-items:center;justify-content:center;position:relative;
+    transition:width .45s ease,height .45s ease;
+  }
+  .pv-art{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
+  .pv-art .pa-title{font-family:'Fraunces',serif;font-weight:700;color:#fff;line-height:1;}
+  .pv-art .pa-sub{font-family:'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.75);}
+  .canvas-anim{animation:drift 4s ease-in-out infinite alternate;}
+  @keyframes drift{
+    0%{transform:scale(1) translateY(0);filter:hue-rotate(0deg);}
+    100%{transform:scale(1.12) translateY(-6px);filter:hue-rotate(28deg);}
+  }
+  .loop-badge{
+    position:absolute;top:8px;left:8px;font-family:'IBM Plex Mono',monospace;font-size:8.5px;
+    letter-spacing:.1em;text-transform:uppercase;background:rgba(0,0,0,.55);color:#8FE3BC;
+    padding:3px 8px;border-radius:999px;
+  }
+  .asset-info{background:rgba(255,255,255,.06);border-radius:12px;padding:14px 16px;font-size:13px;color:#E4D3F5;line-height:1.6;width:100%;}
+  .asset-info .ai-name{font-weight:700;color:#fff;margin-bottom:4px;font-size:14px;}
+  .kit-progress{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:rgba(255,255,255,.5);margin-top:14px;}
+  .kit-progress b{color:#BC87E6;}
+
+  /* free vs pro table */
+  .compare{border:2px solid var(--purple-mid);border-radius:16px;overflow:hidden;margin:28px 0;}
+  .cmp-row{display:grid;grid-template-columns:1.4fr 1fr 1fr;border-bottom:1px solid var(--purple-mid);}
+  .cmp-row:last-child{border-bottom:none;}
+  .cmp-row.head{background:var(--purple);color:#fff;}
+  .cmp-cell{padding:13px 16px;font-size:14px;}
+  .cmp-row.head .cmp-cell{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
+  .cmp-row:not(.head) .cmp-cell:first-child{font-weight:700;background:var(--gray-light);}
+  .cmp-yes{color:var(--green);font-weight:700;}
+  .cmp-no{color:var(--gray);}
+  @media (max-width:600px){
+    .cmp-row{grid-template-columns:1fr;}
+    .cmp-row.head{display:none;}
+    .cmp-row:not(.head) .cmp-cell:first-child{background:var(--purple-light);}
+    .cmp-cell{border-bottom:1px solid var(--purple-light);}
+  }
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+  .callout.green{background:var(--green-light);border-left-color:var(--green);}
+  .callout.green b{color:var(--green);}
+
+  .quiz-q{border:2px solid var(--purple-mid);border-radius:14px;padding:24px 26px;margin-bottom:18px;background:#fff;}
+  .quiz-q .qq-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--purple);letter-spacing:.12em;margin-bottom:6px;}
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--purple-mid);border-radius:10px;background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);}
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{display:none;font-size:14px;background:var(--gray-light);border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);}
+  .quiz-explain.show{display:block;}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+
+  .sources{margin-top:48px;border-top:2px solid var(--purple-mid);padding-top:24px;}
+  .sources .src-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+  .sources ul{list-style:none;}
+  .sources li{font-size:13.5px;color:var(--gray);margin-bottom:8px;line-height:1.55;}
+  .sources a{color:var(--purple);word-break:break-all;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <div class="spotlight-badge">🔦 Tool Spotlight</div>
+    <h1>Why Use Canva?</h1>
+    <p class="lede">You already know it can make a cover. Here is the part nobody tells you: one song release needs about eight different visuals, and a free account can make almost all of them.</p>
+    <div class="meta">
+      <span>Reading time: 9 min</span>
+      <span>Interactive: 2 studios</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>The Job Nobody Warns You About</h2>
+    <p>Say you finish a song on Friday and want to release it. Here is what you actually need before it goes live: cover art, a vertical looping visual for streaming apps, a square post, a story, a banner for your profile, a flyer for the show, a playlist cover, and a press photo.</p>
+    <p>Eight things. Eight different shapes and sizes. And every single one has a "correct" size that platforms expect.</p>
+    <p>This is the quiet reason a lot of finished songs never get released. Not the music. The pile of visual homework behind it. Click through the kit below and see the whole job at once.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">📦 The Release Kit</div>
+        <div class="st-tag">Interactive Checklist</div>
+      </div>
+      <div class="studio-body">
+        <div class="kit-layout">
+          <div>
+            <div class="asset-list" id="assetList"></div>
+            <div class="kit-progress">Assets explored: <b id="kitCount">0</b> of 8</div>
+          </div>
+          <div class="preview-pane">
+            <div class="pv-frame" id="pvFrame"></div>
+            <div class="asset-info" id="assetInfo"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout"><b>Notice number two on that list.</b> A streaming Canvas is a short looping video, not a picture, and most beginners have no idea it exists. It is one of the few places where a tiny bit of motion makes an artist look instantly more professional than the people around them.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>The Four Jobs Canva Does for Musicians</h2>
+    <p><strong>Album and single cover art.</strong> Square templates already sized correctly, so you never guess dimensions or get rejected by a distributor for uploading the wrong shape.</p>
+    <p><strong>Concert and event flyers.</strong> Both digital and printable. This is where templates earn their keep, because a flyer has a lot of information (who, what, when, where, how much) and arranging that well is genuinely hard from scratch.</p>
+    <p><strong>Social media promo graphics.</strong> Posts, stories, announcement graphics, lyric quotes, countdown posts. The formats every platform expects, already set up.</p>
+    <p><strong>Streaming platform visuals.</strong> Profile banners, playlist covers, and vertical looping Canvas videos. The least known and, for an artist trying to look established, arguably the highest impact.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>What the AI Tools Actually Do</h2>
+    <p>Canva's AI features are bundled under the name <strong>Magic Studio</strong>, and the names are marketing, so let's just look at what each one does to a real photo.</p>
+    <p>Below is a promo photo with two problems: a distracting sign in the corner, and it is the wrong shape for a banner. Click each tool and watch.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">✨ The Magic Tools Lab</div>
+        <div class="st-tag">Live Demo</div>
+      </div>
+      <div class="studio-body">
+        <div class="lab-layout">
+          <div class="photo-stage">
+            <div class="photo-wrap" id="photoWrap">
+              <div class="ph-layer ph-sky" id="phSky">
+                <div class="ph-sun"></div>
+                <div class="ph-ground"></div>
+              </div>
+              <div class="ph-layer ph-subject" id="phSubject">
+                <svg width="110" height="150" viewBox="0 0 110 150" style="margin-bottom:34px;" aria-hidden="true">
+                  <circle cx="55" cy="30" r="19" fill="#1B0A2A"/>
+                  <path d="M55 50 C34 50 26 66 24 92 L28 150 L82 150 L86 92 C84 66 76 50 55 50 Z" fill="#1B0A2A"/>
+                  <rect x="49" y="16" width="12" height="30" rx="6" fill="#2E1240"/>
+                  <line x1="55" y1="46" x2="55" y2="60" stroke="#2E1240" stroke-width="3"/>
+                </svg>
+              </div>
+              <div class="ph-distract" id="phDistract">SIGN</div>
+              <div class="ph-expandzone" id="phExpand"></div>
+            </div>
+            <div class="photo-cap" id="photoCap">Original photo &middot; 300 &times; 230</div>
+            <button class="reset-btn" id="resetPhoto">Reset photo</button>
+          </div>
+
+          <div>
+            <div class="tool-list" id="toolList"></div>
+            <div class="magic-write" id="magicWrite">
+              <div class="mw-label">Magic Write output</div>
+              <span id="mwText">Click Magic Write to generate an artist bio.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="studio-msg" id="labMsg">
+          <span>🧪</span>
+          <span><b>Try Magic Eraser first.</b> That yellow sign in the corner is the kind of thing that ruins an otherwise good photo, and removing it used to require real photo editing skill.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>The Honest Free vs. Paid Line</h2>
+    <p>Canva is often described as a free AI art editor, and the free editor genuinely is excellent. But it is worth being precise, because several of the flashiest AI tools sit behind the paid tier.</p>
+
+    <div class="compare">
+      <div class="cmp-row head">
+        <div class="cmp-cell">What you want to do</div>
+        <div class="cmp-cell">Canva Free</div>
+        <div class="cmp-cell">Canva Pro</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-cell">Design covers, flyers, posts from templates</div>
+        <div class="cmp-cell cmp-yes">Yes, 250,000+ templates</div>
+        <div class="cmp-cell cmp-yes">Yes, plus premium ones</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-cell">Correct sizes for every platform</div>
+        <div class="cmp-cell cmp-yes">Yes</div>
+        <div class="cmp-cell cmp-yes">Yes</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-cell">Magic Design (AI generates a layout)</div>
+        <div class="cmp-cell">Limited number of uses</div>
+        <div class="cmp-cell cmp-yes">Included</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-cell">Background Remover, Magic Eraser, Magic Expand</div>
+        <div class="cmp-cell cmp-no">Generally Pro</div>
+        <div class="cmp-cell cmp-yes">Included</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-cell">Magic Resize across formats</div>
+        <div class="cmp-cell cmp-no">Pro</div>
+        <div class="cmp-cell cmp-yes">Included</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-cell">Storage</div>
+        <div class="cmp-cell">5 GB</div>
+        <div class="cmp-cell">1 TB</div>
+      </div>
+    </div>
+
+    <p>So the honest summary: <strong>the free tier can absolutely produce your entire release kit.</strong> You will be resizing manually instead of in one click, and cutting backgrounds the old-fashioned way. That is inconvenience, not a wall.</p>
+
+    <div class="callout green"><b>Unless you are in a K-12 school, in which case you may already have all of it.</b> Canva for Education is free for verified K-12 teachers and their students and unlocks essentially the full Pro experience, including Magic Studio. Students join through a teacher's class rather than signing up alone. Worth asking a teacher before paying for anything.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>Two Traps Worth Avoiding</h2>
+    <p><strong>The sameness trap.</strong> When 220 million people use the same template library, popular templates get very recognizable. If you use one untouched, your release looks like everyone else's. The fix takes two minutes: change the colors to yours, swap the font, and move one element. Treat the template as a skeleton, not a finished design.</p>
+    <p><strong>The generated-image trap.</strong> AI image generators are built into these tools now, and it is tempting to type "moody album cover" and ship whatever appears. Two problems. It will look like every other AI cover, because it is drawing on the same patterns everyone else's prompt hits. And it may not look anything like your music sounds, which is the only job cover art actually has. Generated images work best as a raw ingredient you then cut, recolor, and build on, not as the finished product.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">06</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">What is a streaming Canvas?</div>
+      <button class="quiz-opt" data-c="0">A physical painting used for album artwork</button>
+      <button class="quiz-opt" data-c="1">A short vertical looping video that plays behind a song in a streaming app</button>
+      <button class="quiz-opt" data-c="0">The blank workspace where you start a new design</button>
+      <div class="quiz-explain">A Canvas is a brief vertical video loop that plays while your track is playing. It is motion, not a still image, and most beginners do not know it exists.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">Which of these is generally a paid Canva Pro feature rather than free?</div>
+      <button class="quiz-opt" data-c="0">Using templates to design a flyer</button>
+      <button class="quiz-opt" data-c="1">Background Remover and Magic Eraser</button>
+      <button class="quiz-opt" data-c="0">Getting the correct size for an Instagram post</button>
+      <div class="quiz-explain">Templates and correct sizing are free. The photo-editing AI tools like Background Remover and Magic Eraser generally require Pro, or free access through Canva for Education.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 3</div>
+      <div class="qq-text">Why should you change a template rather than using it exactly as-is?</div>
+      <button class="quiz-opt" data-c="0">Templates expire after 30 days</button>
+      <button class="quiz-opt" data-c="1">Popular templates are used by huge numbers of people, so an untouched one makes your release look like everyone else's</button>
+      <button class="quiz-opt" data-c="0">Using a template without changing it is against the rules</button>
+      <div class="quiz-explain">With hundreds of millions of users, popular templates become recognizable. Changing colors, fonts, and one element makes it yours.</div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>A single song release needs about eight different visuals at different sizes, and that pile of work is a real reason finished songs never get released.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>Canva covers four musician jobs: cover art, event flyers, social promo graphics, and streaming platform visuals like banners and Canvas loops.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>The free tier can produce an entire release kit. Pro mainly buys speed, through tools like Magic Resize and Background Remover.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>Templates and AI images are starting points. Change the colors, type, and composition, or your release will look like everybody else's.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sources fade">
+    <div class="src-label">Sources</div>
+    <ul>
+      <li>Canva, official Magic Design product page, on availability across Free, Pro, and Education accounts &mdash; <a href="https://www.canva.com/magic-design/" target="_blank" rel="noopener">https://www.canva.com/magic-design/</a></li>
+      <li>Canva AI Review 2026: Magic Studio Free vs Pro Limits, on the Magic Studio tool suite &mdash; <a href="https://www.aiworthit.com/blog/canva-ai-review/" target="_blank" rel="noopener">https://www.aiworthit.com/blog/canva-ai-review/</a></li>
+      <li>Canva for Education Review 2026, on free Pro-level access for verified K-12 teachers and students &mdash; <a href="https://ecomm.design/canva-for-education/" target="_blank" rel="noopener">https://ecomm.design/canva-for-education/</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target);} });
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(function(el){ observer.observe(el); });
+
+/* ================= RELEASE KIT ================= */
+var ASSETS=[
+  {name:'Cover art',dim:'3000 × 3000',w:170,h:170,grad:'linear-gradient(150deg,#3A1352,#7B2FBE)',
+   title:'Paper Skies',sub:'Nova Jett',canvas:false,
+   info:'The square that shows up everywhere: streaming apps, your profile, search results. Distributors reject files that are not square, so this size is not a suggestion.'},
+  {name:'Streaming Canvas',dim:'1080 × 1920 · 3–8 sec loop',w:105,h:186,grad:'linear-gradient(160deg,#E2607A,#7B2FBE,#1B0A2A)',
+   title:'Paper Skies',sub:'looping',canvas:true,
+   info:'A short vertical video that loops silently behind your song while it plays. It is motion instead of a still, and it makes an artist look established fast. Most beginners never make one.'},
+  {name:'Square post',dim:'1080 × 1080',w:170,h:170,grad:'linear-gradient(150deg,#7B2FBE,#E2607A)',
+   title:'OUT NOW',sub:'Friday',canvas:false,
+   info:'Your release announcement. The one people actually share. Keep the text huge, because it will be seen small in a crowded feed.'},
+  {name:'Story / Reel cover',dim:'1080 × 1920',w:105,h:186,grad:'linear-gradient(160deg,#1B0A2A,#5A1F8E)',
+   title:'NEW SINGLE',sub:'swipe up',canvas:false,
+   info:'Vertical and full-screen. Different shape entirely from your post, which is why designing once and resizing matters so much.'},
+  {name:'Profile banner',dim:'2560 × 1440',w:206,h:116,grad:'linear-gradient(120deg,#5A1F8E,#F5A25D)',
+   title:'NOVA JETT',sub:'new album out now',canvas:false,
+   info:'The wide header on your artist page or channel. Wide formats are where naive resizing looks worst, because there is nowhere for tall text to go.'},
+  {name:'Concert flyer',dim:'8.5 × 11 in',w:130,h:168,grad:'linear-gradient(160deg,#2A0E20,#E2607A)',
+   title:'LIVE',sub:'Sat 9PM · The Vault',canvas:false,
+   info:'Digital and printable. Flyers carry the most information of anything in your kit, so a template that already arranges who, what, when, where and price saves real time.'},
+  {name:'Playlist cover',dim:'300 × 300',w:120,h:120,grad:'linear-gradient(150deg,#1B0A2A,#3DF5D0)',
+   title:'MIXTAPE',sub:'vol. 1',canvas:false,
+   info:'Tiny by design. This is the ultimate thumbnail test: if the text does not read at this size, it does not read at all.'},
+  {name:'Press photo frame',dim:'1200 × 800',w:190,h:127,grad:'linear-gradient(120deg,#3A3A3A,#0D0D0D)',
+   title:'PRESS KIT',sub:'nova jett · 2026',canvas:false,
+   info:'What venues, blogs, and playlist curators ask for when they want to feature you. Having one ready is the difference between getting covered and getting skipped.'}
+];
+var seen={}, kitIdx=0;
+var assetList=document.getElementById('assetList');
+ASSETS.forEach(function(a,i){
+  var b=document.createElement('button');
+  b.className='asset-btn'+(i===0?' active':'');
+  b.innerHTML='<span class="ab-dot"></span><span class="ab-name">'+a.name+'</span><span class="ab-dim">'+a.dim.split('·')[0].trim()+'</span>';
+  b.addEventListener('click',function(){ selectAsset(i); });
+  assetList.appendChild(b);
+});
+function selectAsset(i){
+  kitIdx=i; seen[i]=true;
+  var a=ASSETS[i];
+  var btns=assetList.querySelectorAll('.asset-btn');
+  btns.forEach(function(b,j){
+    b.classList.toggle('active',j===i);
+    b.classList.toggle('seen',!!seen[j]);
+  });
+  var f=document.getElementById('pvFrame');
+  f.style.width=a.w+'px'; f.style.height=a.h+'px';
+  var base=Math.min(a.w,a.h);
+  f.innerHTML='<div class="pv-art'+(a.canvas?' canvas-anim':'')+'" style="background:'+a.grad+';">'
+    +'<div class="pa-title" style="font-size:'+Math.max(11,Math.round(base*0.16))+'px;">'+a.title+'</div>'
+    +'<div class="pa-sub" style="font-size:'+Math.max(6,Math.round(base*0.062))+'px;">'+a.sub+'</div>'
+    +'</div>'
+    +(a.canvas?'<div class="loop-badge">◉ loops</div>':'');
+  document.getElementById('assetInfo').innerHTML='<div class="ai-name">'+a.name+' &middot; '+a.dim+'</div>'+a.info;
+  var n=Object.keys(seen).length;
+  document.getElementById('kitCount').textContent=n;
+  if(n===ASSETS.length){
+    document.querySelector('.kit-progress').innerHTML='All <b>8</b> assets explored. That is one release. Now you see why artists batch this work.';
+  }
+}
+selectAsset(0);
+
+/* ================= MAGIC TOOLS LAB ================= */
+var TOOLS=[
+  {key:'eraser', name:'Magic Eraser', tag:'pro', icon:'🧽',
+   desc:'Removes an unwanted object and fills in what was behind it.',
+   msg:'<b>Sign gone.</b> Magic Eraser removed the object and generated what was behind it. The old way was cloning pixels by hand, badly, for twenty minutes.'},
+  {key:'bg', name:'Background Remover', tag:'pro', icon:'✂️',
+   desc:'Cuts the subject out from the background in one click.',
+   msg:'<b>Subject cut out.</b> The checkerboard means transparent. Now you can drop this person onto any color, gradient, or flyer. This one tool is why every modern poster looks the way it does.'},
+  {key:'expand', name:'Magic Expand', tag:'pro', icon:'↔️',
+   desc:'Extends the edges of a photo so it fits a wider shape.',
+   msg:'<b>The photo got wider without reshooting.</b> AI generated the new area on the right. This is how a square phone photo becomes a wide banner without stretching anyone.'},
+  {key:'grab', name:'Magic Grab', tag:'pro', icon:'🤏',
+   desc:'Picks up the subject so you can move or resize them separately.',
+   msg:'<b>The subject moved independently of the background.</b> Grab lifts a person off the photo so you can reposition them, which is enormously useful when text needs the space they were standing in.'},
+  {key:'write', name:'Magic Write', tag:'free', icon:'✍️',
+   desc:'Generates text: bios, captions, announcement copy.',
+   msg:'<b>Text is a design problem too.</b> Artist bios and captions stop plenty of people cold. Generate a draft, then rewrite it in your own voice, because a bio that sounds like a robot reads like one.'}
+];
+var used={};
+var toolList=document.getElementById('toolList');
+TOOLS.forEach(function(t){
+  var b=document.createElement('button');
+  b.className='tool-btn';
+  b.setAttribute('data-key',t.key);
+  b.innerHTML='<div class="tb-name">'+t.icon+' '+t.name
+    +'<span class="tb-tag '+t.tag+'">'+(t.tag==='free'?'free (limited)':'Pro')+'</span></div>'
+    +'<div class="tb-desc">'+t.desc+'</div>';
+  b.addEventListener('click',function(){ applyTool(t,b); });
+  toolList.appendChild(b);
+});
+
+var wrap=document.getElementById('photoWrap');
+var sky=document.getElementById('phSky');
+var subject=document.getElementById('phSubject');
+var distract=document.getElementById('phDistract');
+var expandZone=document.getElementById('phExpand');
+var photoCap=document.getElementById('photoCap');
+
+var BIO='Nova Jett is a Chicago songwriter building warm, restless pop from bedroom recordings and late-night walks. Paper Skies is her first single.';
+
+function applyTool(t,btn){
+  used[t.key]=true;
+  btn.classList.add('done');
+  if(t.key==='eraser'){
+    distract.style.opacity='0';
+    photoCap.textContent='Object removed · 300 × 230';
+  }else if(t.key==='bg'){
+    sky.style.opacity='0';
+    photoCap.textContent='Background removed · transparent';
+  }else if(t.key==='expand'){
+    wrap.style.width='400px';
+    expandZone.style.width='100px';
+    expandZone.style.opacity='1';
+    photoCap.textContent='Expanded · 400 × 230';
+    setTimeout(function(){ expandZone.style.opacity='0'; },2200);
+  }else if(t.key==='grab'){
+    subject.style.transform='translateX(-58px) scale(0.86)';
+    photoCap.textContent='Subject repositioned';
+  }else if(t.key==='write'){
+    typeBio();
+  }
+  document.getElementById('labMsg').innerHTML='<span>'+t.icon+'</span><span>'+t.msg+'</span>';
+}
+var typing=null;
+function typeBio(){
+  clearInterval(typing);
+  var el=document.getElementById('mwText');
+  el.textContent='';
+  var i=0;
+  typing=setInterval(function(){
+    i+=2;
+    el.textContent=BIO.slice(0,i);
+    if(i>=BIO.length){ clearInterval(typing); }
+  },18);
+}
+document.getElementById('resetPhoto').addEventListener('click',function(){
+  distract.style.opacity='1';
+  sky.style.opacity='1';
+  wrap.style.width='300px';
+  expandZone.style.width='0';
+  expandZone.style.opacity='0';
+  subject.style.transform='none';
+  photoCap.textContent='Original photo · 300 × 230';
+  document.getElementById('labMsg').innerHTML='<span>↩️</span><span><b>Back to the original.</b> Try the tools in a different order, or stack them: erase the sign, cut the background, then expand the canvas.</span>';
+});
+
+/* ================= quiz ================= */
+document.querySelectorAll('.quiz-q').forEach(function(q){
+  var opts=q.querySelectorAll('.quiz-opt');
+  var explain=q.querySelector('.quiz-explain');
+  var done=false;
+  opts.forEach(function(o){
+    o.addEventListener('click',function(){
+      if(done){ return; }
+      done=true;
+      opts.forEach(function(x){ if(x.getAttribute('data-c')==='1'){ x.classList.add('correct'); } });
+      if(o.getAttribute('data-c')!=='1'){ o.classList.add('wrong'); }
+      explain.classList.add('show');
+    });
+  });
+});
+
+})();
+</script>
+</body>
+</html>
