@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bonus: AI for Contract Review | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --red:#C0392B; --red-light:#FBEDEB;
+    --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(31px,5.6vw,48px);font-weight:700;line-height:1.13;margin:0 0 14px;letter-spacing:-.01em;}
+  .spotlight-badge{
+    display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);background:var(--purple-light);
+    border-radius:999px;padding:7px 16px;margin-top:64px;margin-bottom:14px;
+  }
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  .studio{background:var(--ink);border-radius:20px;overflow:hidden;margin:32px 0;box-shadow:0 20px 50px rgba(26,21,35,.28);}
+  .studio-head{padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .studio-head .st-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#fff;}
+  .studio-head .st-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;background:rgba(188,135,230,.22);color:#D9BEF2;padding:5px 12px;border-radius:999px;}
+  .studio-body{padding:24px 26px 28px;}
+
+  /* contract decoder */
+  .dec-layout{display:grid;grid-template-columns:1fr 300px;gap:22px;align-items:start;}
+  @media (max-width:760px){.dec-layout{grid-template-columns:1fr;}}
+  .paper{
+    background:#F7F4EE;border-radius:10px;padding:24px 26px;max-height:460px;overflow-y:auto;
+    box-shadow:inset 0 0 24px rgba(0,0,0,.07);
+  }
+  .paper-head{text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #d8d2c4;}
+  .paper-head .ph-t{font-family:'Fraunces',serif;font-size:15px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#2B2620;}
+  .paper-head .ph-s{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:#8A8172;margin-top:5px;letter-spacing:.08em;}
+  .clause{
+    display:block;width:100%;text-align:left;background:transparent;border:none;
+    font-family:'DM Sans',sans-serif;font-size:12.5px;line-height:1.65;color:#3A342B;
+    padding:11px 12px;border-radius:7px;cursor:pointer;transition:background .18s,box-shadow .18s;
+    margin-bottom:6px;border-left:3px solid transparent;
+  }
+  .clause:hover{background:rgba(123,47,190,.09);border-left-color:var(--purple-mid);}
+  .clause:focus-visible{outline:2px solid var(--purple);outline-offset:1px;}
+  .clause.active{background:rgba(123,47,190,.15);border-left-color:var(--purple);}
+  .clause.checked{border-left-color:#9a9384;}
+  .clause .cl-num{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:10.5px;color:#8A8172;display:block;margin-bottom:3px;letter-spacing:.06em;}
+  .clause .cl-mark{float:right;font-size:12px;}
+
+  .decode-pane{position:sticky;top:16px;}
+  .dp-empty{
+    background:rgba(255,255,255,.06);border-radius:12px;padding:22px;color:rgba(255,255,255,.5);
+    font-size:13.5px;line-height:1.6;text-align:center;
+  }
+  .dp-card{background:rgba(255,255,255,.07);border-radius:12px;padding:18px 20px;}
+  .dp-verdict{
+    display:inline-flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;font-size:10px;
+    font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;border-radius:999px;margin-bottom:12px;
+  }
+  .dp-verdict.ok{background:rgba(30,138,90,.3);color:#8FE3BC;}
+  .dp-verdict.ask{background:rgba(176,125,43,.3);color:#F0D08A;}
+  .dp-verdict.flag{background:rgba(192,57,43,.32);color:#F5A9A0;}
+  .dp-plain{font-size:14px;color:#fff;line-height:1.6;margin-bottom:14px;}
+  .dp-label{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.42);margin-bottom:5px;}
+  .dp-ask{font-size:13px;color:#E4D3F5;line-height:1.6;background:rgba(188,135,230,.14);border-radius:9px;padding:11px 13px;}
+  .dec-progress{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:rgba(255,255,255,.5);margin-top:14px;text-align:center;}
+  .dec-progress b{color:#BC87E6;}
+  .flag-counter{
+    display:flex;gap:8px;justify-content:center;margin-top:10px;
+  }
+  .flag-pip{width:26px;height:5px;border-radius:99px;background:rgba(255,255,255,.14);transition:background .3s;}
+  .flag-pip.lit{background:#C0392B;}
+
+  /* prompt lab */
+  .prompt-list{display:flex;flex-direction:column;gap:9px;margin-bottom:18px;}
+  .prompt-btn{
+    text-align:left;font-family:'DM Sans',sans-serif;padding:14px 16px;border-radius:12px;
+    border:2px solid rgba(188,135,230,.28);background:rgba(255,255,255,.05);cursor:pointer;
+    transition:all .22s;color:#fff;font-size:13.5px;line-height:1.5;
+  }
+  .prompt-btn:hover{border-color:#BC87E6;background:rgba(188,135,230,.13);}
+  .prompt-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .prompt-btn.active{background:#7B2FBE;border-color:#BC87E6;}
+  .prompt-btn .pb-quote{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#D9BEF2;}
+  .prompt-btn.active .pb-quote{color:#fff;}
+  .response{
+    background:rgba(255,255,255,.06);border-radius:12px;padding:18px 20px;min-height:150px;
+  }
+  .resp-head{display:flex;align-items:center;gap:9px;margin-bottom:12px;flex-wrap:wrap;}
+  .resp-avatar{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#9350D1,#5A1F8E);display:flex;align-items:center;justify-content:center;font-size:13px;}
+  .resp-name{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);}
+  .resp-rating{
+    margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;
+    letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;
+  }
+  .resp-rating.poor{background:rgba(192,57,43,.3);color:#F5A9A0;}
+  .resp-rating.mid{background:rgba(176,125,43,.3);color:#F0D08A;}
+  .resp-rating.good{background:rgba(30,138,90,.3);color:#8FE3BC;}
+  .resp-body{font-size:13.5px;color:#E4D3F5;line-height:1.65;white-space:pre-line;}
+  .resp-note{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);font-size:12.5px;color:rgba(255,255,255,.6);line-height:1.55;}
+
+  .studio-msg{
+    margin-top:18px;background:rgba(188,135,230,.14);border-radius:12px;padding:14px 18px;
+    color:#E4D3F5;font-size:14px;line-height:1.6;display:flex;gap:10px;align-items:flex-start;
+  }
+  .studio-msg b{color:#fff;}
+
+  .limit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:28px 0;}
+  .limit{border:2px solid var(--purple-mid);border-radius:14px;padding:20px 22px;}
+  .limit .lm-icon{font-size:24px;margin-bottom:6px;}
+  .limit .lm-title{font-family:'Fraunces',serif;font-size:17px;font-weight:700;margin-bottom:7px;line-height:1.3;}
+  .limit .lm-text{font-size:13.5px;color:var(--gray);line-height:1.6;}
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+  .callout.green{background:var(--green-light);border-left-color:var(--green);}
+  .callout.green b{color:var(--green);}
+  .callout.red{background:var(--red-light);border-left-color:var(--red);}
+  .callout.red b{color:var(--red);}
+
+  .rule-box{background:var(--purple);border-radius:18px;padding:34px 36px;color:#fff;margin:32px 0;text-align:center;}
+  .rule-box .rb-label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#D9BEF2;margin-bottom:12px;}
+  .rule-box .rb-text{font-family:'Fraunces',serif;font-size:clamp(20px,3.4vw,26px);font-weight:600;line-height:1.35;}
+
+  .quiz-q{border:2px solid var(--purple-mid);border-radius:14px;padding:24px 26px;margin-bottom:18px;background:#fff;}
+  .quiz-q .qq-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--purple);letter-spacing:.12em;margin-bottom:6px;}
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--purple-mid);border-radius:10px;background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);}
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{display:none;font-size:14px;background:var(--gray-light);border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);}
+  .quiz-explain.show{display:block;}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+
+  .sources{margin-top:48px;border-top:2px solid var(--purple-mid);padding-top:24px;}
+  .sources .src-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+  .sources ul{list-style:none;}
+  .sources li{font-size:13.5px;color:var(--gray);margin-bottom:8px;line-height:1.55;}
+  .sources a{color:var(--purple);word-break:break-all;}
+  .disclaimer{font-size:13px;color:var(--gray);font-style:italic;margin-top:16px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <div class="spotlight-badge">⭐ Bonus Skill</div>
+    <h1>AI for Contract Review</h1>
+    <p class="lede">The day someone offers you a music contract is one of the best days of your life. It is also the day you get handed fourteen pages written in a language built to be hard to read.</p>
+    <div class="meta">
+      <span>Reading time: 9 min</span>
+      <span>Interactive: 2 exercises</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>The Scariest Document in Music</h2>
+    <p>Here is how it usually goes. Someone likes your music. They send over an agreement. You are excited, you do not want to look difficult or inexperienced, and the document is full of phrases like "in perpetuity throughout the universe" and "fully recoupable from Artist's royalty account."</p>
+    <p>So a lot of people do the thing that ruins careers: they sign it without understanding it.</p>
+    <p>This is where AI has become genuinely useful, in a way that would have cost hundreds of dollars an hour ten years ago. Not to replace a lawyer. To make sure you <em>walk into</em> the lawyer's office already knowing what to ask.</p>
+    <p>Below is a fictional recording agreement. Click any clause to translate it.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">📄 The Contract Decoder</div>
+        <div class="st-tag">Spot the Flags</div>
+      </div>
+      <div class="studio-body">
+        <div class="dec-layout">
+          <div class="paper" id="paper">
+            <div class="paper-head">
+              <div class="ph-t">Exclusive Recording Agreement</div>
+              <div class="ph-s">Halberd Records LLC &nbsp;·&nbsp; "Company" &nbsp;·&nbsp; and &nbsp;·&nbsp; Nova Jett &nbsp;·&nbsp; "Artist"</div>
+            </div>
+            <div id="clauseHost"></div>
+          </div>
+          <div class="decode-pane">
+            <div id="decodeOut">
+              <div class="dp-empty">👈 Click any clause in the contract to see what it actually means in plain English.</div>
+            </div>
+            <div class="dec-progress">Clauses decoded: <b id="decCount">0</b> of 8</div>
+            <div class="flag-counter" id="flagPips"></div>
+            <div class="dec-progress" style="margin-top:6px;">Red flags found: <b id="flagCount">0</b> of 3</div>
+          </div>
+        </div>
+        <div class="studio-msg" id="decMsg">
+          <span>🔍</span>
+          <span><b>Three of these eight clauses are serious red flags.</b> Not illegal, not rare, just genuinely bad for the artist. See if you can find them before the panel tells you.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout"><b>The most important thing in that contract was one word: recoupable.</b> An advance is not a gift, it is a loan against money you have not earned yet, and in many deals recording costs, video costs, and marketing all get charged back to your share. Plenty of artists have had a charting song and a royalty statement that still said zero. Understanding that single word changes how you read every other number in a deal.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>What AI Is Genuinely Good At Here</h2>
+    <p>Two things, and they map exactly to what you just did.</p>
+    <p><strong>It translates.</strong> Paste a clause, ask what it means in plain English, and you get an answer instantly, at 2 a.m., without feeling embarrassed for not already knowing. That embarrassment is real and it is expensive, because it is the reason people sign things they do not understand.</p>
+    <p><strong>It flags.</strong> Ask AI what in a document is unusual or unfavorable and it will point at the terms worth a second look: long option periods, ownership in perpetuity, revenue shares that reach beyond recorded music. It will not always be right, but it is very good at spotting what deserves a question.</p>
+    <p>The output you want is not "should I sign this." It is <strong>a list of questions.</strong> And the quality of what you get back depends almost entirely on how you ask.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>How You Ask Changes Everything</h2>
+    <p>Four ways to ask AI about the same contract. Click each and compare what comes back.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">💬 The Prompt Lab</div>
+        <div class="st-tag">Same Contract, Four Questions</div>
+      </div>
+      <div class="studio-body">
+        <div class="prompt-list" id="promptList"></div>
+        <div class="response">
+          <div class="resp-head">
+            <div class="resp-avatar">🤖</div>
+            <div class="resp-name">AI response</div>
+            <div class="resp-rating good" id="respRating">select a prompt</div>
+          </div>
+          <div class="resp-body" id="respBody">Pick one of the four prompts above to see the kind of answer it produces.</div>
+          <div class="resp-note" id="respNote"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout green"><b>The pattern to steal:</b> tell it who you are, give it the actual text, ask for plain English, ask what is unusual, and ask for questions to bring to a lawyer. That last part is the difference between a tool that makes you feel informed and a tool that actually protects you.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>Four Things AI Cannot Do</h2>
+    <p>This is the section that matters most, so read it twice.</p>
+
+    <div class="limit-grid">
+      <div class="limit">
+        <div class="lm-icon">⚖️</div>
+        <div class="lm-title">It is not a lawyer</div>
+        <div class="lm-text">It has no license, no duty to protect your interests, and no responsibility if it is wrong. A lawyer who gives you bad advice can be held accountable. A chatbot cannot.</div>
+      </div>
+      <div class="limit">
+        <div class="lm-icon">📍</div>
+        <div class="lm-title">It does not know where you are</div>
+        <div class="lm-text">Contract law differs by state and country. A clause that is unenforceable in one place is perfectly binding in another, and AI will rarely volunteer that distinction unless you ask.</div>
+      </div>
+      <div class="limit">
+        <div class="lm-icon">🎭</div>
+        <div class="lm-title">It can be confidently wrong</div>
+        <div class="lm-text">AI states incorrect things in the same calm, authoritative tone it uses for correct ones. There is no wobble in its voice when it invents something. Treat every answer as a lead to verify, not a fact.</div>
+      </div>
+      <div class="limit">
+        <div class="lm-icon">🔒</div>
+        <div class="lm-title">It does not know your leverage</div>
+        <div class="lm-text">Whether a term is acceptable depends on what you bring to the table and what else you have been offered. That is strategy, not language, and it needs a human who knows your actual situation.</div>
+      </div>
+    </div>
+
+    <div class="callout red"><b>One practical privacy warning.</b> A contract has your legal name, and possibly your address, bank details, and terms the other side considers confidential. Before you paste any document into any AI tool, check what that tool does with what you give it, and consider removing personal details first. Some services train on what you type. Some have settings to turn that off. Know which one you are using.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>You Can Probably Get a Real Lawyer for Free</h2>
+    <p>Most artists assume legal help is out of reach financially. Often it is not.</p>
+    <p>Across the United States there is a network of organizations called <strong>Volunteer Lawyers for the Arts</strong>, which connect artists and musicians with attorneys who provide free or low-cost help specifically on things like contract review, copyright, and licensing. They exist in many states, they are used to working with people at the beginning of their careers, and reviewing a recording agreement is exactly the kind of thing they do.</p>
+    <p>Eligibility usually depends on income, and some charge a small application or membership fee, so check the details for your area. There is a national directory linked in the sources below. Many music schools, universities, and musicians' unions also offer contract help to members.</p>
+    <p>The combination that actually protects a young artist is this: use AI to understand the document and build your list of questions, then take that list to a human who is legally on your side.</p>
+  </section>
+
+  <div class="rule-box fade">
+    <div class="rb-label">The rule for this entire article</div>
+    <div class="rb-text">Use AI to understand a contract.<br>Use a human to decide whether to sign it.</div>
+  </div>
+
+  <section class="fade">
+    <span class="section-num">06</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">In a recording contract, what does "recoupable" mean?</div>
+      <button class="quiz-opt" data-c="0">The label gives the artist money as a gift that never has to be repaid</button>
+      <button class="quiz-opt" data-c="1">Costs the label pays upfront get charged back against the artist's future royalties</button>
+      <button class="quiz-opt" data-c="0">The artist can recover their master recordings after five years</button>
+      <div class="quiz-explain">Recoupable means an advance and certain costs are effectively a loan against your earnings. This is why an artist can have a popular song and still see zero on a royalty statement.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">What is the best kind of output to ask AI for when reviewing a contract?</div>
+      <button class="quiz-opt" data-c="0">A yes or no answer on whether you should sign it</button>
+      <button class="quiz-opt" data-c="1">Plain-English translations, a list of unusual terms, and questions to bring to a lawyer</button>
+      <button class="quiz-opt" data-c="0">A rewritten version of the contract to send back immediately</button>
+      <div class="quiz-explain">AI is strong at translating and flagging. Asking it to make the final call hands a licensed, accountable decision to a tool that is neither.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 3</div>
+      <div class="qq-text">Why is "it can be confidently wrong" listed as a serious limitation?</div>
+      <button class="quiz-opt" data-c="0">Because AI refuses to answer legal questions at all</button>
+      <button class="quiz-opt" data-c="1">Because AI states incorrect information in the same authoritative tone as correct information, so mistakes are hard to spot</button>
+      <button class="quiz-opt" data-c="0">Because AI always warns you when it is unsure</button>
+      <div class="quiz-explain">There is no change in tone when AI is wrong. That is why every answer should be treated as a lead to verify rather than a settled fact.</div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>AI can translate contract language into plain English instantly, which removes the embarrassment that makes people sign things they do not understand.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>Watch for ownership in perpetuity, long option periods controlled only by the label, broad recoupment, and revenue shares that reach beyond recorded music.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>Ask for translations, unusual terms, and questions for a lawyer. Never ask AI to make the decision for you.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>Free and low-cost legal help for artists exists through Volunteer Lawyers for the Arts organizations. Use AI to prepare, then use a human to decide.</p>
+      </div>
+    </div>
+    <p class="disclaimer">This article is educational material about how AI tools work, not legal advice. The contract shown is fictional and simplified, and real agreements vary enormously. What counts as a fair term depends on your situation, your leverage, and the law where you live. Always have an actual attorney review anything before you sign it.</p>
+  </section>
+
+  <div class="sources fade">
+    <div class="src-label">Sources</div>
+    <ul>
+      <li>Volunteer Lawyers for the Arts, national directory of arts legal-aid organizations by state &mdash; <a href="https://vlany.org/national-directory-of-volunteer-lawyers-for-the-arts/" target="_blank" rel="noopener">https://vlany.org/national-directory-of-volunteer-lawyers-for-the-arts/</a></li>
+      <li>Philadelphia Volunteer Lawyers for the Arts, on free legal services and recording contract review for artists &mdash; <a href="https://pvla.org/" target="_blank" rel="noopener">https://pvla.org/</a></li>
+      <li>Maryland Volunteer Lawyers for the Arts, on pro bono contract review for creatives &mdash; <a href="https://mdvla.org/" target="_blank" rel="noopener">https://mdvla.org/</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target);} });
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(function(el){ observer.observe(el); });
+
+/* ================= CONTRACT DECODER ================= */
+var CLAUSES=[
+ {n:'1. TERM',
+  legal:'The Term shall commence upon the Effective Date and continue for an Initial Period, followed by four (4) consecutive Option Periods, each exercisable by Company in its sole and absolute discretion upon written notice to Artist.',
+  verdict:'flag', vlabel:'Red flag',
+  plain:'The label can keep you for up to five album cycles. Critically, only the label decides whether to continue. You are locked in; they are not.',
+  ask:'Ask: "Can I get a release if the label declines to promote a record? Is there any point where I can walk away?"'},
+
+ {n:'2. GRANT OF RIGHTS',
+  legal:'Artist hereby irrevocably grants and assigns to Company all right, title and interest in and to the Masters, including all copyrights therein, throughout the universe, in perpetuity.',
+  verdict:'flag', vlabel:'Red flag',
+  plain:'The label owns your recordings forever. Not for ten years. Forever. "Throughout the universe in perpetuity" is real contract language, and it means exactly what it sounds like.',
+  ask:'Ask: "Is there any path for the masters to revert to me after a period of time, or a buy-back option?"'},
+
+ {n:'3. ROYALTY',
+  legal:'Artist shall be entitled to a royalty of twelve percent (12%) of Net Receipts actually received by Company, computed after deduction of all Recoupable Costs as defined herein.',
+  verdict:'ask', vlabel:'Worth asking about',
+  plain:'You get 12% of what is left after the label subtracts its costs. The percentage matters far less than what counts as a deductible cost, which is defined somewhere else in the document.',
+  ask:'Ask: "Show me exactly what is deducted before my percentage is calculated, with a real example."'},
+
+ {n:'4. RECOUPMENT',
+  legal:'All Advances, recording costs, video production costs, marketing and promotional expenditures, and tour support shall be fully recoupable from Artist\u2019s royalty account prior to any payment to Artist.',
+  verdict:'flag', vlabel:'Red flag',
+  plain:'The advance is a loan. On top of that, recording, videos, marketing, and tour support all get charged against your earnings. You earn nothing until every one of those costs is paid back out of your share.',
+  ask:'Ask: "Which of these costs can be made non-recoupable, or split between us?"'},
+
+ {n:'5. EXCLUSIVITY',
+  legal:'During the Term, Artist shall not render recording services to, or permit the use of Artist\u2019s name in connection with, any Person other than Company without prior written consent.',
+  verdict:'ok', vlabel:'Fairly standard',
+  plain:'You cannot record for anyone else during the deal, including guest features, without permission. This is normal in exclusive recording agreements.',
+  ask:'Ask: "Will consent for features be reasonable and timely, and can we write that in?"'},
+
+ {n:'6. CREATIVE APPROVAL',
+  legal:'Company shall have final approval over selection of Masters for release, album sequencing, artwork, and designation of single releases.',
+  verdict:'ask', vlabel:'Worth asking about',
+  plain:'The label picks which songs come out, what the cover looks like, and which track becomes the single. Common, but it means you may not control your own artistic decisions.',
+  ask:'Ask: "Can approval be mutual, or can I have final say on artwork at minimum?"'},
+
+ {n:'7. DELIVERY COMMITMENT',
+  legal:'Artist shall deliver to Company not fewer than ten (10) newly recorded Masters constituting one (1) Album during each Contract Period, in a form technically satisfactory for commercial release.',
+  verdict:'ok', vlabel:'Fairly standard',
+  plain:'You owe them ten finished songs per album cycle, at professional quality. Delivery requirements like this are normal.',
+  ask:'Ask: "What happens to the timeline if life happens, and who decides what counts as technically satisfactory?"'},
+
+ {n:'8. AUDIT RIGHTS',
+  legal:'Artist may, upon sixty (60) days prior written notice and not more than once per calendar year, examine Company\u2019s books and records relating solely to Artist\u2019s account, at Artist\u2019s sole cost and expense.',
+  verdict:'ok', vlabel:'Good that it exists',
+  plain:'You are allowed to check their math on your account once a year, but you pay for the audit yourself. Having audit rights at all is a good sign; without them you simply trust their numbers.',
+  ask:'Ask: "If an audit finds an underpayment above a certain amount, will the label cover the audit cost?"'}
+];
+
+var decoded={}, flagsFound={};
+var host=document.getElementById('clauseHost');
+CLAUSES.forEach(function(c,i){
+  var b=document.createElement('button');
+  b.className='clause';
+  b.setAttribute('data-i',String(i));
+  b.innerHTML='<span class="cl-num">'+c.n+'<span class="cl-mark" data-mark="'+i+'"></span></span>'+c.legal;
+  b.addEventListener('click',function(){ decode(i,b); });
+  host.appendChild(b);
+});
+
+var pips=document.getElementById('flagPips');
+for(var p=0;p<3;p++){
+  var d=document.createElement('div');
+  d.className='flag-pip';
+  pips.appendChild(d);
+}
+
+function decode(i,btn){
+  var c=CLAUSES[i];
+  decoded[i]=true;
+  document.querySelectorAll('.clause').forEach(function(x){ x.classList.remove('active'); });
+  btn.classList.add('active','checked');
+  var mark=btn.querySelector('[data-mark]');
+  mark.textContent = c.verdict==='flag' ? '🚩' : (c.verdict==='ask' ? '⚠️' : '✅');
+
+  document.getElementById('decodeOut').innerHTML=
+    '<div class="dp-card">'
+    +'<div class="dp-verdict '+(c.verdict==='flag'?'flag':(c.verdict==='ask'?'ask':'ok'))+'">'
+    +(c.verdict==='flag'?'🚩':(c.verdict==='ask'?'⚠️':'✅'))+' '+c.vlabel+'</div>'
+    +'<div class="dp-label">In plain English</div>'
+    +'<div class="dp-plain">'+c.plain+'</div>'
+    +'<div class="dp-label">Take this to a lawyer</div>'
+    +'<div class="dp-ask">'+c.ask+'</div>'
+    +'</div>';
+
+  document.getElementById('decCount').textContent=Object.keys(decoded).length;
+
+  if(c.verdict==='flag'){ flagsFound[i]=true; }
+  var fn=Object.keys(flagsFound).length;
+  document.getElementById('flagCount').textContent=fn;
+  document.querySelectorAll('.flag-pip').forEach(function(pip,idx){
+    pip.classList.toggle('lit',idx<fn);
+  });
+
+  var msg=document.getElementById('decMsg');
+  if(Object.keys(decoded).length===CLAUSES.length){
+    msg.innerHTML='<span>🎓</span><span><b>All eight decoded.</b> Notice that none of this contract is illegal, and a real lawyer would tell you parts of it are negotiable. The point is not that labels are villains. It is that you cannot negotiate a term you did not understand was there.</span>';
+  }else if(fn===3){
+    msg.innerHTML='<span>🚩</span><span><b>All three red flags found.</b> Perpetual ownership, label-controlled options, and broad recoupment. Those three together decide whether a deal builds a career or quietly ends one.</span>';
+  }else if(c.verdict==='flag'){
+    msg.innerHTML='<span>🚩</span><span><b>That is one of the three.</b> Keep reading. Two more clauses in this document deserve the same reaction.</span>';
+  }
+}
+
+/* ================= PROMPT LAB ================= */
+var PROMPTS=[
+ {label:'The vague one',
+  text:'Is this contract good?',
+  rating:'poor', rlabel:'Nearly useless',
+  body:'Whether a contract is "good" depends on many factors, including your goals, your leverage, and the standards in your industry. Contracts should always be reviewed by a qualified attorney before signing.\n\nIf you would like, you can share more details about the agreement.',
+  note:'You gave it nothing to work with, so it gave you a shrug. No clause text, no context, no specific question. This is the most common way people waste an AI tool.'},
+
+ {label:'Better, but still asking for a verdict',
+  text:'Here is my recording contract. Should I sign it?',
+  rating:'mid', rlabel:'Wrong question',
+  body:'I can walk through the terms with you, but I cannot tell you whether to sign. That decision depends on your leverage, your alternatives, and the law where you live, and I am not able to act as your attorney.\n\nA few terms that often deserve attention in agreements like this: the length of the term, who owns the masters, and what costs are recoupable.',
+  note:'The document is there now, which helps. But "should I sign" asks a tool with no license and no accountability to make the single highest-stakes decision of your early career. Even when it answers, you should not take it.'},
+
+ {label:'Asking it to translate',
+  text:'Explain clause 4 of this contract in plain English, at a middle-school reading level. Do not give legal advice, just translate it.',
+  rating:'good', rlabel:'Genuinely useful',
+  body:'Clause 4 says that before you get paid anything, the label first takes back the money it spent on you.\n\nThat includes: the advance they gave you, the cost of recording, the cost of making videos, money spent on marketing, and money spent supporting your tour.\n\nAll of that comes out of your share first. You start earning only after those costs are paid back.',
+  note:'Clear, specific, and exactly what you needed. Notice the prompt told it what to do (translate), how (plain English, reading level), and what not to do (no advice). Narrow instructions produce sharp answers.'},
+
+ {label:'The one that actually protects you',
+  text:'I am an independent musician with no lawyer yet. Here is a recording agreement. 1) Summarize each clause in plain English. 2) List anything unusual or unfavorable to me. 3) Write the 5 questions I should ask an entertainment attorney. Note anything that varies by state.',
+  rating:'good', rlabel:'Best possible use',
+  body:'PLAIN-ENGLISH SUMMARY\nTerm: up to 5 album cycles, extended at the label\u2019s choice only.\nRights: the label owns the recordings permanently.\nMoney: 12% after the label deducts its costs first.\n\nPOTENTIALLY UNFAVORABLE\n• Ownership in perpetuity with no reversion\n• Options controlled entirely by the label\n• Marketing and video costs charged back to you\n\nQUESTIONS FOR YOUR ATTORNEY\n1. Can the masters revert to me after a set period?\n2. Can I exit if the label does not release a record?\n3. Which costs can be made non-recoupable?\n4. Is the 12% on gross or net, and net of what exactly?\n5. What is the realistic value of this advance after recoupment?\n\nNote: enforceability of long-term exclusive personal service contracts varies by state; California in particular limits their duration.',
+  note:'This is the whole lesson. You told it who you are, gave it the document, asked for translation and flags, and demanded questions rather than conclusions. You now walk into a lawyer\u2019s office prepared instead of confused, which makes an expensive hour dramatically cheaper.'}
+];
+
+var plist=document.getElementById('promptList');
+PROMPTS.forEach(function(p,i){
+  var b=document.createElement('button');
+  b.className='prompt-btn';
+  b.innerHTML='<div style="font-weight:700;margin-bottom:4px;">'+p.label+'</div><div class="pb-quote">"'+p.text+'"</div>';
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.prompt-btn').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
+    var r=document.getElementById('respRating');
+    r.className='resp-rating '+p.rating;
+    r.textContent=p.rlabel;
+    document.getElementById('respBody').textContent=p.body;
+    document.getElementById('respNote').textContent=p.note;
+  });
+  plist.appendChild(b);
+});
+
+/* ================= quiz ================= */
+document.querySelectorAll('.quiz-q').forEach(function(q){
+  var opts=q.querySelectorAll('.quiz-opt');
+  var explain=q.querySelector('.quiz-explain');
+  var done=false;
+  opts.forEach(function(o){
+    o.addEventListener('click',function(){
+      if(done){ return; }
+      done=true;
+      opts.forEach(function(x){ if(x.getAttribute('data-c')==='1'){ x.classList.add('correct'); } });
+      if(o.getAttribute('data-c')!=='1'){ o.classList.add('wrong'); }
+      explain.classList.add('show');
+    });
+  });
+});
+
+})();
+</script>
+</body>
+</html>
