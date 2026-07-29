@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Study: Two Artists Who Did Not Own Their Songs | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --red:#C0392B; --red-light:#FBEDEB;
+    --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(30px,5.4vw,46px);font-weight:700;line-height:1.14;margin:0 0 14px;letter-spacing:-.01em;}
+  .spotlight-badge{
+    display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--purple);background:var(--purple-light);
+    border-radius:999px;padding:7px 16px;margin-top:64px;margin-bottom:14px;
+  }
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  .legal-banner{
+    background:var(--red-light);border:2px solid var(--red);border-radius:14px;
+    padding:18px 22px;margin:28px 0;font-size:14.5px;line-height:1.6;color:#7A2318;
+    display:flex;gap:12px;align-items:flex-start;
+  }
+  .legal-banner b{color:var(--red);}
+
+  .studio{background:var(--ink);border-radius:20px;overflow:hidden;margin:32px 0;box-shadow:0 20px 50px rgba(26,21,35,.28);}
+  .studio-head{padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .studio-head .st-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#fff;}
+  .studio-head .st-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;background:rgba(188,135,230,.22);color:#D9BEF2;padding:5px 12px;border-radius:999px;}
+  .studio-body{padding:24px 26px 28px;}
+
+  /* stage stepper */
+  .stage-row{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap;}
+  .stage-btn{
+    flex:1;min-width:105px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12.5px;
+    padding:11px 8px;border:2px solid rgba(188,135,230,.3);border-radius:11px;
+    background:rgba(255,255,255,.05);color:rgba(255,255,255,.65);cursor:pointer;transition:all .22s;
+  }
+  .stage-btn:hover{border-color:#BC87E6;color:#fff;}
+  .stage-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .stage-btn.on{background:#7B2FBE;border-color:#BC87E6;color:#fff;}
+  .stage-btn .sb-n{display:block;font-family:'IBM Plex Mono',monospace;font-size:9px;opacity:.7;letter-spacing:.1em;margin-bottom:2px;}
+
+  .compare-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media (max-width:640px){.compare-2{grid-template-columns:1fr;}}
+  .artist-card{background:rgba(255,255,255,.06);border-radius:14px;padding:20px 22px;border-top:4px solid;}
+  .artist-card.prince{border-top-color:#9350D1;}
+  .artist-card.taylor{border-top-color:#E2607A;}
+  .ac-name{font-family:'Fraunces',serif;font-size:19px;font-weight:700;color:#fff;margin-bottom:2px;}
+  .ac-year{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.45);margin-bottom:12px;}
+  .ac-body{font-size:13.5px;color:#E4D3F5;line-height:1.65;margin-bottom:13px;}
+  .ac-clause{
+    background:rgba(188,135,230,.16);border-radius:9px;padding:11px 13px;font-size:12.5px;
+    color:#D9BEF2;line-height:1.55;
+  }
+  .ac-clause .acl-label{
+    font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+    color:rgba(255,255,255,.4);display:block;margin-bottom:4px;
+  }
+  .stage-summary{
+    margin-top:16px;background:rgba(188,135,230,.14);border-radius:12px;padding:14px 18px;
+    color:#E4D3F5;font-size:14px;line-height:1.6;display:flex;gap:10px;align-items:flex-start;
+  }
+  .stage-summary b{color:#fff;}
+
+  /* what-if machine */
+  .wi-layout{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;}
+  @media (max-width:700px){.wi-layout{grid-template-columns:1fr;}}
+  .term{
+    background:rgba(255,255,255,.05);border-radius:12px;padding:14px 16px;margin-bottom:10px;
+    border:2px solid transparent;transition:border-color .25s,background .25s;
+  }
+  .term.fixed{border-color:rgba(30,138,90,.5);background:rgba(30,138,90,.12);}
+  .term-top{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+  .term-name{font-weight:700;font-size:13.5px;color:#fff;flex:1;}
+  .toggle{
+    width:46px;height:25px;border-radius:99px;background:rgba(255,255,255,.16);border:none;
+    cursor:pointer;position:relative;transition:background .25s;flex-shrink:0;padding:0;
+  }
+  .toggle:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .toggle::after{
+    content:'';position:absolute;top:3px;left:3px;width:19px;height:19px;border-radius:50%;
+    background:#fff;transition:transform .25s;
+  }
+  .toggle.on{background:#1E8A5A;}
+  .toggle.on::after{transform:translateX(21px);}
+  .term-state{font-size:12.5px;color:rgba(255,255,255,.6);line-height:1.5;}
+  .term.fixed .term-state{color:#8FE3BC;}
+
+  .outcome{background:rgba(255,255,255,.06);border-radius:14px;padding:20px 22px;position:sticky;top:16px;}
+  .outcome .oc-label{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.42);margin-bottom:8px;}
+  .outcome .oc-title{font-family:'Fraunces',serif;font-size:19px;font-weight:700;color:#fff;margin-bottom:10px;line-height:1.3;}
+  .outcome .oc-body{font-size:13.5px;color:#E4D3F5;line-height:1.65;}
+  .oc-meter{height:8px;border-radius:99px;background:rgba(255,255,255,.12);margin:14px 0 8px;overflow:hidden;}
+  .oc-fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#C0392B,#B07D2B,#1E8A5A);transition:width .5s ease;}
+  .oc-scale{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(255,255,255,.35);letter-spacing:.06em;}
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+  .callout.green{background:var(--green-light);border-left-color:var(--green);}
+  .callout.green b{color:var(--green);}
+
+  .pullquote{
+    border-left:5px solid var(--purple);padding:8px 0 8px 26px;margin:32px 0;
+    font-family:'Fraunces',serif;font-size:clamp(20px,3.2vw,25px);font-weight:600;line-height:1.35;color:var(--ink);
+  }
+  .pullquote .pq-attr{
+    display:block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-top:12px;
+  }
+
+  .quiz-q{border:2px solid var(--purple-mid);border-radius:14px;padding:24px 26px;margin-bottom:18px;background:#fff;}
+  .quiz-q .qq-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--purple);letter-spacing:.12em;margin-bottom:6px;}
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--purple-mid);border-radius:10px;background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);}
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{display:none;font-size:14px;background:var(--gray-light);border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);}
+  .quiz-explain.show{display:block;}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+
+  .sources{margin-top:48px;border-top:2px solid var(--purple-mid);padding-top:24px;}
+  .sources .src-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+  .sources ul{list-style:none;}
+  .sources li{font-size:13.5px;color:var(--gray);margin-bottom:8px;line-height:1.55;}
+  .sources a{color:var(--purple);word-break:break-all;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <div class="spotlight-badge">📚 Case Study</div>
+    <h1>Two Artists Who Did Not Own Their Own Songs</h1>
+    <p class="lede">One signed at nineteen in 1977. One signed at fifteen in 2005. Twenty-eight years apart, in completely different eras of the industry, they ended up saying the same sentence.</p>
+    <div class="meta">
+      <span>Reading time: 10 min</span>
+      <span>Interactive: 2 exercises</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <div class="legal-banner fade">
+    <span style="font-size:20px;">⚖️</span>
+    <span><b>Read this first.</b> This article is educational material about publicly reported business disputes. It is not legal advice, and AI tools are not a substitute for a real lawyer. Nothing here should be used to evaluate an actual contract. If you are ever offered an agreement, have a licensed attorney review it before you sign.</span>
+  </div>
+
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>The Same Story, Twice</h2>
+    <p>Prince signed with Warner Bros. Records in 1977, as a teenager. He went on to make <em>1999</em> and <em>Purple Rain</em>, some of the most important records ever made. Warner Bros. owned those master recordings, which is the actual audio of the actual performances.</p>
+    <p>Taylor Swift signed with Big Machine Records in 2005, at fifteen years old. She went on to make six albums that defined a generation of pop. Big Machine owned those masters.</p>
+    <p>Neither of them was tricked. Neither of them lacked representation. Both signed deals that were, by the standards of their time, fairly ordinary for a new artist. And both spent a significant portion of their careers trying to undo what those deals had set in motion.</p>
+    <p>Step through the five stages below and watch how closely the two stories rhyme.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">🕰️ Two Careers, Five Stages</div>
+        <div class="st-tag">Parallel Case Study</div>
+      </div>
+      <div class="studio-body">
+        <div class="stage-row" id="stageRow"></div>
+        <div class="compare-2">
+          <div class="artist-card prince">
+            <div class="ac-name">Prince</div>
+            <div class="ac-year" id="pYear"></div>
+            <div class="ac-body" id="pBody"></div>
+            <div class="ac-clause"><span class="acl-label">The clause behind it</span><span id="pClause"></span></div>
+          </div>
+          <div class="artist-card taylor">
+            <div class="ac-name">Taylor Swift</div>
+            <div class="ac-year" id="tYear"></div>
+            <div class="ac-body" id="tBody"></div>
+            <div class="ac-clause"><span class="acl-label">The clause behind it</span><span id="tClause"></span></div>
+          </div>
+        </div>
+        <div class="stage-summary" id="stageSummary"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>The Clause That Rescued One of Them</h2>
+    <p>Here is the detail most people miss when they hear about the "Taylor's Version" re-recordings, and it is the single most useful thing in this article.</p>
+    <p>She was able to re-record those albums because <strong>her contract's re-recording restriction had expired.</strong> Recording agreements almost always block an artist from re-recording their own songs, but that block usually runs for a set number of years. Once that window closed, nothing stopped her from recording those songs again and owning the new versions outright.</p>
+    <p>That is a clause. A boring, technical, easy-to-skim clause about timing. And it turned out to be the mechanism that let an artist build leverage against a catalog she did not own, until she was eventually able to buy the originals back in 2025.</p>
+    <p>Prince's situation had a similar hinge. Reporting on his 2014 settlement with Warner Bros. noted that it came as the 35-year copyright termination window on his earliest work was approaching, a provision in U.S. copyright law that can let creators reclaim rights decades after a transfer. Timing, again, buried in the legal machinery.</p>
+
+    <div class="callout"><b>The lesson underneath both stories:</b> the terms that decided these careers were not hidden. They were in the documents the whole time. What was missing, at fifteen and at nineteen, was a full understanding of what those specific words would mean twenty years later.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>Change One Term, Change Everything</h2>
+    <p>Below are four contract terms drawn from these two stories. Each starts in the position that actually caused the problem. Flip them one at a time and watch how much of the drama simply stops existing.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">🔀 The What-If Machine</div>
+        <div class="st-tag">Alternate Outcomes</div>
+      </div>
+      <div class="studio-body">
+        <div class="wi-layout">
+          <div id="termList"></div>
+          <div class="outcome">
+            <div class="oc-label">How the story would have gone</div>
+            <div class="oc-title" id="ocTitle"></div>
+            <div class="oc-body" id="ocBody"></div>
+            <div class="oc-meter"><div class="oc-fill" id="ocFill"></div></div>
+            <div class="oc-scale"><span>Artist has no control</span><span>Artist protected</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout green"><b>Notice what happened when you flipped all four.</b> There is no scandal, no name change, no re-recording project, no twenty-year fight. Two of the most famous business disputes in music history exist because of a handful of sentences that could have read differently.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>So Would AI Have Saved Them? Honestly, No.</h2>
+    <p>It would be an easy story to tell, and it would be false. Let's be accurate about this, because it matters.</p>
+    <p><strong>Neither artist lacked lawyers.</strong> These were represented deals. And AI did not exist in 1977, or in any usable form in 2005.</p>
+    <p><strong>AI would not have given them leverage.</strong> This is the real constraint. A fifteen-year-old unknown songwriter and a nineteen-year-old unsigned musician have almost no bargaining power. Understanding a term perfectly does not mean you can get it changed. Sometimes the honest choice is signing an imperfect deal because it is the only door open, which is a legitimate decision when you make it <em>knowingly.</em></p>
+    <p>So what does AI actually change? One thing, and it is not nothing:</p>
+
+    <div class="pullquote">
+      It closes the gap between what a contract says and what a young artist understands it to say.
+    </div>
+
+    <p>That gap used to cost money to close. You needed a lawyer's hour just to ask "wait, what does recoupable mean?" Today a teenager with a phone can get that translated in seconds, for free, at midnight, without feeling stupid for asking.</p>
+    <p>And knowing changes behavior. It changes which term you push back on, what you ask your lawyer to prioritize in the hour you can afford, whether you accept a smaller advance to keep your masters, and whether you notice that a re-recording clause runs out in seven years. Prince spent decades making the point that this knowledge should be common:</p>
+
+    <div class="pullquote">
+      "If you don't own your masters, your master owns you."
+      <span class="pq-attr">Prince, to Rolling Stone, 1996</span>
+    </div>
+
+    <p>That sentence is the entire curriculum of this article, delivered thirty years before you could ask a chatbot to explain it to you.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>What This Means for You</h2>
+    <p>You are not going to be offered a major label contract this week. But the pattern in both of these stories shows up in much smaller agreements, and those you will absolutely encounter: a producer wanting points on your song, a beat lease with terms you did not read, a manager agreement, a sync licensing deal, a battle-of-the-bands entry form that quietly claims rights to your recording.</p>
+    <p>The habit is what matters. Read it. Translate anything you do not understand. Write down your questions. Then bring those questions to a human whose job is to protect you.</p>
+    <p>Both of these artists eventually got their music back. It took Prince about thirty-seven years, and Taylor Swift twenty. You would rather understand the clause on day one.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">06</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">What are "master recordings"?</div>
+      <button class="quiz-opt" data-c="0">The written sheet music and lyrics for a song</button>
+      <button class="quiz-opt" data-c="1">The actual original audio recordings of the performances</button>
+      <button class="quiz-opt" data-c="0">The final mixed version of a live concert</button>
+      <div class="quiz-explain">Masters are the original recorded audio. Whoever owns them controls how those specific recordings are used, licensed, and sold.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">Which contract detail made the "Taylor's Version" re-recordings possible?</div>
+      <button class="quiz-opt" data-c="0">A clause giving her ownership of the masters from the start</button>
+      <button class="quiz-opt" data-c="1">A re-recording restriction that expired after a set number of years</button>
+      <button class="quiz-opt" data-c="0">A clause preventing the label from ever selling her catalog</button>
+      <div class="quiz-explain">Re-recording restrictions usually last a set period. Once hers lapsed, she could legally record those songs again and own the new versions.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 3</div>
+      <div class="qq-text">According to this article, what can AI genuinely change about signing a contract?</div>
+      <button class="quiz-opt" data-c="0">It gives a young artist more bargaining power with a label</button>
+      <button class="quiz-opt" data-c="1">It closes the gap between what a contract says and what the artist understands it to say</button>
+      <button class="quiz-opt" data-c="0">It replaces the need for a lawyer entirely</button>
+      <div class="quiz-explain">AI does not create leverage and does not replace legal counsel. What it does is make comprehension fast, free, and available to someone who cannot yet afford to ask a lawyer every question.</div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>Prince signed with Warner Bros. in 1977 and Taylor Swift signed with Big Machine in 2005 as a teenager. In both cases the label owned the master recordings.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>Prince protested by changing his name to a symbol and appearing with "slave" written on his face, and regained his masters in a 2014 deal with Warner Bros.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>Swift re-recorded her early albums as "Taylor's Version" because a re-recording restriction had expired, and in May 2025 she bought back the original masters.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>AI would not have given either artist leverage. What it offers today is instant comprehension, which is what tells you which term to fight for and what to ask a lawyer.</p>
+      </div>
+    </div>
+
+    <div class="legal-banner" style="margin-top:28px;">
+      <span style="font-size:20px;">⚖️</span>
+      <span><b>Final reminder.</b> AI does not replace a real lawyer or legal counsel. It has no license, no duty to protect your interests, and no accountability if it is wrong. Use it to understand a document and to prepare your questions. Use a qualified attorney to advise you and to decide. If cost is a barrier, look up Volunteer Lawyers for the Arts organizations, which provide free or low-cost legal help to artists in many states.</span>
+    </div>
+  </section>
+
+  <div class="sources fade">
+    <div class="src-label">Sources</div>
+    <ul>
+      <li>BBC News, "Prince re-signs with 'slave' label Warner Bros Records" (2014 deal returning ownership of his master recordings) &mdash; <a href="https://www.bbc.co.uk/news/entertainment-arts-27081344" target="_blank" rel="noopener">https://www.bbc.co.uk/news/entertainment-arts-27081344</a></li>
+      <li>Copyright Alliance, "The Legacy of Prince: How He Spoke Up for the Creative Community" (2014 deal and the 35-year copyright termination window) &mdash; <a href="https://copyrightalliance.org/prince-legacy/" target="_blank" rel="noopener">https://copyrightalliance.org/prince-legacy/</a></li>
+      <li>The Hollywood Reporter, "Prince's Legal Legacy: Contract Fights, Copyright Battles and Changing His Name" &mdash; <a href="https://www.hollywoodreporter.com/business/business-news/princes-legal-legacy-contract-fights-886521/" target="_blank" rel="noopener">https://www.hollywoodreporter.com/business/business-news/princes-legal-legacy-contract-fights-886521/</a></li>
+      <li>NPR, "Taylor Swift buys back the masters for her first 6 albums" (May 30, 2025) &mdash; <a href="https://www.npr.org/2025/05/30/nx-s1-5418039/taylor-swift-masters-rights-big-machine" target="_blank" rel="noopener">https://www.npr.org/2025/05/30/nx-s1-5418039/taylor-swift-masters-rights-big-machine</a></li>
+      <li>Variety, "Taylor Swift Buys Back Rights to First Six Albums" (2019 and 2020 catalog sales, re-recording timeline) &mdash; <a href="https://variety.com/2025/music/news/taylor-swift-buys-rights-first-six-albums-shamrock-1236413964/" target="_blank" rel="noopener">https://variety.com/2025/music/news/taylor-swift-buys-rights-first-six-albums-shamrock-1236413964/</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target);} });
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(function(el){ observer.observe(el); });
+
+/* ================= PARALLEL STAGES ================= */
+var STAGES=[
+ {label:'The Signature',
+  p:{year:'1977 · age 19',
+     body:'Prince signs with Warner Bros. Records as a teenager. It is a real opportunity and a genuine launch pad. Under the deal, the label will own the master recordings he makes.',
+     clause:'Grant of rights. The label takes ownership of the masters, which is standard for a new artist deal of that era.'},
+  t:{year:'2005 · age 15',
+     body:'Taylor Swift signs with Big Machine Records, a brand-new independent label, at fifteen. The label will own the masters of the albums she records for them.',
+     clause:'Grant of rights. Same structure, three decades later: the company that funds the recordings owns them.'},
+  sum:'<b>Both deals were normal.</b> That is the uncomfortable part. Neither contract was a scam. Label-owned masters have been the default in the recording industry for most of its history.'},
+
+ {label:'The Success',
+  p:{year:'1982–1984',
+     body:'<em>1999</em> and then <em>Purple Rain</em> make him one of the biggest artists alive. The recordings are historic. They belong to Warner Bros.',
+     clause:'Perpetuity. Ownership does not expire when an artist becomes successful, or ever.'},
+  t:{year:'2008–2017',
+     body:'Six albums, from <em>Fearless</em> through <em>Reputation</em>, turn her into one of the biggest artists in the world. All six sets of masters sit with Big Machine.',
+     clause:'Perpetuity. Success increases the catalog\u2019s value, but not the artist\u2019s ownership of it.'},
+  sum:'<b>Success does not change ownership.</b> The more valuable the catalog becomes, the more valuable it is to the party that owns it, which is not the artist.'},
+
+ {label:'The Realization',
+  p:{year:'Early 1990s',
+     body:'Prince wants to release music faster and wants his masters. Warner Bros. declines on both. He realizes the contract that launched him now controls his output and his name.',
+     clause:'Creative approval and release control. The label decides what comes out and when.'},
+  t:{year:'June 2019',
+     body:'Big Machine is sold to Scooter Braun\u2019s Ithaca Holdings for a reported $300 million, and her masters go with the company. She publicly objected, saying she was not given a fair chance to buy them. Braun has said he offered to sell them back and her team declined.',
+     clause:'Assignment. The label can sell the catalog to another party, and the artist has no veto.'},
+  sum:'<b>This is where both stories turn.</b> Prince discovered the label controlled his output. Swift discovered her catalog could change hands entirely without her agreement.'},
+
+ {label:'The Fight',
+  p:{year:'1993–1996',
+     body:'He changes his name to an unpronounceable symbol, appears in public with "slave" written on his cheek, and delivers the albums he owes with material widely seen as below his standard until the contract is satisfied.',
+     clause:'Exclusivity and delivery commitment. He owed a set number of albums before he could go anywhere.'},
+  t:{year:'2019–2023',
+     body:'She announces she will re-record her early catalog, then releases <em>Fearless</em>, <em>Red</em>, <em>Speak Now</em> and <em>1989</em> as "Taylor\u2019s Version," owning those new recordings, while fans shift streams toward them.',
+     clause:'Re-recording restriction. Hers had expired, which made the entire strategy legal.'},
+  sum:'<b>Two different escape routes, both defined by contract language.</b> Prince had to satisfy a delivery obligation. Swift had a re-recording window that had quietly opened.'},
+
+ {label:'The Resolution',
+  p:{year:'April 2014',
+     body:'Prince reaches a new agreement with Warner Bros. that returns ownership of his master recordings to him, alongside a 30th anniversary reissue of <em>Purple Rain</em>. Roughly thirty-seven years after he signed.',
+     clause:'Negotiated reversion, reported to have come as the 35-year copyright termination window approached.'},
+  t:{year:'May 2025',
+     body:'She announces she has purchased the master recordings of her first six albums from Shamrock Capital, the firm that bought them in 2020. Twenty years after signing, she owns her early catalog.',
+     clause:'Acquisition. Not a contract term at all. She bought back what she had made.'},
+  sum:'<b>Both eventually won, and both paid enormously for it.</b> In time, in career energy, and in Swift\u2019s case in money for work she had already created. Winning late is still expensive.'}
+];
+
+var stageRow=document.getElementById('stageRow');
+STAGES.forEach(function(s,i){
+  var b=document.createElement('button');
+  b.className='stage-btn'+(i===0?' on':'');
+  b.innerHTML='<span class="sb-n">STAGE '+(i+1)+'</span>'+s.label;
+  b.addEventListener('click',function(){ showStage(i); });
+  stageRow.appendChild(b);
+});
+function showStage(i){
+  var s=STAGES[i];
+  document.querySelectorAll('.stage-btn').forEach(function(b,j){ b.classList.toggle('on',j===i); });
+  document.getElementById('pYear').textContent=s.p.year;
+  document.getElementById('pBody').innerHTML=s.p.body;
+  document.getElementById('pClause').textContent=s.p.clause;
+  document.getElementById('tYear').textContent=s.t.year;
+  document.getElementById('tBody').innerHTML=s.t.body;
+  document.getElementById('tClause').textContent=s.t.clause;
+  document.getElementById('stageSummary').innerHTML='<span>💡</span><span>'+s.sum+'</span>';
+}
+showStage(0);
+
+/* ================= WHAT-IF MACHINE ================= */
+var TERMS=[
+ {name:'Who owns the masters',
+  bad:'The label owns them permanently, with no reversion.',
+  good:'Ownership reverts to the artist after a set number of years.'},
+ {name:'Can the catalog be sold',
+  bad:'The label may sell the catalog to anyone, at any time, without the artist\u2019s consent.',
+  good:'The artist gets right of first refusal, meaning first chance to buy before any sale.'},
+ {name:'Re-recording restriction',
+  bad:'The artist may never re-record these songs.',
+  good:'The restriction expires after a defined period.'},
+ {name:'Who controls the term',
+  bad:'The label alone decides whether to extend, for up to five album cycles.',
+  good:'A fixed term, with a clear exit if the label does not release a record.'}
+];
+var flips=[false,false,false,false];
+
+var termList=document.getElementById('termList');
+TERMS.forEach(function(t,i){
+  var d=document.createElement('div');
+  d.className='term';
+  d.innerHTML='<div class="term-top"><span class="term-name">'+t.name+'</span>'
+    +'<button class="toggle" role="switch" aria-checked="false" aria-label="Flip term: '+t.name+'"></button></div>'
+    +'<div class="term-state">'+t.bad+'</div>';
+  var btn=d.querySelector('.toggle');
+  btn.addEventListener('click',function(){
+    flips[i]=!flips[i];
+    btn.classList.toggle('on',flips[i]);
+    btn.setAttribute('aria-checked',flips[i]?'true':'false');
+    d.classList.toggle('fixed',flips[i]);
+    d.querySelector('.term-state').textContent=flips[i]?t.good:t.bad;
+    renderOutcome();
+  });
+  termList.appendChild(d);
+});
+
+var OUTCOMES=[
+ {t:'Exactly what happened',
+  b:'The label owns the recordings forever, can sell them to whoever it likes, and the artist has limited options. This is the starting position of both real stories, and it is why both artists spent decades trying to undo it.'},
+ {t:'Slightly better, still a fight',
+  b:'One protection helps, but the core problem survives. A single good clause rarely rescues a deal on its own, which is why lawyers read the whole document rather than skimming for the royalty percentage.'},
+ {t:'A real negotiation',
+  b:'Now the artist has meaningful protection. Two of these four terms together would have changed the shape of both disputes considerably, though not eliminated them.'},
+ {t:'Most of the story disappears',
+  b:'With three of four fixed, there is very little left to fight about. No surprise sale, or a path back to ownership, or the freedom to re-record. The famous conflicts largely stop being possible.'},
+ {t:'There is no story at all',
+  b:'No name change. No writing on a face. No re-recording project. No twenty-year campaign. Two of the most famous business disputes in music history exist because of a small number of sentences that could have been written differently.'}
+];
+function renderOutcome(){
+  var n=flips.filter(Boolean).length;
+  var o=OUTCOMES[n];
+  document.getElementById('ocTitle').textContent=o.t;
+  document.getElementById('ocBody').textContent=o.b;
+  document.getElementById('ocFill').style.width=(n/4*100)+'%';
+}
+renderOutcome();
+
+/* ================= quiz ================= */
+document.querySelectorAll('.quiz-q').forEach(function(q){
+  var opts=q.querySelectorAll('.quiz-opt');
+  var explain=q.querySelector('.quiz-explain');
+  var done=false;
+  opts.forEach(function(o){
+    o.addEventListener('click',function(){
+      if(done){ return; }
+      done=true;
+      opts.forEach(function(x){ if(x.getAttribute('data-c')==='1'){ x.classList.add('correct'); } });
+      if(o.getAttribute('data-c')!=='1'){ o.classList.add('wrong'); }
+      explain.classList.add('show');
+    });
+  });
+});
+
+})();
+</script>
+</body>
+</html>
