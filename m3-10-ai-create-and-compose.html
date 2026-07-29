@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI: Create &amp; Compose | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --red:#C0392B; --red-light:#FBEDEB;
+    --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(32px,6vw,50px);font-weight:700;line-height:1.12;padding-top:64px;margin:0 0 14px;letter-spacing:-.01em;}
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  .studio{background:var(--ink);border-radius:20px;overflow:hidden;margin:32px 0;box-shadow:0 20px 50px rgba(26,21,35,.28);}
+  .studio-head{padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .studio-head .st-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#fff;}
+  .studio-head .st-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;background:rgba(188,135,230,.22);color:#D9BEF2;padding:5px 12px;border-radius:999px;}
+  .studio-body{padding:24px 26px 28px;}
+
+  /* prompt builder */
+  .pb-block{margin-bottom:15px;}
+  .pb-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px;}
+  .pb-row{display:flex;gap:7px;flex-wrap:wrap;}
+  .pb-btn{
+    font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;padding:9px 16px;
+    border:2px solid rgba(188,135,230,.3);border-radius:999px;background:rgba(255,255,255,.05);
+    color:rgba(255,255,255,.7);cursor:pointer;transition:all .2s;
+  }
+  .pb-btn:hover{border-color:#BC87E6;color:#fff;}
+  .pb-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .pb-btn.on{background:#7B2FBE;border-color:#BC87E6;color:#fff;}
+
+  .prompt-box{
+    background:rgba(0,0,0,.28);border:2px solid rgba(188,135,230,.3);border-radius:12px;
+    padding:16px 18px;margin:18px 0;font-family:'IBM Plex Mono',monospace;font-size:14px;
+    color:#D9BEF2;line-height:1.6;
+  }
+  .prompt-box .pbx-label{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:7px;}
+  .prompt-box .pbx-text{color:#fff;}
+  .caret{display:inline-block;width:8px;background:#BC87E6;animation:blink 1s steps(1) infinite;}
+  @keyframes blink{0%,50%{opacity:1;}51%,100%{opacity:0;}}
+
+  .gen-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px;}
+  .gen-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;
+    background:linear-gradient(100deg,#9350D1,#5A1F8E);color:#fff;border:none;
+    border-radius:999px;padding:14px 30px;cursor:pointer;transition:filter .2s,transform .12s;
+  }
+  .gen-btn:hover{filter:brightness(1.15);}
+  .gen-btn:active{transform:scale(.97);}
+  .gen-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .gen-btn:disabled{opacity:.5;cursor:default;}
+  .stop-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:13.5px;background:transparent;color:#D9BEF2;
+    border:2px solid rgba(188,135,230,.45);border-radius:999px;padding:12px 20px;cursor:pointer;transition:all .25s;
+  }
+  .stop-btn:hover{border-color:#BC87E6;background:rgba(188,135,230,.14);}
+  .stop-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+
+  .viz{height:74px;display:flex;align-items:flex-end;gap:3px;margin-bottom:14px;}
+  .viz-bar{flex:1;background:linear-gradient(180deg,#BC87E6,#5A1F8E);border-radius:3px 3px 0 0;height:4px;transition:height .09s ease;}
+  .gen-status{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:rgba(255,255,255,.55);min-height:20px;
+  }
+  .gen-status b{color:#BC87E6;}
+
+  .studio-msg{
+    margin-top:18px;background:rgba(188,135,230,.14);border-radius:12px;padding:14px 18px;
+    color:#E4D3F5;font-size:14px;line-height:1.6;display:flex;gap:10px;align-items:flex-start;
+  }
+  .studio-msg b{color:#fff;}
+
+  /* ownership checker */
+  .own-layout{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;}
+  @media (max-width:700px){.own-layout{grid-template-columns:1fr;}}
+  .check-item{
+    display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.05);
+    border-radius:11px;padding:13px 15px;margin-bottom:8px;cursor:pointer;
+    border:2px solid transparent;transition:all .2s;
+  }
+  .check-item:hover{border-color:rgba(188,135,230,.4);}
+  .check-item.on{background:rgba(30,138,90,.16);border-color:rgba(30,138,90,.5);}
+  .check-box{
+    width:20px;height:20px;border-radius:6px;border:2px solid rgba(255,255,255,.3);
+    flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;
+    font-size:12px;color:#fff;transition:all .2s;
+  }
+  .check-item.on .check-box{background:#1E8A5A;border-color:#1E8A5A;}
+  .check-text{font-size:13.5px;color:#E4D3F5;line-height:1.5;}
+  .verdict-card{background:rgba(255,255,255,.06);border-radius:14px;padding:20px 22px;position:sticky;top:16px;}
+  .vc-tier{
+    display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;
+    letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:12px;
+  }
+  .vc-tier.t0{background:rgba(192,57,43,.32);color:#F5A9A0;}
+  .vc-tier.t1{background:rgba(176,125,43,.32);color:#F0D08A;}
+  .vc-tier.t2{background:rgba(30,138,90,.3);color:#8FE3BC;}
+  .vc-row{margin-bottom:13px;}
+  .vc-label{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px;}
+  .vc-val{font-size:13.5px;color:#fff;line-height:1.55;}
+
+  .pillar-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:28px 0;}
+  .pillar{border:2px solid var(--purple-mid);border-radius:14px;padding:22px;}
+  .pillar .pl-emoji{font-size:26px;margin-bottom:6px;}
+  .pillar .pl-title{font-family:'Fraunces',serif;font-size:18px;font-weight:700;margin-bottom:8px;line-height:1.3;}
+  .pillar .pl-text{font-size:14px;color:var(--gray);line-height:1.6;}
+
+  .timeline-legal{margin:28px 0;}
+  .tl-item{display:flex;gap:16px;margin-bottom:12px;}
+  .tl-date{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:#fff;background:var(--purple);
+    border-radius:8px;padding:6px 10px;height:fit-content;flex-shrink:0;min-width:92px;text-align:center;
+  }
+  .tl-body{font-size:14.5px;line-height:1.6;padding-top:3px;}
+  .tl-body b{color:var(--purple-dark);}
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+  .callout.green{background:var(--green-light);border-left-color:var(--green);}
+  .callout.green b{color:var(--green);}
+  .callout.red{background:var(--red-light);border-left-color:var(--red);}
+  .callout.red b{color:var(--red);}
+
+  .use-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0;}
+  @media (max-width:600px){.use-grid{grid-template-columns:1fr;}}
+  .use-col{border-radius:14px;padding:22px 24px;}
+  .use-col.good{background:var(--green-light);}
+  .use-col.care{background:var(--gold-light);}
+  .use-col .uc-title{font-family:'Fraunces',serif;font-size:18px;font-weight:700;margin-bottom:12px;}
+  .use-col.good .uc-title{color:var(--green);}
+  .use-col.care .uc-title{color:var(--gold);}
+  .use-col ul{list-style:none;font-size:14px;line-height:1.75;}
+  .use-col li{padding-left:20px;position:relative;margin-bottom:7px;}
+  .use-col.good li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700;}
+  .use-col.care li::before{content:"!";position:absolute;left:0;color:var(--gold);font-weight:700;}
+
+  .quiz-q{border:2px solid var(--purple-mid);border-radius:14px;padding:24px 26px;margin-bottom:18px;background:#fff;}
+  .quiz-q .qq-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--purple);letter-spacing:.12em;margin-bottom:6px;}
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--purple-mid);border-radius:10px;background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);}
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{display:none;font-size:14px;background:var(--gray-light);border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);}
+  .quiz-explain.show{display:block;}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+
+  .sources{margin-top:48px;border-top:2px solid var(--purple-mid);padding-top:24px;}
+  .sources .src-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+  .sources ul{list-style:none;}
+  .sources li{font-size:13.5px;color:var(--gray);margin-bottom:8px;line-height:1.55;}
+  .sources a{color:var(--purple);word-break:break-all;}
+  .disclaimer{font-size:13px;color:var(--gray);font-style:italic;margin-top:16px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <h1>AI: Create &amp; Compose</h1>
+    <p class="lede">Every other tool in this course helped you make music. This one makes the music. That difference is why it is the most exciting and most argued-about technology in the industry right now.</p>
+    <div class="meta">
+      <span>Reading time: 11 min</span>
+      <span>Interactive: 2 studios</span>
+      <span>Turn your sound on</span>
+    </div>
+  </header>
+
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>Describe a Song. Get a Song.</h2>
+    <p>For most of history, turning an idea into music required an instrument, years of practice, and usually other people. Then software made it easier. Then loops made it easier again.</p>
+    <p>Now you type a sentence.</p>
+    <p>Below is a tiny working version of that idea. Choose a genre, a mood, and an energy level, watch your prompt assemble itself, and press Generate. The music you hear is built live in your browser from your description.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">🎼 The Prompt-to-Song Generator</div>
+        <div class="st-tag">Live Audio Studio</div>
+      </div>
+      <div class="studio-body">
+
+        <div class="pb-block">
+          <div class="pb-label">Genre</div>
+          <div class="pb-row" id="genreRow"></div>
+        </div>
+        <div class="pb-block">
+          <div class="pb-label">Mood</div>
+          <div class="pb-row" id="moodRow"></div>
+        </div>
+        <div class="pb-block">
+          <div class="pb-label">Energy</div>
+          <div class="pb-row" id="energyRow"></div>
+        </div>
+
+        <div class="prompt-box">
+          <div class="pbx-label">Your prompt</div>
+          <div class="pbx-text" id="promptText"></div>
+        </div>
+
+        <div class="viz" id="viz"></div>
+
+        <div class="gen-row">
+          <button class="gen-btn" id="genBtn">✨ Generate</button>
+          <button class="stop-btn" id="stopBtn">Stop</button>
+        </div>
+        <div class="gen-status" id="genStatus">Pick your settings, then press Generate.</div>
+
+        <div class="studio-msg" id="genMsg">
+          <span>🎧</span>
+          <span><b>Generate it twice with the same settings.</b> You will get two different results. That is not a bug, it is how these tools work: the same prompt produces endless variations, which is both the magic and the problem.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout"><b>What you just used is a toy. The real ones are not.</b> Tools like Suno and Udio produce finished-sounding songs from a text description, complete with vocals, in under a minute. By early 2026 Suno alone reported around two million paying subscribers. This is not a preview of the future. It is a product millions of people already pay for.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>What These Tools Actually Do</h2>
+
+    <div class="pillar-grid">
+      <div class="pillar">
+        <div class="pl-emoji">📝</div>
+        <div class="pl-title">Full songs from text prompts</div>
+        <div class="pl-text">Describe a song in a sentence and get back a complete track: arrangement, instruments, structure, and in many cases sung vocals with lyrics. Minutes, not months.</div>
+      </div>
+      <div class="pillar">
+        <div class="pl-emoji">🎶</div>
+        <div class="pl-title">Lyrics, beats, and melodies in any genre</div>
+        <div class="pl-text">Generate the individual ingredients instead of the whole thing. A hook when you are stuck, a beat to write over, a lyric draft to rewrite in your own voice.</div>
+      </div>
+      <div class="pillar">
+        <div class="pl-emoji">🎬</div>
+        <div class="pl-title">Instrumentals and soundtracks</div>
+        <div class="pl-text">Background music for videos, games, podcasts, and school projects. This is the least controversial use, because it is filling a need that often had no budget to begin with.</div>
+      </div>
+    </div>
+
+    <p>Notice which of those three is the calm one. Nobody is losing sleep over a student generating background music for a class video. The arguments start when generated music competes with music that people made.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>The Question Nobody Asks First: Do You Own It?</h2>
+    <p>This is the part that gets skipped, and after two articles about Prince and Taylor Swift fighting for ownership, you should be suspicious of any tool that hands you a song without mentioning who owns it.</p>
+    <p>Here is the general principle. U.S. copyright protects <strong>human authorship</strong>. Copyright Office guidance has consistently held that material generated entirely by AI, without meaningful human creative input, is not protected on its own. Work that combines AI-generated elements with substantial human authorship can be protected, but the protection attaches to what the human contributed.</p>
+    <p>That has a blunt practical consequence: <strong>a song you generated from one prompt and did nothing else to may not be yours to protect at all.</strong> Anyone could use it. And separately from copyright, whether you can legally sell or monetize it depends on the specific terms of the tool you used, which often differ between free and paid accounts.</p>
+    <p>Check your own situation below.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">⚖️ How Much of This Is Yours?</div>
+        <div class="st-tag">Ownership Checker</div>
+      </div>
+      <div class="studio-body">
+        <div class="own-layout">
+          <div id="checkList"></div>
+          <div class="verdict-card">
+            <div class="vc-tier t0" id="vcTier">Nothing checked</div>
+            <div class="vc-row">
+              <div class="vc-label">Copyright protection</div>
+              <div class="vc-val" id="vcCopy"></div>
+            </div>
+            <div class="vc-row">
+              <div class="vc-label">How to credit it honestly</div>
+              <div class="vc-val" id="vcCredit"></div>
+            </div>
+            <div class="vc-row">
+              <div class="vc-label">Can you call it your song?</div>
+              <div class="vc-val" id="vcOwn"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout green"><b>The useful takeaway:</b> the more of yourself you put into it, the more of it is actually yours. That is not a moral lecture, it is close to how the law is currently drawn. AI-generated material is strongest as an ingredient in something you then shape, and weakest as a finished product you simply accepted.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>The Legal Storm Around These Tools</h2>
+    <p>You should know this history, because it is still being written and it will shape the industry you are entering.</p>
+
+    <div class="timeline-legal">
+      <div class="tl-item">
+        <div class="tl-date">June 2024</div>
+        <div class="tl-body">The RIAA, on behalf of the three major labels, sues <b>Suno and Udio</b> for mass copyright infringement, arguing the companies trained their models on copyrighted recordings without permission.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">Oct 2025</div>
+        <div class="tl-body"><b>Universal settles with Udio</b> and announces a licensed AI music platform. The first major-label template for how this might work legally.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">Nov 2025</div>
+        <div class="tl-body"><b>Warner settles with Suno</b> in a first-of-its-kind partnership. Suno agrees to retire models trained on unlicensed music, restrict downloads to paid accounts, and give artists control over use of their names, voices, and likenesses.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026</div>
+        <div class="tl-body"><b>Sony and Universal keep litigating against Suno.</b> In May 2026 they moved to expand the case from 560 recordings to over 61,000. Suno is defending on fair use grounds. Court schedules have pushed a U.S. ruling further out, and a German case brought by GEMA is also pending.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026</div>
+        <div class="tl-body">The <b>American Federation of Musicians sues Warner and Universal</b>, alleging the labels licensed members' recordings for AI training without proper consent or sharing the proceeds. Independent artists have filed separate class actions arguing the major-label settlements do nothing for them.</div>
+      </div>
+    </div>
+
+    <p>Read that last entry again, because it is the most revealing one. The fight is no longer simply artists versus AI companies. It has become a question of <em>who gets paid when a catalog is licensed for training</em>, and session musicians and independent artists are arguing they were left out of deals made with their work.</p>
+
+    <div class="callout red"><b>What this means for you practically.</b> This area is genuinely unsettled and moving fast. Terms of service change, models get retired, and what a free account allows today may differ tomorrow. Before you release anything commercially that used a generator, read that tool's current terms, and understand that a license to use output is not the same thing as owning a copyright in it.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>How to Use These Tools Without Regretting It</h2>
+
+    <div class="use-grid">
+      <div class="use-col good">
+        <div class="uc-title">Smart uses</div>
+        <ul>
+          <li>Background music for your own videos, podcasts, or school projects</li>
+          <li>Sketching an idea fast to hear if an arrangement works before you record it</li>
+          <li>Generating a beat to write and practice over</li>
+          <li>Breaking writer's block, then rewriting the output in your own words</li>
+          <li>Learning what genres sound like by generating and comparing them</li>
+        </ul>
+      </div>
+      <div class="use-col care">
+        <div class="uc-title">Handle with care</div>
+        <ul>
+          <li>Releasing fully generated tracks commercially without checking terms</li>
+          <li>Prompting for a specific living artist's voice or style</li>
+          <li>Assuming you own what came out</li>
+          <li>Passing off generated work as entirely your own performance</li>
+          <li>Uploading generated music in bulk to streaming platforms</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>That second-to-last point deserves a sentence of its own. Disclosure is becoming normal and expected. Being straightforward about what a machine made and what you made costs you nothing and protects your reputation, which in a career built on trust is worth more than a shortcut.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">06</span>
+    <h2>The Honest Argument, Both Sides</h2>
+    <p><strong>The case for:</strong> these tools put composition in reach of people who were locked out by cost, access, or disability. A student with no instrument and no lessons can hear their idea. A filmmaker with no budget gets a score. That is a real democratization, and it echoes every previous technology that made music cheaper to make, from the drum machine to the laptop.</p>
+    <p><strong>The case against:</strong> these models learned from the work of musicians who were not asked, not credited, and in most cases not paid. Generated music now competes for the same streams and sync placements as human work, in a business where most artists already earn very little. And the settlements so far have mostly benefited large rights holders rather than the session players and independent artists whose work was in the training data.</p>
+    <p>You do not have to resolve that today. But you are going to work in this industry, and people will ask what you think. Having an actual informed opinion, rather than a reflex in either direction, is going to be part of your professional value.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">07</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">Under current U.S. copyright principles, what is generally true of a song generated entirely by AI from a single prompt, with no other human input?</div>
+      <button class="quiz-opt" data-c="0">It is automatically protected by copyright and owned by whoever typed the prompt</button>
+      <button class="quiz-opt" data-c="1">It generally is not protected by copyright, because copyright protects human authorship</button>
+      <button class="quiz-opt" data-c="0">It is automatically owned by the AI company forever</button>
+      <div class="quiz-explain">Copyright Office guidance has consistently held that material generated entirely by AI without meaningful human creative input is not protectable on its own. Human contributions can be protected.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">What were the 2024 lawsuits against Suno and Udio primarily about?</div>
+      <button class="quiz-opt" data-c="0">The tools being too expensive for independent artists</button>
+      <button class="quiz-opt" data-c="1">Whether training the models on copyrighted recordings without permission was infringement</button>
+      <button class="quiz-opt" data-c="0">The audio quality of generated songs being too low to release</button>
+      <div class="quiz-explain">The RIAA sued on behalf of the major labels over training data. Warner and Universal later settled with licensing deals; Sony and Universal continued litigating against Suno, which is defending on fair use grounds.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 3</div>
+      <div class="qq-text">Why did the American Federation of Musicians sue Warner and Universal?</div>
+      <button class="quiz-opt" data-c="0">For refusing to license any music to AI companies</button>
+      <button class="quiz-opt" data-c="1">For allegedly licensing members' recordings for AI training without proper consent or sharing the proceeds</button>
+      <button class="quiz-opt" data-c="0">For making AI music that competed with the labels' own artists</button>
+      <div class="quiz-explain">This is the twist in the story: the dispute expanded from artists versus AI companies into artists versus their own labels over who gets paid when a catalog is licensed for training.</div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>Generative tools can produce full songs from a text prompt, or individual ingredients like beats, melodies, and lyrics, in any genre.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>Copyright protects human authorship. A track generated entirely by AI with no meaningful human input generally is not protectable, and a license to use output is not the same as owning it.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>The legal fight is live and unsettled: Warner and Universal signed licensing deals, Sony and Universal continue litigating against Suno, and musicians' groups are now suing labels over the settlement money.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>The more you contribute, the more is genuinely yours. Use generated material as an ingredient you shape, disclose honestly, and read the terms before you release anything.</p>
+      </div>
+    </div>
+    <p class="disclaimer">This article is educational material, not legal advice. Copyright and AI law is changing quickly, and the status of these cases and platform terms may have changed since publication. For anything you plan to release commercially, check the current terms of the tool you used and consult a qualified attorney.</p>
+  </section>
+
+  <div class="sources fade">
+    <div class="src-label">Sources</div>
+    <ul>
+      <li>Music Business Worldwide, "Warner Music Group strikes 'landmark' deal with Suno; settles copyright lawsuit" (November 2025) &mdash; <a href="https://www.musicbusinessworldwide.com/warner-music-group-settles-with-suno-strikes-first-of-its-kind-deal-with-ai-song-generator/" target="_blank" rel="noopener">https://www.musicbusinessworldwide.com/warner-music-group-settles-with-suno-strikes-first-of-its-kind-deal-with-ai-song-generator/</a></li>
+      <li>Chartlex, "Music Industry AI Lawsuits Tracker 2026: Live Status" (settlement status, AFM suit, GEMA case) &mdash; <a href="https://www.chartlex.com/blog/business/music-industry-ai-lawsuits-tracker-2026" target="_blank" rel="noopener">https://www.chartlex.com/blog/business/music-industry-ai-lawsuits-tracker-2026</a></li>
+      <li>Tech Times, "Musicians Sue Warner and Universal Over AI Settlement Money as Suno Ruling Nears" (June 2026) &mdash; <a href="https://www.techtimes.com/articles/318087/20260609/musicians-sue-warner-universal-over-ai-settlement-money-suno-ruling-nears.htm" target="_blank" rel="noopener">https://www.techtimes.com/articles/318087/20260609/musicians-sue-warner-universal-over-ai-settlement-money-suno-ruling-nears.htm</a></li>
+      <li>Dynamoi, "AI Music Copyright Cases Timeline" (on licensing versus copyright protection for AI-generated work) &mdash; <a href="https://dynamoi.com/learn/ai-music-distribution/ai-music-copyright-cases-timeline" target="_blank" rel="noopener">https://dynamoi.com/learn/ai-music-distribution/ai-music-copyright-cases-timeline</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target);} });
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(function(el){ observer.observe(el); });
+
+/* ============ audio core ============ */
+var ctx=null, noiseBuf=null, master=null, analyser=null;
+function audio(){
+  if(!ctx){
+    var AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC){ return null; }
+    ctx=new AC();
+    var len=Math.floor(ctx.sampleRate);
+    noiseBuf=ctx.createBuffer(1,len,ctx.sampleRate);
+    var d=noiseBuf.getChannelData(0);
+    for(var i=0;i<len;i++){ d[i]=Math.random()*2-1; }
+    master=ctx.createGain(); master.gain.value=1;
+    analyser=ctx.createAnalyser(); analyser.fftSize=64;
+    master.connect(analyser); analyser.connect(ctx.destination);
+  }
+  if(ctx.state==='suspended'){ ctx.resume(); }
+  return ctx;
+}
+function noiseSrc(){ var s=ctx.createBufferSource(); s.buffer=noiseBuf; s.loop=true; return s; }
+function kick(t,g){
+  var o=ctx.createOscillator(), gn=ctx.createGain();
+  o.type='sine';
+  o.frequency.setValueAtTime(150,t);
+  o.frequency.exponentialRampToValueAtTime(44,t+0.12);
+  gn.gain.setValueAtTime(0.0001,t);
+  gn.gain.exponentialRampToValueAtTime(g||0.9,t+0.005);
+  gn.gain.exponentialRampToValueAtTime(0.0001,t+0.34);
+  o.connect(gn); gn.connect(master);
+  o.start(t); o.stop(t+0.36);
+}
+function snare(t,g){
+  var n=noiseSrc(), f=ctx.createBiquadFilter(), gn=ctx.createGain();
+  f.type='bandpass'; f.frequency.value=1850; f.Q.value=0.8;
+  gn.gain.setValueAtTime(g||0.4,t);
+  gn.gain.exponentialRampToValueAtTime(0.0001,t+0.16);
+  n.connect(f); f.connect(gn); gn.connect(master);
+  n.start(t); n.stop(t+0.18);
+}
+function hat(t,g){
+  var n=noiseSrc(), f=ctx.createBiquadFilter(), gn=ctx.createGain();
+  f.type='highpass'; f.frequency.value=7600;
+  gn.gain.setValueAtTime(g||0.12,t);
+  gn.gain.exponentialRampToValueAtTime(0.0001,t+0.05);
+  n.connect(f); f.connect(gn); gn.connect(master);
+  n.start(t); n.stop(t+0.07);
+}
+function tone(t,freq,o){
+  o=o||{};
+  var osc=ctx.createOscillator(), gn=ctx.createGain(), f=ctx.createBiquadFilter();
+  osc.type=o.wave||'triangle';
+  osc.frequency.setValueAtTime(freq,t);
+  f.type='lowpass'; f.frequency.setValueAtTime(o.cut||4000,t);
+  var dec=o.dec||0.5;
+  gn.gain.setValueAtTime(0.0001,t);
+  gn.gain.exponentialRampToValueAtTime(o.gain||0.2,t+(o.att||0.02));
+  gn.gain.exponentialRampToValueAtTime(0.0001,t+dec);
+  osc.connect(f); f.connect(gn); gn.connect(master);
+  osc.start(t); osc.stop(t+dec+0.04);
+}
+
+/* ============ prompt state ============ */
+var GENRES=[
+ {key:'lofi',name:'Lo-Fi',bpm:78,
+  kick:[0,6,8,14],snare:[4,12],hat:[0,2,4,6,8,10,12,14],hatG:0.07,
+  padWave:'triangle',padCut:1900,leadWave:'triangle',leadCut:2600,leadDec:0.4},
+ {key:'trap',name:'Trap',bpm:140,
+  kick:[0,3,6,8,11,14],snare:[4,12],hat:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],hatG:0.09,
+  padWave:'sawtooth',padCut:1200,leadWave:'square',leadCut:2400,leadDec:0.22},
+ {key:'cine',name:'Cinematic',bpm:88,
+  kick:[0,8],snare:[],hat:[],hatG:0,
+  padWave:'sawtooth',padCut:1500,leadWave:'sine',leadCut:3000,leadDec:1.1},
+ {key:'house',name:'House',bpm:124,
+  kick:[0,2,4,6,8,10,12,14],snare:[4,12],hat:[1,3,5,7,9,11,13,15],hatG:0.11,
+  padWave:'sawtooth',padCut:2200,leadWave:'sawtooth',leadCut:2600,leadDec:0.3},
+ {key:'folk',name:'Acoustic Folk',bpm:96,
+  kick:[0,8],snare:[4,12],hat:[2,6,10,14],hatG:0.06,
+  padWave:'triangle',padCut:2600,leadWave:'triangle',leadCut:3200,leadDec:0.35}
+];
+var MOODS=[
+ {key:'bright',name:'Bright',
+  chords:[[261.63,329.63,392.00],[261.63,349.23,440.00],[293.66,392.00,493.88],[261.63,329.63,440.00]],
+  bass:[65.41,87.31,98.00,110.00],
+  scale:[261.63,293.66,329.63,392.00,440.00,523.25,587.33,659.25]},
+ {key:'dark',name:'Dark',
+  chords:[[261.63,329.63,440.00],[293.66,349.23,440.00],[261.63,349.23,440.00],[246.94,329.63,415.30]],
+  bass:[55.00,73.42,87.31,82.41],
+  scale:[261.63,293.66,311.13,349.23,392.00,415.30,466.16,523.25]},
+ {key:'dreamy',name:'Dreamy',
+  chords:[[261.63,329.63,392.00,493.88],[261.63,329.63,349.23,440.00],[261.63,329.63,392.00,440.00],[293.66,392.00,440.00]],
+  bass:[65.41,87.31,110.00,98.00],
+  scale:[261.63,293.66,329.63,392.00,440.00,493.88,523.25,587.33]}
+];
+var ENERGIES=[
+ {key:'chill',name:'Chill',leadDensity:0.22,drumGain:0.7,extraHat:false},
+ {key:'medium',name:'Medium',leadDensity:0.42,drumGain:0.9,extraHat:false},
+ {key:'hype',name:'Hype',leadDensity:0.66,drumGain:1.0,extraHat:true}
+];
+
+var sel={g:0,m:0,e:1};
+
+function buildRow(id,items,key){
+  var row=document.getElementById(id);
+  items.forEach(function(it,i){
+    var b=document.createElement('button');
+    b.className='pb-btn'+(sel[key]===i?' on':'');
+    b.textContent=it.name;
+    b.addEventListener('click',function(){
+      sel[key]=i;
+      row.querySelectorAll('.pb-btn').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      updatePrompt();
+    });
+    row.appendChild(b);
+  });
+}
+buildRow('genreRow',GENRES,'g');
+buildRow('moodRow',MOODS,'m');
+buildRow('energyRow',ENERGIES,'e');
+
+function updatePrompt(){
+  var g=GENRES[sel.g], m=MOODS[sel.m], e=ENERGIES[sel.e];
+  document.getElementById('promptText').innerHTML=
+    'a '+m.name.toLowerCase()+' '+g.name.toLowerCase()+' track, '+e.name.toLowerCase()+' energy, around '+g.bpm+' BPM<span class="caret">&nbsp;</span>';
+}
+updatePrompt();
+
+/* viz bars */
+var vizHost=document.getElementById('viz');
+var bars=[];
+for(var b=0;b<32;b++){
+  var el=document.createElement('div');
+  el.className='viz-bar';
+  vizHost.appendChild(el);
+  bars.push(el);
+}
+
+/* ============ generation ============ */
+var playing=false, timer=null, step=0, nextT=0, curSong=null, generating=false;
+
+function makeSong(){
+  var g=GENRES[sel.g], m=MOODS[sel.m], e=ENERGIES[sel.e];
+  var lead=[];
+  for(var i=0;i<16;i++){
+    if(Math.random()<e.leadDensity){
+      lead.push(m.scale[Math.floor(Math.random()*m.scale.length)]);
+    }else{
+      lead.push(0);
+    }
+  }
+  var order=[0,1,2,3];
+  if(Math.random()<0.5){ order=[0,3,1,2]; }
+  return {g:g,m:m,e:e,lead:lead,order:order};
+}
+function stepDur(){ return (60.0/curSong.g.bpm)/2; }
+
+function schedule(){
+  if(!ctx||!curSong){ return; }
+  var g=curSong.g, m=curSong.m, e=curSong.e;
+  while(nextT < ctx.currentTime+0.14){
+    var ci=curSong.order[Math.floor(step/4)%4];
+    if(g.kick.indexOf(step)>-1){ kick(nextT,0.85*e.drumGain); }
+    if(g.snare.indexOf(step)>-1){ snare(nextT,0.38*e.drumGain); }
+    if(g.hat.indexOf(step)>-1){ hat(nextT,g.hatG*e.drumGain); }
+    if(e.extraHat && step%2===1 && g.hatG>0){ hat(nextT+stepDur()/2,g.hatG*0.6); }
+    if(step%4===0){
+      m.chords[ci].forEach(function(f){
+        tone(nextT,f,{wave:g.padWave,cut:g.padCut,dec:1.15,gain:0.075,att:0.05});
+      });
+      tone(nextT,m.bass[ci],{wave:'sawtooth',cut:480,dec:0.55,gain:0.3});
+    }
+    if(curSong.lead[step]){
+      tone(nextT,curSong.lead[step],{wave:g.leadWave,cut:g.leadCut,dec:g.leadDec,gain:0.11});
+    }
+    nextT+=stepDur();
+    step=(step+1)%16;
+  }
+}
+function drawViz(){
+  if(playing&&analyser){
+    var data=new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(data);
+    bars.forEach(function(bar,i){
+      var v=data[i%data.length]/255;
+      bar.style.height=Math.max(4,v*70)+'px';
+    });
+  }
+  requestAnimationFrame(drawViz);
+}
+requestAnimationFrame(drawViz);
+
+var genBtn=document.getElementById('genBtn');
+var statusEl=document.getElementById('genStatus');
+
+genBtn.addEventListener('click',function(){
+  var c=audio();
+  if(!c){ statusEl.textContent='Your browser does not support live audio, but the rest of this page works.'; return; }
+  if(generating){ return; }
+  generating=true;
+  genBtn.disabled=true;
+  stopPlayback(true);
+  var msgs=['Reading your prompt...','Choosing instruments...','Writing a chord progression...','Arranging the parts...'];
+  var mi=0;
+  statusEl.innerHTML='<b>'+msgs[0]+'</b>';
+  var iv=setInterval(function(){
+    mi++;
+    if(mi<msgs.length){ statusEl.innerHTML='<b>'+msgs[mi]+'</b>'; }
+  },260);
+  setTimeout(function(){
+    clearInterval(iv);
+    generating=false;
+    genBtn.disabled=false;
+    curSong=makeSong();
+    step=0; nextT=c.currentTime+0.08; playing=true;
+    clearInterval(timer);
+    timer=setInterval(schedule,25);
+    statusEl.innerHTML='Now playing: <b>'+curSong.m.name.toLowerCase()+' '+curSong.g.name.toLowerCase()+'</b> at '+curSong.g.bpm+' BPM';
+    document.getElementById('genMsg').innerHTML='<span>🔁</span><span><b>Press Generate again with the exact same settings.</b> The chords reorder and the melody changes. Real generators behave the same way, which is why two people using an identical prompt get different songs, and why nobody can predict exactly what will come out.</span>';
+  },1100);
+});
+
+document.getElementById('stopBtn').addEventListener('click',function(){ stopPlayback(false); });
+function stopPlayback(silent){
+  playing=false;
+  clearInterval(timer); timer=null;
+  bars.forEach(function(b){ b.style.height='4px'; });
+  if(!silent){ statusEl.textContent='Stopped. Change your prompt and generate again.'; }
+}
+
+/* ============ ownership checker ============ */
+var CONTRIBS=[
+ {t:'I wrote the lyrics myself',w:2},
+ {t:'I wrote or played the melody myself',w:2},
+ {t:'I sang or performed on the recording',w:2},
+ {t:'I chose, cut, and rearranged the sections',w:1},
+ {t:'I mixed or edited the audio',w:1},
+ {t:'I used generated material only as a starting point, then changed it substantially',w:2}
+];
+var checked=[];
+var listHost=document.getElementById('checkList');
+CONTRIBS.forEach(function(c,i){
+  checked.push(false);
+  var d=document.createElement('div');
+  d.className='check-item';
+  d.setAttribute('role','checkbox');
+  d.setAttribute('tabindex','0');
+  d.setAttribute('aria-checked','false');
+  d.innerHTML='<div class="check-box">✓</div><div class="check-text">'+c.t+'</div>';
+  var toggle=function(){
+    checked[i]=!checked[i];
+    d.classList.toggle('on',checked[i]);
+    d.setAttribute('aria-checked',checked[i]?'true':'false');
+    renderVerdict();
+  };
+  d.addEventListener('click',toggle);
+  d.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
+  listHost.appendChild(d);
+});
+
+function renderVerdict(){
+  var score=0;
+  CONTRIBS.forEach(function(c,i){ if(checked[i]){ score+=c.w; } });
+  var tier=document.getElementById('vcTier');
+  var copy=document.getElementById('vcCopy');
+  var credit=document.getElementById('vcCredit');
+  var own=document.getElementById('vcOwn');
+
+  if(score===0){
+    tier.className='vc-tier t0'; tier.textContent='Prompt only';
+    copy.textContent='Likely none. Material generated entirely by AI without meaningful human creative input is generally not protected by copyright, so you may have nothing to enforce against anyone who copies it.';
+    credit.textContent='Say plainly that it was AI-generated. There is nothing embarrassing about that unless you hide it.';
+    own.textContent='You chose the description. That is real, but it is closer to commissioning than to writing.';
+  }else if(score<=4){
+    tier.className='vc-tier t1'; tier.textContent='Partly yours';
+    copy.textContent='Partial at best. Protection would attach to your specific contributions rather than the whole track, and the generated portions likely remain unprotected.';
+    credit.textContent='Credit yourself for what you actually did, and note that AI was used in production. Specific is better than vague.';
+    own.textContent='You can honestly say you made it with AI assistance. Naming which parts are yours makes the claim stronger, not weaker.';
+  }else{
+    tier.className='vc-tier t2'; tier.textContent='Substantially yours';
+    copy.textContent='Much stronger. With significant human authorship in the lyrics, melody, performance, and arrangement, the human-created elements are the kind of contribution copyright is designed to protect.';
+    credit.textContent='Credit yourself as writer and performer, and disclose AI use as a production tool, the same way you would credit a synth or a sample pack.';
+    own.textContent='Yes. At this point AI was an instrument in your process, not the author of your work.';
+  }
+}
+renderVerdict();
+
+/* ============ quiz ============ */
+document.querySelectorAll('.quiz-q').forEach(function(q){
+  var opts=q.querySelectorAll('.quiz-opt');
+  var explain=q.querySelector('.quiz-explain');
+  var done=false;
+  opts.forEach(function(o){
+    o.addEventListener('click',function(){
+      if(done){ return; }
+      done=true;
+      opts.forEach(function(x){ if(x.getAttribute('data-c')==='1'){ x.classList.add('correct'); } });
+      if(o.getAttribute('data-c')!=='1'){ o.classList.add('wrong'); }
+      explain.classList.add('show');
+    });
+  });
+});
+
+})();
+</script>
+</body>
+</html>
