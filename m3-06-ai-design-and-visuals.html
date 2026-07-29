@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI: Design &amp; Visuals | AI in Music Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE; --purple-dark:#5A1F8E; --purple-light:#F3EAFB; --purple-mid:#E2CFF5;
+    --ink:#1A1523; --gray:#5C5566; --gray-light:#F7F5FA;
+    --green:#1E8A5A; --green-light:#E7F6EF; --red:#C0392B; --red-light:#FBEDEB;
+    --gold:#B07D2B; --gold-light:#FBF3E3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:#FFF;color:var(--ink);line-height:1.7;font-size:17px;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px;}
+  .fade{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .fade.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    *{animation:none !important;transition:none !important;}
+  }
+  h1{font-family:'Fraunces',serif;font-size:clamp(31px,5.6vw,48px);font-weight:700;line-height:1.13;padding-top:64px;margin:0 0 14px;letter-spacing:-.01em;}
+  .lede{font-size:19px;color:var(--gray);max-width:640px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gray);margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;}
+  .meta span::before{content:"● ";color:var(--purple);font-size:9px;vertical-align:2px;}
+  h2{font-family:'Fraunces',serif;font-size:clamp(25px,4vw,32px);font-weight:600;line-height:1.2;margin:64px 0 16px;}
+  p{margin-bottom:16px;}
+  .section-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--purple);font-weight:600;letter-spacing:.1em;display:block;margin-bottom:-8px;margin-top:64px;}
+  .section-num + h2{margin-top:8px;}
+
+  .studio{background:var(--ink);border-radius:20px;overflow:hidden;margin:32px 0;box-shadow:0 20px 50px rgba(26,21,35,.28);}
+  .studio-head{padding:18px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .studio-head .st-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#fff;}
+  .studio-head .st-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;background:rgba(188,135,230,.22);color:#D9BEF2;padding:5px 12px;border-radius:999px;}
+  .studio-body{padding:24px 26px 28px;}
+
+  .cv-layout{display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:start;}
+  @media (max-width:700px){.cv-layout{grid-template-columns:1fr;}}
+
+  .cover-stage{display:flex;flex-direction:column;gap:16px;align-items:center;}
+  .cover-frame{width:300px;height:300px;border-radius:12px;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,.45);}
+  .cover-scaled{width:360px;height:360px;transform:scale(0.8333);transform-origin:0 0;}
+
+  .cover{
+    width:360px;height:360px;position:relative;overflow:hidden;display:block;
+  }
+  .cover .cv-band{position:absolute;left:0;right:0;bottom:0;height:110px;}
+  .cover .cv-text{position:absolute;padding:26px;}
+  .cover .cv-title{margin:0 0 6px;line-height:1.05;}
+  .cover .cv-artist{margin:0;line-height:1.2;}
+
+  .thumbs{display:flex;gap:16px;align-items:flex-end;justify-content:center;flex-wrap:wrap;}
+  .thumb-item{display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .thumb-frame{border-radius:5px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.4);}
+  .thumb-cap{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.45);}
+
+  .ctrl-block{margin-bottom:16px;}
+  .ctrl-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px;}
+  .opt-row{display:flex;gap:7px;flex-wrap:wrap;}
+  .opt-btn{
+    font-family:'DM Sans',sans-serif;font-weight:600;font-size:12.5px;padding:8px 14px;
+    border:2px solid rgba(188,135,230,.32);border-radius:999px;background:rgba(255,255,255,.05);
+    color:rgba(255,255,255,.7);cursor:pointer;transition:all .22s;
+  }
+  .opt-btn:hover{border-color:#BC87E6;color:#fff;}
+  .opt-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .opt-btn.on{background:#7B2FBE;border-color:#BC87E6;color:#fff;}
+  .swatch{width:15px;height:15px;border-radius:4px;display:inline-block;vertical-align:-3px;margin-right:7px;}
+
+  .text-input{
+    width:100%;font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 14px;
+    border:2px solid rgba(188,135,230,.3);border-radius:10px;background:rgba(255,255,255,.06);
+    color:#fff;margin-bottom:8px;
+  }
+  .text-input:focus{outline:none;border-color:#BC87E6;}
+  .text-input::placeholder{color:rgba(255,255,255,.35);}
+
+  .ai-btn{
+    font-family:'DM Sans',sans-serif;font-weight:700;font-size:13.5px;
+    background:linear-gradient(100deg,#9350D1,#5A1F8E);color:#fff;border:none;
+    border-radius:999px;padding:12px 22px;cursor:pointer;transition:transform .12s,filter .25s;
+  }
+  .ai-btn:hover{filter:brightness(1.15);}
+  .ai-btn:active{transform:scale(.97);}
+  .ai-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+
+  .verdict{border-radius:12px;padding:14px 18px;font-size:13.5px;line-height:1.6;margin-top:14px;display:flex;gap:10px;align-items:flex-start;}
+  .verdict.pass{background:rgba(30,138,90,.22);color:#8FE3BC;}
+  .verdict.warn{background:rgba(176,125,43,.22);color:#F0D08A;}
+  .verdict.fail{background:rgba(192,57,43,.22);color:#F5A9A0;}
+  .verdict b{color:#fff;}
+
+  .studio-msg{
+    margin-top:18px;background:rgba(188,135,230,.14);border-radius:12px;padding:14px 18px;
+    color:#E4D3F5;font-size:14px;line-height:1.6;display:flex;gap:10px;align-items:flex-start;
+  }
+  .studio-msg b{color:#fff;}
+
+  /* resize machine */
+  .mode-toggle{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+  .mode-btn{
+    flex:1;min-width:160px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14.5px;
+    padding:15px 12px;border:2px solid rgba(188,135,230,.35);border-radius:14px;
+    background:rgba(255,255,255,.05);color:rgba(255,255,255,.72);cursor:pointer;transition:all .25s;
+  }
+  .mode-btn:hover{border-color:#BC87E6;color:#fff;}
+  .mode-btn:focus-visible{outline:3px solid #BC87E6;outline-offset:3px;}
+  .mode-btn.active{background:#7B2FBE;border-color:#BC87E6;color:#fff;}
+  .mode-btn .mb-sub{display:block;font-weight:400;font-size:11.5px;opacity:.78;margin-top:3px;}
+
+  .formats{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;align-items:flex-end;}
+  .fmt-item{display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .fmt-frame{border-radius:8px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.4);background:#000;position:relative;}
+  .fmt-cap{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);text-align:center;line-height:1.4;}
+  .flyer{position:relative;overflow:hidden;}
+  .flyer .fl-inner{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;}
+  .flyer .fl-kicker{font-family:'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;opacity:.85;}
+  .flyer .fl-title{line-height:1.02;margin:0;}
+  .flyer .fl-meta{opacity:.9;line-height:1.3;}
+
+  /* id card */
+  .id-card{border:2px solid var(--purple);border-radius:16px;padding:26px 28px;margin:28px 0;background:var(--purple-light);}
+  .id-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
+  .id-item{background:#fff;border-radius:10px;padding:13px 16px;}
+  .id-item .idl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);}
+  .id-item .idv{font-size:14px;font-weight:600;margin-top:3px;line-height:1.4;}
+
+  .steps-list{margin:24px 0;}
+  .step-item{display:flex;gap:16px;margin-bottom:14px;background:var(--gray-light);border-radius:12px;padding:18px 20px;}
+  .step-item .si-num{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:#fff;background:var(--purple);
+    border-radius:8px;min-width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .step-item .si-body{font-size:14.5px;line-height:1.6;}
+  .step-item .si-body b{display:block;margin-bottom:2px;}
+
+  .callout{background:var(--gold-light);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:20px 26px;margin:28px 0;font-size:15.5px;}
+  .callout b{color:var(--gold);}
+  .callout.green{background:var(--green-light);border-left-color:var(--green);}
+  .callout.green b{color:var(--green);}
+
+  .quiz-q{border:2px solid var(--purple-mid);border-radius:14px;padding:24px 26px;margin-bottom:18px;background:#fff;}
+  .quiz-q .qq-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--purple);letter-spacing:.12em;margin-bottom:6px;}
+  .quiz-q .qq-text{font-weight:700;font-size:16.5px;margin-bottom:14px;}
+  .quiz-opt{display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--purple-mid);border-radius:10px;background:var(--gray-light);cursor:pointer;transition:all .25s;color:var(--ink);}
+  .quiz-opt:hover{border-color:var(--purple);background:var(--purple-light);}
+  .quiz-opt:focus-visible{outline:3px solid var(--purple-mid);outline-offset:2px;}
+  .quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700;}
+  .quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+  .quiz-explain{display:none;font-size:14px;background:var(--gray-light);border-radius:10px;padding:12px 16px;margin-top:6px;color:var(--gray);}
+  .quiz-explain.show{display:block;}
+
+  .takeaways{background:var(--purple);border-radius:18px;padding:36px;color:#fff;margin:40px 0 0;}
+  .takeaways h2{color:#fff;margin:0 0 18px;font-size:26px;}
+  .takeaway{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+  .takeaway:last-child{margin-bottom:0;}
+  .takeaway .t-icon{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:rgba(255,255,255,.16);border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .takeaway p{margin:0;font-size:15.5px;line-height:1.6;}
+
+  .sources{margin-top:48px;border-top:2px solid var(--purple-mid);padding-top:24px;}
+  .sources .src-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+  .sources ul{list-style:none;}
+  .sources li{font-size:13.5px;color:var(--gray);margin-bottom:8px;line-height:1.55;}
+  .sources a{color:var(--purple);word-break:break-all;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="fade">
+    <h1>AI: Design &amp; Visuals</h1>
+    <p class="lede">Your cover art gets about three seconds and roughly the size of a postage stamp to convince someone to press play. Here is how to win that fight.</p>
+    <div class="meta">
+      <span>Reading time: 8 min</span>
+      <span>Interactive: 2 design studios</span>
+      <span>Level: Beginner</span>
+    </div>
+  </header>
+
+  <section class="fade">
+    <span class="section-num">01</span>
+    <h2>Nobody Sees Your Cover Art Big</h2>
+    <p>Picture where album covers actually live now. Not on a twelve-inch record sleeve you hold in your hands. On a phone, in a scrolling list, about the size of your thumbnail. Sometimes smaller.</p>
+    <p>That single fact changes everything about how you should design one. A gorgeous, delicate, detailed cover can be completely invisible at the size people will actually see it. Most beginners design for the big version and never check the small one.</p>
+    <p>So let's design a cover, and check both at once.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">🎨 The Cover Art Studio</div>
+        <div class="st-tag">Live Design Tool</div>
+      </div>
+      <div class="studio-body">
+        <div class="cv-layout">
+
+          <div class="cover-stage">
+            <div class="cover-frame"><div class="cover-scaled" id="heroCover"></div></div>
+            <div class="thumbs" id="thumbStrip"></div>
+          </div>
+
+          <div class="controls">
+            <div class="ctrl-block">
+              <div class="ctrl-label">Artist name &amp; album title</div>
+              <input class="text-input" id="inArtist" value="NOVA JETT" maxlength="18" aria-label="Artist name">
+              <input class="text-input" id="inTitle" value="Paper Skies" maxlength="20" aria-label="Album title">
+            </div>
+            <div class="ctrl-block">
+              <div class="ctrl-label">Color palette</div>
+              <div class="opt-row" id="palRow"></div>
+            </div>
+            <div class="ctrl-block">
+              <div class="ctrl-label">Layout</div>
+              <div class="opt-row" id="layRow"></div>
+            </div>
+            <div class="ctrl-block">
+              <div class="ctrl-label">Type style</div>
+              <div class="opt-row" id="typeRow"></div>
+            </div>
+            <button class="ai-btn" id="magicBtn">🤖 AI Magic Design</button>
+            <div class="verdict pass" id="verdict"></div>
+          </div>
+
+        </div>
+        <div class="studio-msg" id="cvMsg">
+          <span>🔍</span>
+          <span><b>Watch the small versions.</b> Those three sizes on the left are roughly how your cover appears in a playlist, in a queue, and in a mini player. If your title disappears there, it disappears for most listeners.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout"><b>Try this on purpose:</b> set the type style to <b>Minimal</b> and watch the smallest thumbnail. The design still looks elegant at full size and turns into an unreadable smudge at real size. That is the single most common mistake in beginner cover art, and you can only catch it by checking.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">02</span>
+    <h2>What You Just Learned Without Being Told</h2>
+    <p>Every choice in that studio was teaching a design principle:</p>
+    <p><strong>Contrast</strong> is the gap between your text and your background. High contrast survives shrinking. Low contrast dies. <strong>Hierarchy</strong> means one thing should be biggest, and the eye should know instantly where to land. When artist name and album title are the same size, neither wins. <strong>Type personality</strong> is real: the exact same words in a serif font feel classic and warm, in a bold sans feel loud and modern, in a mono font feel technical and cold. You did not change the words at all.</p>
+    <p>And <strong>a solid band behind text</strong> is the cheapest legibility trick in design. It guarantees your words sit on a predictable background instead of fighting whatever is behind them.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">03</span>
+    <h2>One Design, Every Platform</h2>
+    <p>Now the second half of the job. You have a show coming up, so you need a flyer. But "a flyer" is not one thing anymore. You need a square post, a vertical story, a wide banner, and something printable.</p>
+    <p>The lazy approach is to make one and stretch it to fit everywhere. Try it below and see what happens, then switch to the AI version.</p>
+
+    <div class="studio">
+      <div class="studio-head">
+        <div class="st-title">📐 The Resize Machine</div>
+        <div class="st-tag">Magic Resize Demo</div>
+      </div>
+      <div class="studio-body">
+        <div class="mode-toggle">
+          <button class="mode-btn active" data-rmode="stretch">
+            Just Stretch It
+            <span class="mb-sub">Force one design into every shape</span>
+          </button>
+          <button class="mode-btn" data-rmode="magic">
+            🤖 AI Magic Resize
+            <span class="mb-sub">Re-flow the layout for each shape</span>
+          </button>
+        </div>
+        <div class="formats" id="formats"></div>
+        <div class="studio-msg" id="rzMsg">
+          <span>😬</span>
+          <span><b>Look at the story and banner versions.</b> Stretching squashes and distorts everything. Your fonts get fat, your spacing breaks, and it screams "made in a hurry."</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout"><b>This is the real time-saver.</b> Making four separate designs by hand takes a beginner an hour or more. Magic Resize re-flows the layout for each canvas in seconds, so you spend your time on the one thing that matters: whether the design is any good.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">04</span>
+    <h2>The Tool Most Artists Use for This</h2>
+    <p>The platform behind most independent artists' cover art, flyers, and social posts is <strong>Canva</strong>. It is a browser-based design tool built on templates, so you always start from something that already works instead of a blank white square.</p>
+
+    <div class="id-card">
+      <div class="id-grid">
+        <div class="id-item"><div class="idl">Where it runs</div><div class="idv">Any web browser, plus phone and tablet apps</div></div>
+        <div class="id-item"><div class="idl">Free tier</div><div class="idv">250,000+ templates, 5GB storage, and limited uses of the AI design tools</div></div>
+        <div class="id-item"><div class="idl">Paid tier</div><div class="idv">Canva Pro, around $15 a month, adds Magic Resize, Background Remover, and Brand Kit</div></div>
+        <div class="id-item"><div class="idl">The AI suite</div><div class="idv">Magic Studio: Magic Design, Magic Resize, Magic Eraser, Magic Expand, Background Remover</div></div>
+        <div class="id-item"><div class="idl">Scale</div><div class="idv">Over 220 million people use it monthly</div></div>
+        <div class="id-item"><div class="idl">Best for musicians</div><div class="idv">Cover art, gig flyers, social posts, merch mockups, press kits</div></div>
+      </div>
+    </div>
+
+    <div class="callout green"><b>Worth knowing if you are in school:</b> Canva for Education is completely free for verified K-12 teachers and their students, and it unlocks essentially the full Pro experience, including the Magic Studio AI tools. Students cannot sign up alone; a verified teacher invites them into a class, or the district gets approved. If you are in college, this specific program does not apply, but many campuses have a separate arrangement called Canva for Campus, so it is worth asking.</div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">05</span>
+    <h2>What the AI Decides, and What You Decide</h2>
+    <p>Be clear about the division of labor here, because it is easy to hand over too much.</p>
+    <p><strong>AI is genuinely great at:</strong> generating starting layouts, resizing across formats, cutting a subject out of a photo background, erasing a distracting object, and extending an image so it fits a taller canvas. All of these are chores. All of them used to take skill and time you did not have.</p>
+    <p><strong>AI cannot tell you:</strong> whether the cover looks like your music sounds. That is the entire job of cover art, and it requires knowing what your music feels like, who it is for, and what you want someone to expect before they press play. A generated design can be beautiful and completely wrong for the song.</p>
+    <p>There is also a practical warning: template-based tools make everyone's work start from the same place. If you use a popular template untouched, your cover will look like a thousand others. Use the template as scaffolding, then change the colors, the type, and the composition until it looks like you.</p>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">06</span>
+    <h2>Design Your First Cover Today</h2>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="si-num">1</div>
+        <div class="si-body"><b>Write down three words describing your song.</b> Not the genre. The feeling. "Late, warm, lonely." Those three words are your design brief, and they will decide your colors.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">2</div>
+        <div class="si-body"><b>Open a square canvas and pick two colors, not five.</b> Beginner designs almost always have too many colors. Two plus a neutral looks intentional. Five looks like an accident.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">3</div>
+        <div class="si-body"><b>Make one element clearly the biggest.</b> Usually the title. If everything is the same size, the eye has nowhere to land and the design feels flat.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">4</div>
+        <div class="si-body"><b>Shrink it to thumbnail size and look again.</b> The step almost everyone skips. If you cannot read it small, it does not work, no matter how good it looks big.</div>
+      </div>
+      <div class="step-item">
+        <div class="si-num">5</div>
+        <div class="si-body"><b>Resize it into a story and a square post.</b> Now you have a release announcement ready to go, not just a cover sitting in a folder.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <span class="section-num">07</span>
+    <h2>Check Your Understanding</h2>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 1</div>
+      <div class="qq-text">Why should you always check your cover art at thumbnail size?</div>
+      <button class="quiz-opt" data-c="0">Because streaming platforms only accept small image files</button>
+      <button class="quiz-opt" data-c="1">Because that is the size most listeners actually see it, and delicate designs can become unreadable</button>
+      <button class="quiz-opt" data-c="0">Because small images load faster on phones</button>
+      <div class="quiz-explain">Covers live in scrolling lists at tiny sizes. A design that only works big has failed where it counts.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 2</div>
+      <div class="qq-text">What does Magic Resize do?</div>
+      <button class="quiz-opt" data-c="0">Stretches one design to fill any shape, distorting it</button>
+      <button class="quiz-opt" data-c="1">Re-flows a design's layout for different canvas shapes, so a square post becomes a proper vertical story</button>
+      <button class="quiz-opt" data-c="0">Makes image files smaller so they upload faster</button>
+      <div class="quiz-explain">Stretching is the problem; re-flowing is the fix. Magic Resize rebuilds the layout for each format instead of squashing it.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="qq-num">QUESTION 3</div>
+      <div class="qq-text">According to this article, what can AI design tools NOT do for you?</div>
+      <button class="quiz-opt" data-c="0">Remove the background from a photo</button>
+      <button class="quiz-opt" data-c="1">Decide whether the cover actually looks like your music sounds</button>
+      <button class="quiz-opt" data-c="0">Generate a starting layout</button>
+      <div class="quiz-explain">Matching a visual to the feeling of your music requires knowing your music and your audience. That judgment stays human.</div>
+    </div>
+  </section>
+
+  <section class="fade">
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway">
+        <div class="t-icon">01</div>
+        <p>Cover art is seen tiny, so contrast, hierarchy, and legibility at thumbnail size matter more than fine detail.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">02</div>
+        <p>Type carries personality. The same words in a serif, a bold sans, or a mono font send completely different signals.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">03</div>
+        <p>Magic Resize re-flows one design across every platform shape, turning an hour of rebuilding into seconds.</p>
+      </div>
+      <div class="takeaway">
+        <div class="t-icon">04</div>
+        <p>AI handles the chores. Deciding whether the visual matches the feeling of your music is still entirely your call.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sources fade">
+    <div class="src-label">Sources</div>
+    <ul>
+      <li>Canva, official Magic Design product page (availability across Free, Pro, and Education accounts) &mdash; <a href="https://www.canva.com/magic-design/" target="_blank" rel="noopener">https://www.canva.com/magic-design/</a></li>
+      <li>Canva for Education Review 2026, on free Pro-level access for verified K-12 teachers and students &mdash; <a href="https://ecomm.design/canva-for-education/" target="_blank" rel="noopener">https://ecomm.design/canva-for-education/</a></li>
+      <li>Canva AI Review 2026: Magic Studio Free vs Pro Limits, on the Magic Studio tool suite and pricing &mdash; <a href="https://www.aiworthit.com/blog/canva-ai-review/" target="_blank" rel="noopener">https://www.aiworthit.com/blog/canva-ai-review/</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target);} });
+},{threshold:.08});
+document.querySelectorAll('.fade').forEach(function(el){ observer.observe(el); });
+
+/* ---------- data ---------- */
+var PALETTES=[
+  {key:'midnight',name:'Midnight',bg:'linear-gradient(155deg,#1B1038 0%,#4A1D7A 100%)',text:'#FFFFFF',band:'rgba(0,0,0,.55)',swatch:'#4A1D7A',contrast:3},
+  {key:'sunset',  name:'Sunset',  bg:'linear-gradient(155deg,#FF8A3D 0%,#E5427E 100%)',text:'#2A0E20',band:'rgba(255,240,217,.9)',swatch:'#E5427E',contrast:2},
+  {key:'mono',    name:'Mono',    bg:'linear-gradient(155deg,#0D0D0D 0%,#3A3A3A 100%)',text:'#FFFFFF',band:'rgba(0,0,0,.65)',swatch:'#2B2B2B',contrast:3},
+  {key:'bloom',   name:'Bloom',   bg:'linear-gradient(155deg,#F6EEFC 0%,#DCC4F0 100%)',text:'#2A1240',band:'rgba(255,255,255,.85)',swatch:'#DCC4F0',contrast:3},
+  {key:'neon',    name:'Neon',    bg:'radial-gradient(circle at 30% 25%, #2A0F52 0%, #0B0B14 70%)',text:'#3DF5D0',band:'rgba(0,0,0,.6)',swatch:'#3DF5D0',contrast:2}
+];
+var LAYOUTS=[
+  {key:'center',name:'Centered',band:false,score:0},
+  {key:'lower', name:'Lower Left',band:false,score:0},
+  {key:'band',  name:'Bottom Band',band:true,score:1},
+  {key:'top',   name:'Top Corner',band:false,score:0}
+];
+var TYPES=[
+  {key:'classic',name:'Classic',fam:"'Fraunces',serif",  weight:700,size:40,artSize:14,track:'-0.5px',upper:false,score:2},
+  {key:'modern', name:'Modern', fam:"'DM Sans',sans-serif",weight:700,size:38,artSize:13,track:'0.5px', upper:true, score:3},
+  {key:'minimal',name:'Minimal',fam:"'DM Sans',sans-serif",weight:300,size:21,artSize:10,track:'6px',   upper:true, score:0},
+  {key:'techno', name:'Technical',fam:"'IBM Plex Mono',monospace",weight:600,size:24,artSize:11,track:'1.5px',upper:true,score:1}
+];
+
+var state={pal:0,lay:2,typ:1,artist:'NOVA JETT',title:'Paper Skies'};
+
+/* ---------- cover rendering ---------- */
+function coverHTML(){
+  var P=PALETTES[state.pal], L=LAYOUTS[state.lay], T=TYPES[state.typ];
+  var title=state.title||'Untitled';
+  var artist=state.artist||'Unknown Artist';
+  if(T.upper){ title=title.toUpperCase(); }
+  var pos='';
+  var align='left';
+  if(L.key==='center'){ pos='left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;'; align='center'; }
+  else if(L.key==='lower'){ pos='left:0;right:0;bottom:8px;'; }
+  else if(L.key==='band'){ pos='left:0;right:0;bottom:0;height:110px;display:flex;flex-direction:column;justify-content:center;'; }
+  else { pos='left:0;right:0;top:8px;'; }
+
+  var bandEl=L.band?'<div class="cv-band" style="background:'+P.band+'"></div>':'';
+  var titleColor=(L.key==='band'&&P.key==='sunset')?'#2A0E20':((L.key==='band'&&P.key==='bloom')?'#2A1240':P.text);
+
+  return '<div class="cover" style="background:'+P.bg+';">'
+    + bandEl
+    + '<div class="cv-text" style="'+pos+'">'
+    + '<h3 class="cv-title" style="font-family:'+T.fam+';font-weight:'+T.weight+';font-size:'+T.size+'px;letter-spacing:'+T.track+';color:'+titleColor+';text-align:'+align+';">'+esc(title)+'</h3>'
+    + '<p class="cv-artist" style="font-family:'+T.fam+';font-weight:'+(T.weight>400?500:300)+';font-size:'+T.artSize+'px;letter-spacing:2px;text-transform:uppercase;color:'+titleColor+';opacity:.82;text-align:'+align+';">'+esc(artist)+'</p>'
+    + '</div></div>';
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+var THUMB_SIZES=[
+  {px:118,cap:'Playlist row'},
+  {px:64, cap:'Up next'},
+  {px:38, cap:'Mini player'}
+];
+function renderCover(){
+  var html=coverHTML();
+  document.getElementById('heroCover').innerHTML=html;
+  var strip=document.getElementById('thumbStrip');
+  strip.innerHTML=THUMB_SIZES.map(function(t){
+    var sc=(t.px/360);
+    return '<div class="thumb-item">'
+      +'<div class="thumb-frame" style="width:'+t.px+'px;height:'+t.px+'px;">'
+      +'<div style="width:360px;height:360px;transform:scale('+sc+');transform-origin:0 0;">'+html+'</div>'
+      +'</div>'
+      +'<div class="thumb-cap">'+t.cap+'</div></div>';
+  }).join('');
+  renderVerdict();
+}
+function renderVerdict(){
+  var score=PALETTES[state.pal].contrast + LAYOUTS[state.lay].score + TYPES[state.typ].score;
+  var v=document.getElementById('verdict');
+  if(score>=5){
+    v.className='verdict pass';
+    v.innerHTML='<span>✅</span><span><b>Passes the thumbnail test.</b> Strong contrast and heavy enough type to survive being shrunk. This would still be readable in a playlist.</span>';
+  }else if(score>=4){
+    v.className='verdict warn';
+    v.innerHTML='<span>⚠️</span><span><b>Borderline.</b> It reads at medium size but gets shaky in the smallest player. Try heavier type or a solid band behind the text.</span>';
+  }else{
+    v.className='verdict fail';
+    v.innerHTML='<span>❌</span><span><b>Fails at thumbnail size.</b> Look at the smallest square. The type is too light and too widely spaced to survive. Beautiful big, invisible small.</span>';
+  }
+}
+
+function buildOptions(rowId,items,stateKey){
+  var row=document.getElementById(rowId);
+  items.forEach(function(item,i){
+    var b=document.createElement('button');
+    b.className='opt-btn'+(state[stateKey]===i?' on':'');
+    if(item.swatch){
+      b.innerHTML='<span class="swatch" style="background:'+item.swatch+'"></span>'+item.name;
+    }else{
+      b.textContent=item.name;
+    }
+    b.addEventListener('click',function(){
+      state[stateKey]=i;
+      row.querySelectorAll('.opt-btn').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      renderCover();
+      renderFormats();
+    });
+    row.appendChild(b);
+  });
+}
+buildOptions('palRow',PALETTES,'pal');
+buildOptions('layRow',LAYOUTS,'lay');
+buildOptions('typeRow',TYPES,'typ');
+
+function syncOptionButtons(){
+  ['palRow','layRow','typeRow'].forEach(function(id,idx){
+    var key=['pal','lay','typ'][idx];
+    var btns=document.getElementById(id).querySelectorAll('.opt-btn');
+    btns.forEach(function(b,i){ b.classList.toggle('on',i===state[key]); });
+  });
+}
+
+document.getElementById('inArtist').addEventListener('input',function(e){
+  state.artist=e.target.value; renderCover(); renderFormats();
+});
+document.getElementById('inTitle').addEventListener('input',function(e){
+  state.title=e.target.value; renderCover(); renderFormats();
+});
+
+var GOOD_COMBOS=[
+  {pal:0,lay:2,typ:1},{pal:2,lay:0,typ:0},{pal:1,lay:2,typ:1},
+  {pal:3,lay:1,typ:0},{pal:4,lay:2,typ:3},{pal:0,lay:0,typ:0},{pal:2,lay:2,typ:1}
+];
+var comboIdx=-1;
+document.getElementById('magicBtn').addEventListener('click',function(){
+  comboIdx=(comboIdx+1)%GOOD_COMBOS.length;
+  var c=GOOD_COMBOS[comboIdx];
+  state.pal=c.pal; state.lay=c.lay; state.typ=c.typ;
+  syncOptionButtons();
+  renderCover();
+  renderFormats();
+  document.getElementById('cvMsg').innerHTML='<span>🤖</span><span><b>That is what Magic Design does.</b> It hands you a combination that already works so you are editing instead of staring at a blank square. Press it again for another. Then change one thing yourself, because a starting point is not a finished cover.</span>';
+});
+
+renderCover();
+
+/* ---------- resize machine ---------- */
+var FORMATS=[
+  {key:'square',w:150,h:150,cap:'Square post<br>1:1'},
+  {key:'story', w:100,h:178,cap:'Story / Reel<br>9:16'},
+  {key:'wide',  w:206,h:116,cap:'Header banner<br>16:9'},
+  {key:'poster',w:130,h:173,cap:'Printable flyer<br>3:4'}
+];
+var rMode='stretch';
+
+function flyerInner(w,h,scaleFactor){
+  var P=PALETTES[state.pal], T=TYPES[state.typ];
+  var title=(state.title||'Paper Skies');
+  if(T.upper){ title=title.toUpperCase(); }
+  var artist=(state.artist||'NOVA JETT');
+  var base=Math.min(w,h);
+  var tSize=Math.max(9,Math.round(base*0.155*scaleFactor));
+  var kSize=Math.max(5,Math.round(base*0.052*scaleFactor));
+  var mSize=Math.max(5,Math.round(base*0.058*scaleFactor));
+  var pad=Math.round(base*0.10);
+  return '<div class="fl-inner" style="padding:'+pad+'px;">'
+    +'<div class="fl-kicker" style="font-size:'+kSize+'px;color:'+P.text+';margin-bottom:'+Math.round(base*0.04)+'px;">Live in concert</div>'
+    +'<div class="fl-title" style="font-family:'+T.fam+';font-weight:'+T.weight+';font-size:'+tSize+'px;letter-spacing:'+T.track+';color:'+P.text+';margin-bottom:'+Math.round(base*0.045)+'px;">'+esc(title)+'</div>'
+    +'<div class="fl-meta" style="font-family:'+T.fam+';font-size:'+mSize+'px;color:'+P.text+';">'+esc(artist)+'<br>Sat 9 PM &middot; The Vault</div>'
+    +'</div>';
+}
+function renderFormats(){
+  var P=PALETTES[state.pal];
+  var host=document.getElementById('formats');
+  host.innerHTML=FORMATS.map(function(f){
+    var inner;
+    if(rMode==='stretch'){
+      var sx=(f.w/150).toFixed(4), sy=(f.h/150).toFixed(4);
+      inner='<div style="position:absolute;inset:0;transform-origin:0 0;transform:scale('+sx+','+sy+');width:150px;height:150px;background:'+P.bg+';">'
+        +flyerInner(150,150,1)+'</div>';
+    }else{
+      inner='<div style="position:absolute;inset:0;background:'+P.bg+';">'+flyerInner(f.w,f.h,1)+'</div>';
+    }
+    return '<div class="fmt-item">'
+      +'<div class="fmt-frame" style="width:'+f.w+'px;height:'+f.h+'px;">'
+      +'<div class="flyer" style="position:absolute;inset:0;">'+inner+'</div>'
+      +'</div>'
+      +'<div class="fmt-cap">'+f.cap+'</div></div>';
+  }).join('');
+}
+document.querySelectorAll('.mode-btn[data-rmode]').forEach(function(b){
+  b.addEventListener('click',function(){
+    rMode=b.getAttribute('data-rmode');
+    document.querySelectorAll('.mode-btn[data-rmode]').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
+    renderFormats();
+    var msg=document.getElementById('rzMsg');
+    if(rMode==='magic'){
+      msg.innerHTML='<span>✨</span><span><b>Same design, rebuilt for each shape.</b> Nothing is squashed. Text sizes and spacing were recalculated per canvas, so every version looks like it was made on purpose, because it was.</span>';
+    }else{
+      msg.innerHTML='<span>😬</span><span><b>Look at the story and banner versions.</b> Stretching squashes and distorts everything. Your fonts get fat, your spacing breaks, and it screams "made in a hurry."</span>';
+    }
+  });
+});
+renderFormats();
+
+/* ---------- quiz ---------- */
+document.querySelectorAll('.quiz-q').forEach(function(q){
+  var opts=q.querySelectorAll('.quiz-opt');
+  var explain=q.querySelector('.quiz-explain');
+  var done=false;
+  opts.forEach(function(o){
+    o.addEventListener('click',function(){
+      if(done){ return; }
+      done=true;
+      opts.forEach(function(x){ if(x.getAttribute('data-c')==='1'){ x.classList.add('correct'); } });
+      if(o.getAttribute('data-c')!=='1'){ o.classList.add('wrong'); }
+      explain.classList.add('show');
+    });
+  });
+});
+
+})();
+</script>
+</body>
+</html>
