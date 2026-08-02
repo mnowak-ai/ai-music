@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Goals Checklist: Music Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE;
+    --purple-dark:#5B1F8E;
+    --purple-light:#F3EAFB;
+    --purple-line:#E4D2F5;
+    --ink:#1F1B24;
+    --ink-soft:#5B5563;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--white);
+    color:var(--ink);
+    font-family:'DM Sans', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:860px;
+    margin:0 auto;
+    padding:0 24px 80px;
+  }
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(14px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .fade{
+    opacity:0;
+    animation:fadeUp 0.7s ease forwards;
+  }
+  .fade1{animation-delay:.05s;}
+  .fade2{animation-delay:.15s;}
+  .fade3{animation-delay:.25s;}
+  .fade4{animation-delay:.35s;}
+  .fade5{animation-delay:.45s;}
+  .fade6{animation-delay:.55s;}
+
+  /* HERO */
+  .hero{
+    background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    border-radius:0 0 28px 28px;
+    padding:56px 24px 44px;
+    text-align:center;
+    color:var(--white);
+    margin-bottom:44px;
+  }
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:clamp(32px,5vw,46px);
+    margin:0 0 6px;
+    line-height:1.1;
+  }
+  .hero .sub{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:clamp(18px,3vw,22px);
+    opacity:.92;
+  }
+  .hero .note-icon{
+    font-size:34px;
+    margin-bottom:10px;
+  }
+
+  h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:26px;
+    color:var(--ink);
+    margin:0 0 14px;
+  }
+  p{
+    font-size:16px;
+    color:var(--ink-soft);
+    margin:0 0 16px;
+  }
+
+  .intro{
+    text-align:center;
+    max-width:620px;
+    margin:0 auto 48px;
+  }
+  .intro p{
+    font-size:17px;
+  }
+
+  /* CHECKLIST */
+  .checklist-card{
+    background:var(--purple-light);
+    border:1px solid var(--purple-line);
+    border-radius:20px;
+    padding:36px 30px;
+    margin-bottom:48px;
+  }
+  .checklist-card .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--purple);
+    font-weight:500;
+    margin-bottom:18px;
+  }
+  .check-item{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    padding:14px 0;
+    border-bottom:1px solid var(--purple-line);
+    cursor:pointer;
+  }
+  .check-item:last-child{border-bottom:none;}
+  .box{
+    flex:none;
+    width:26px;
+    height:26px;
+    border-radius:7px;
+    border:2px solid var(--purple);
+    background:var(--white);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:background .2s ease, transform .15s ease;
+    margin-top:2px;
+  }
+  .box svg{
+    width:15px;
+    height:15px;
+    opacity:0;
+    transition:opacity .15s ease;
+  }
+  .check-item.done .box{
+    background:var(--purple);
+    transform:scale(1.05);
+  }
+  .check-item.done .box svg{opacity:1;}
+  .check-text strong{
+    display:block;
+    font-size:16.5px;
+    color:var(--ink);
+    font-weight:700;
+    margin-bottom:2px;
+  }
+  .check-text span{
+    font-size:14.5px;
+    color:var(--ink-soft);
+  }
+  .progress-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:22px;
+  }
+  .progress-track{
+    flex:1;
+    height:8px;
+    background:var(--white);
+    border:1px solid var(--purple-line);
+    border-radius:99px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background:var(--purple);
+    border-radius:99px;
+    transition:width .35s ease;
+  }
+  .progress-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--purple-dark);
+    white-space:nowrap;
+  }
+
+  /* STOPS / ROADMAP */
+  .roadmap{
+    margin-bottom:48px;
+  }
+  .stop{
+    display:flex;
+    gap:18px;
+    margin-bottom:26px;
+  }
+  .stop-marker{
+    flex:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .stop-num{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:var(--purple);
+    color:var(--white);
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:500;
+    font-size:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .stop-line{
+    width:2px;
+    flex:1;
+    background:var(--purple-line);
+    margin-top:6px;
+  }
+  .stop:last-child .stop-line{display:none;}
+  .stop-body{
+    flex:1;
+    padding-bottom:4px;
+  }
+  .stop-body .stop-icon{font-size:22px; margin-bottom:6px;}
+  .stop-body strong{
+    display:block;
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:19px;
+    color:var(--ink);
+    margin-bottom:4px;
+  }
+  .stop-body p{
+    font-size:15px;
+    margin:0;
+  }
+
+  /* WHY IT MATTERS */
+  .why-card{
+    background:var(--white);
+    border:1.5px solid var(--purple-line);
+    border-radius:18px;
+    padding:28px 26px;
+    margin-bottom:48px;
+  }
+  .why-card .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--purple);
+    font-weight:500;
+    margin-bottom:10px;
+  }
+  .why-card p{margin-bottom:0; font-size:16px;}
+
+  /* CTA */
+  .cta{
+    text-align:center;
+    background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    border-radius:20px;
+    padding:38px 28px;
+    color:var(--white);
+  }
+  .cta h2{
+    color:var(--white);
+    font-size:22px;
+    margin-bottom:10px;
+  }
+  .cta p{
+    color:rgba(255,255,255,.9);
+    font-size:15.5px;
+    max-width:480px;
+    margin:0 auto;
+  }
+
+  @media (max-width:600px){
+    .hero{padding:44px 18px 34px;}
+    .checklist-card{padding:26px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero fade fade1">
+  <div class="note-icon">🎧</div>
+  <div class="eyebrow">AI in Music · Module 1 · Getting Started</div>
+  <h1>AI Goals Checklist</h1>
+  <div class="sub">(Music Edition)</div>
+</div>
+
+<div class="wrap">
+
+  <div class="intro fade fade2">
+    <p>Music is everywhere — in your headphones, in movies, in the background of your favorite video. It's also a massive industry with real jobs, real money, and real careers behind every song you hear. And right now, AI is changing how that industry works. Before we jump in, here's exactly what this module has in store for you.</p>
+  </div>
+
+  <div class="checklist-card fade fade3">
+    <div class="label">Today we will...</div>
+
+    <div class="check-item" data-item="1">
+      <div class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-text">
+        <strong>Learn what the music industry is</strong>
+        <span>and explore the main genres that make it up.</span>
+      </div>
+    </div>
+
+    <div class="check-item" data-item="2">
+      <div class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-text">
+        <strong>Discover cool music career paths</strong>
+        <span>you could explore — many you've probably never heard of.</span>
+      </div>
+    </div>
+
+    <div class="check-item" data-item="3">
+      <div class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-text">
+        <strong>Explore how AI is changing music</strong>
+        <span>from how songs get made to how artists connect with fans.</span>
+      </div>
+    </div>
+
+    <div class="check-item" data-item="4">
+      <div class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-text">
+        <strong>Have some fun!</strong>
+        <span>Create your own AI song using a real AI app.</span>
+      </div>
+    </div>
+
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel">0 of 4 goals</div>
+    </div>
+  </div>
+
+  <h2 class="fade fade4">Your Roadmap for This Module</h2>
+  <div class="roadmap fade fade4">
+    <div class="stop">
+      <div class="stop-marker">
+        <div class="stop-num">1</div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-icon">🎵</div>
+        <strong>The Music Industry, Up Close</strong>
+        <p>What actually counts as "the music industry," and a tour through the genres that shape it — from pop to jazz to hip-hop.</p>
+      </div>
+    </div>
+    <div class="stop">
+      <div class="stop-marker">
+        <div class="stop-num">2</div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-icon">🎤</div>
+        <strong>Careers Behind the Music</strong>
+        <p>It's not just artists. Producers, managers, photographers, and marketing teams all make the music world run.</p>
+      </div>
+    </div>
+    <div class="stop">
+      <div class="stop-marker">
+        <div class="stop-num">3</div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-icon">🤖</div>
+        <strong>AI's Role in Music Today</strong>
+        <p>How artists are already using AI to write, produce, design, and market — and where humans still make the final call.</p>
+      </div>
+    </div>
+    <div class="stop">
+      <div class="stop-marker">
+        <div class="stop-num">4</div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-icon">✨</div>
+        <strong>Make Something Real</strong>
+        <p>You'll use an AI music app to create an original song of your own — start to finish.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="why-card fade fade5">
+    <div class="label">Why This Matters</div>
+    <p>Music isn't just something you listen to — it's a career path, a business, and one of the fastest-changing industries when it comes to AI. Understanding how it works now will help you spot opportunities other people miss later.</p>
+  </div>
+
+  <div class="cta fade fade6">
+    <h2>Ready to press play?</h2>
+    <p>Tap each goal above to check it off as we go — then let's dive into what makes the music industry tick.</p>
+  </div>
+
+</div>
+
+<script>
+  const items = document.querySelectorAll('.check-item');
+  const fill = document.getElementById('progressFill');
+  const label = document.getElementById('progressLabel');
+
+  function updateProgress(){
+    const done = document.querySelectorAll('.check-item.done').length;
+    const pct = (done / items.length) * 100;
+    fill.style.width = pct + '%';
+    label.textContent = done + ' of ' + items.length + ' goals';
+  }
+
+  items.forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.toggle('done');
+      updateProgress();
+    });
+  });
+</script>
+
+</body>
+</html>
