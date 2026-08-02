@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume Power — AI in Music Capstone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE;
+    --purple-dark:#5A1F8F;
+    --purple-light:#F3EBFA;
+    --ink:#1E1B26;
+    --gray:#5E5A6B;
+    --border:#E6E0EF;
+    --gold:#E8A33D;
+    --white:#FFFFFF;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:var(--white);
+    color:var(--ink);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px;}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    text-align:center;
+    padding:72px 0 56px;
+    border-bottom:1px solid var(--border);
+  }
+  .eyebrow{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--purple);
+    background:var(--purple-light);
+    padding:8px 18px;
+    border-radius:999px;
+    margin-bottom:24px;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:900;
+    font-size:clamp(2.2rem,5.5vw,3.4rem);
+    line-height:1.12;
+    letter-spacing:-.01em;
+    margin-bottom:18px;
+  }
+  h1 em{
+    font-style:italic;
+    color:var(--purple);
+  }
+  .hero p{
+    font-size:1.1rem;
+    color:var(--gray);
+    max-width:560px;
+    margin:0 auto 36px;
+  }
+  .stats{
+    display:flex;
+    justify-content:center;
+    gap:48px;
+    flex-wrap:wrap;
+  }
+  .stat{text-align:center;}
+  .stat b{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:1.6rem;
+    font-weight:600;
+    color:var(--purple);
+  }
+  .stat span{font-size:.85rem;color:var(--gray);}
+
+  /* ---------- Sections ---------- */
+  section{padding:60px 0;}
+  section + section{border-top:1px solid var(--border);}
+  .sec-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--purple);
+    margin-bottom:10px;
+  }
+  h2{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:clamp(1.6rem,3.5vw,2.1rem);
+    margin-bottom:14px;
+  }
+  .lede{color:var(--gray);max-width:600px;margin-bottom:36px;}
+
+  /* ---------- What you did ---------- */
+  .did-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:16px;
+  }
+  .did-card{
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:24px 22px;
+    background:var(--white);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .did-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 26px rgba(123,47,190,.10);
+  }
+  .did-card .icon{font-size:1.7rem;margin-bottom:12px;display:block;}
+  .did-card h3{
+    font-family:'Fraunces',serif;
+    font-size:1.05rem;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .did-card p{font-size:.92rem;color:var(--gray);}
+  .did-callout{
+    margin-top:28px;
+    background:var(--purple-light);
+    border-radius:14px;
+    padding:20px 26px;
+    text-align:center;
+    font-size:1.02rem;
+  }
+  .did-callout em{color:var(--purple);font-style:italic;font-weight:700;}
+
+  /* ---------- Bullets ---------- */
+  .bullet{
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:24px 24px 20px;
+    margin-bottom:16px;
+    background:var(--white);
+    transition:border-color .18s ease;
+  }
+  .bullet:hover{border-color:var(--purple);}
+  .bullet-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--purple);
+    background:var(--purple-light);
+    padding:4px 12px;
+    border-radius:999px;
+    margin-bottom:12px;
+  }
+  .bullet p{font-size:1.02rem;margin-bottom:14px;}
+  .copy-btn{
+    font-family:'DM Sans',sans-serif;
+    font-size:.85rem;
+    font-weight:700;
+    color:var(--purple);
+    background:none;
+    border:1.5px solid var(--purple);
+    border-radius:999px;
+    padding:7px 20px;
+    cursor:pointer;
+    transition:background .15s ease,color .15s ease;
+  }
+  .copy-btn:hover{background:var(--purple);color:var(--white);}
+  .copy-btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+  .copy-btn.copied{background:var(--purple);color:var(--white);}
+  .pick-note{
+    font-size:.92rem;
+    color:var(--gray);
+    margin-bottom:28px;
+  }
+  .pick-note b{color:var(--ink);}
+
+  /* ---------- Tips ---------- */
+  .tip{
+    display:flex;
+    gap:20px;
+    padding:22px 0;
+  }
+  .tip + .tip{border-top:1px dashed var(--border);}
+  .tip-num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.85rem;
+    font-weight:600;
+    color:var(--purple);
+    background:var(--purple-light);
+    width:38px;height:38px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+    margin-top:2px;
+  }
+  .tip h3{
+    font-size:1.02rem;
+    font-weight:700;
+    margin-bottom:4px;
+  }
+  .tip p{font-size:.95rem;color:var(--gray);}
+
+  .stronger{
+    margin-top:36px;
+    border:2px solid var(--purple);
+    border-radius:16px;
+    padding:26px 26px 22px;
+    background:linear-gradient(180deg,var(--purple-light) 0%,var(--white) 90%);
+  }
+  .stronger .bullet-tag{background:var(--purple);color:var(--white);}
+  .stronger p{font-size:1.05rem;font-weight:500;margin-bottom:16px;}
+
+  /* ---------- Close ---------- */
+  .close{
+    text-align:center;
+    padding:70px 0 90px;
+  }
+  .close h2{margin-bottom:14px;}
+  .close p{
+    color:var(--gray);
+    max-width:540px;
+    margin:0 auto;
+    font-size:1.05rem;
+  }
+  .close p b{color:var(--purple);}
+  .close .own{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:1.3rem;
+    color:var(--ink);
+    margin-top:26px;
+  }
+
+  /* ---------- Motion ---------- */
+  .fade{
+    opacity:0;
+    transform:translateY(14px);
+    transition:opacity .55s ease, transform .55s ease;
+  }
+  .fade.in{opacity:1;transform:none;}
+  @media (prefers-reduced-motion:reduce){
+    .fade{opacity:1;transform:none;transition:none;}
+    .did-card:hover{transform:none;}
+  }
+  @media (max-width:600px){
+    .stats{gap:28px;}
+    .tip{gap:14px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <span class="eyebrow">🎵 AI in Music Capstone</span>
+  <h1>Turn Your Thank You Track<br>Into <em>Resume Power</em></h1>
+  <p>You didn't just learn about AI and music. You wrote, designed, and produced an original song using professional AI tools. That matters to employers, colleges, and internship programs.</p>
+  <div class="stats">
+    <div class="stat"><b>8</b><span>Bullet Options</span></div>
+    <div class="stat"><b>5</b><span>Steps Completed</span></div>
+    <div class="stat"><b>1</b><span>Original Song</span></div>
+  </div>
+</header>
+
+<section class="wrap fade">
+  <div class="sec-label">🧠 The Proof</div>
+  <h2>What You Actually Did</h2>
+  <div class="did-grid">
+    <div class="did-card">
+      <span class="icon">🎼</span>
+      <h3>Produced a Song</h3>
+      <p>Created a complete, original track from concept to finished audio</p>
+    </div>
+    <div class="did-card">
+      <span class="icon">🤖</span>
+      <h3>Directed AI Tools</h3>
+      <p>Used Suno and prompt writing to generate and refine real creative output</p>
+    </div>
+    <div class="did-card">
+      <span class="icon">✍️</span>
+      <h3>Told a Story</h3>
+      <p>Built lyrics and structure around a personal message of gratitude</p>
+    </div>
+    <div class="did-card">
+      <span class="icon">🎧</span>
+      <h3>Learned the Industry</h3>
+      <p>Explored genres, careers, and how music actually gets made and sold</p>
+    </div>
+  </div>
+  <div class="did-callout">💡 That's <em>real creative production experience</em>, not just a class project.</div>
+</section>
+
+<section class="wrap fade">
+  <div class="sec-label">🧾 Copy &amp; Paste &amp; Adjust</div>
+  <h2>Resume-Ready Bullet Points</h2>
+  <p class="pick-note">Pick <b>one to three</b> bullets that best match the role you're applying for. Then <b>adjust each one</b> based on what you actually built and who you made your song for — your genre, your tools, and your person make the bullet yours.</p>
+
+  <div class="bullet">
+    <span class="bullet-tag">Full Project 🎼</span>
+    <p>Created an original AI-generated song using Suno AI, including lyrics, genre selection, and music production.</p>
+    <button class="copy-btn" data-copy>Copy</button>
+  </div>
+
+  <div class="bullet">
+    <span class="bullet-tag">Creative Tools 🤖</span>
+    <p>Designed and produced a digital music project using AI creative tools and prompt engineering.</p>
+    <button class="copy-btn" data-copy>Copy</button>
+  </div>
+
+  <div class="bullet">
+    <span class="bullet-tag">Storytelling ✍️</span>
+    <p>Developed lyrics and song structure to tell a personal story through music and storytelling.</p>
+    <button class="copy-btn" data-copy>Copy</button>
+  </div>
+
+  <div class="bullet">
+    <span class="bullet-tag">Industry Insight 🎧</span>
+    <p>Applied AI tools for music composition and production, exploring how technology is transforming the music industry.</p>
+    <button class="copy-btn" data-copy>Copy</button>
+  </div>
+
+  <div class="bullet">
+    <span class="bullet-tag">End to End 💿</span>
+    <p>Produced a complete digital song project including concept, lyrics, genre selection, and audio generation.</p>
+    <button class="copy-btn" data-copy>Copy</button>
+  </div>
+
+  <div class="bullet">
+    <span class="bullet-tag">Problem Solving 💡</span>
+    <p>Demonstrated creative problem-solving and digital creativity using emerging AI technologies.</p>
+    <button class="copy-btn" data-copy>Copy</button>
+  </div>
+
+  <div class="bullet">
+    <span class="bullet-tag">Career Awareness 📊</span>
+    <p>Analyzed music industry roles and career pathways including production, marketing, and artist management.</p>
+    <button class="copy-btn" data-copy>Copy</button>
+  </div>
+
+  <div class="bullet">
+    <span class="bullet-tag">AI Workflow 🔁</span>
+    <p>Used AI tools to brainstorm, generate, and refine creative media content.</p>
+    <button class="copy-btn" data-copy>Copy</button>
+  </div>
+</section>
+
+<section class="wrap fade">
+  <div class="sec-label">✨ Level Up</div>
+  <h2>Make It Even Stronger</h2>
+  <p class="lede">A tailored bullet beats a generic one every time. Adjust yours based on what you actually created.</p>
+
+  <div class="tip">
+    <div class="tip-num">01</div>
+    <div>
+      <h3>Name the tools.</h3>
+      <p>Swap "AI tools" for the specific tools you used, like Suno. Naming real software shows technical fluency and makes the bullet more believable.</p>
+    </div>
+  </div>
+  <div class="tip">
+    <div class="tip-num">02</div>
+    <div>
+      <h3>Name your genre.</h3>
+      <p>Did you produce an R&amp;B track? A country song? A hip-hop beat? Adding the genre makes your project concrete and memorable instead of vague.</p>
+    </div>
+  </div>
+  <div class="tip">
+    <div class="tip-num">03</div>
+    <div>
+      <h3>Say what the song was about.</h3>
+      <p>"A tribute song honoring a mentor" is far more interesting than "a song." The personal story behind your Thank You Track is a strength. Use it.</p>
+    </div>
+  </div>
+  <div class="tip">
+    <div class="tip-num">04</div>
+    <div>
+      <h3>Match the bullet to the job.</h3>
+      <p>Applying for something creative? Lead with lyrics and storytelling. Something technical? Lead with prompt engineering and AI production. Something business-y? Lead with industry analysis.</p>
+    </div>
+  </div>
+
+  <div class="stronger">
+    <span class="bullet-tag">⚡ Stronger Example</span>
+    <p>Wrote and produced an original R&amp;B tribute song using Suno AI, developing lyrics, genre direction, and prompt-engineered audio production to honor a personal mentor.</p>
+    <button class="copy-btn" data-copy>Copy This Example</button>
+  </div>
+</section>
+
+<footer class="close wrap fade">
+  <div class="sec-label">🏁 Final Note</div>
+  <h2>Own What You Built</h2>
+  <p>This capstone isn't just proof you understand AI. It shows you know how to <b>use AI to create something real</b>, and that's a skill employers are actively looking for.</p>
+  <p class="own">Own it. 👏</p>
+</footer>
+
+<script>
+  // Copy buttons: copy the bullet text from the preceding <p>
+  document.querySelectorAll('[data-copy]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const text=btn.parentElement.querySelector('p').innerText.trim();
+      navigator.clipboard.writeText(text).then(()=>{
+        const original=btn.textContent;
+        btn.textContent='Copied ✓';
+        btn.classList.add('copied');
+        setTimeout(()=>{btn.textContent=original;btn.classList.remove('copied');},1600);
+      });
+    });
+  });
+
+  // Fade-in on scroll
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});
+  },{threshold:.12});
+  document.querySelectorAll('.fade').forEach(el=>obs.observe(el));
+</script>
+
+</body>
+</html>
