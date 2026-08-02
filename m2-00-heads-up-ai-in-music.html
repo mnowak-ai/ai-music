@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Up Next: How AI Is Changing Music</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7B2FBE;
+    --purple-dark:#5B1F8E;
+    --purple-light:#F3EAFB;
+    --purple-line:#E4D2F5;
+    --ink:#1F1B24;
+    --ink-soft:#5B5563;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--white);
+    color:var(--ink);
+    font-family:'DM Sans', sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:860px;
+    margin:0 auto;
+    padding:0 24px 80px;
+  }
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(14px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .fade{opacity:0; animation:fadeUp .7s ease forwards;}
+  .fade1{animation-delay:.05s;}
+  .fade2{animation-delay:.18s;}
+  .fade3{animation-delay:.32s;}
+  .fade4{animation-delay:.46s;}
+  .fade5{animation-delay:.6s;}
+
+  .hero{
+    background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    border-radius:0 0 28px 28px;
+    padding:56px 24px 46px;
+    text-align:center;
+    color:var(--white);
+    margin-bottom:44px;
+  }
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:clamp(30px,5vw,44px);
+    margin:0;
+    line-height:1.15;
+  }
+  .hero .icon{font-size:34px; margin-bottom:10px;}
+
+  p{
+    font-size:17px;
+    color:var(--ink-soft);
+    margin:0 0 18px;
+  }
+  .lead{
+    font-size:18px;
+    color:var(--ink);
+  }
+
+  .pulse-card{
+    background:var(--purple-light);
+    border:1px solid var(--purple-line);
+    border-radius:18px;
+    padding:26px 26px;
+    margin:32px 0;
+  }
+  .pulse-card .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--purple);
+    font-weight:500;
+    margin-bottom:12px;
+  }
+  .pulse-card p{margin-bottom:0; font-size:16px;}
+
+  .preview-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:26px 0 34px;
+    justify-content:center;
+  }
+  .chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13.5px;
+    color:var(--purple-dark);
+    background:var(--white);
+    border:1.5px solid var(--purple-line);
+    border-radius:99px;
+    padding:8px 16px;
+  }
+
+  .closing{
+    text-align:center;
+    background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    border-radius:20px;
+    padding:34px 28px;
+    color:var(--white);
+    margin-top:40px;
+  }
+  .closing h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:22px;
+    margin:0 0 10px;
+    color:var(--white);
+  }
+  .closing p{
+    color:rgba(255,255,255,.9);
+    font-size:15.5px;
+    max-width:480px;
+    margin:0 auto;
+  }
+
+  @media (max-width:600px){
+    .hero{padding:44px 18px 36px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero fade fade1">
+  <div class="icon">🎶🤖</div>
+  <div class="eyebrow">AI in Music · A Quick Heads-Up</div>
+  <h1>Up Next: How AI Is Changing Music</h1>
+</div>
+
+<div class="wrap">
+
+  <div class="fade fade2">
+    <p class="lead">You've met the industry. You've met the careers. Now it's time for the part this course is really about: <strong>AI</strong>.</p>
+    <p>Here's the heads-up. Over the next several articles, we're going to walk through all the different ways AI is showing up in music right now — not someday, not in the future, but today.</p>
+  </div>
+
+  <div class="preview-row fade fade3">
+    <span class="chip">🎸 Learning & Practice</span>
+    <span class="chip">🎛️ Remixing & Producing</span>
+    <span class="chip">🎬 Videos & Visuals</span>
+    <span class="chip">🎨 Design & Artwork</span>
+    <span class="chip">📄 Contracts & Business</span>
+    <span class="chip">✍️ Creating & Composing</span>
+  </div>
+
+  <div class="fade fade4">
+    <p>Some of it might surprise you. AI isn't just making robot songs — it's helping artists learn instruments faster, design album covers, edit music videos, understand confusing contracts, and yes, even write and produce music.</p>
+    <p>We won't just tell you about these tools either. You'll get to try things, play with sounds, and see how it all works for yourself.</p>
+  </div>
+
+  <div class="pulse-card fade fade4">
+    <div class="label">One Thing to Remember</div>
+    <p>As we go, keep asking yourself one question: <strong>where does the AI help, and where does the human still make the call?</strong> That question is going to come up again and again — in music, and in every industry you'll ever work in.</p>
+  </div>
+
+  <div class="closing fade fade5">
+    <h2>Alright — let's get into it.</h2>
+    <p>First stop: how AI is helping people learn and practice music faster than ever before.</p>
+  </div>
+
+</div>
+
+</body>
+</html>
